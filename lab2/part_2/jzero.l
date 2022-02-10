@@ -2,6 +2,9 @@
 /* Simple wc implementation in Flex */
 
 %option noyywrap
+%option noinput
+%option nounput
+
 %{
 #include "defs.h"
 

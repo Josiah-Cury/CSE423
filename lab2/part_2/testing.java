@@ -1,9 +1,15 @@
+// Comment
 
+/*
+	
+	Multiline comment test:
+		Does it work?
+*/
 
 public class HelloWorld {
 	public static void main(String[] args) {
 		float t = 12.34;
-		int i = 2;
+		int i = 0x2x34f;
 		//char c = 'wowza';
 		char d = 'd';
 		System.out.println("Hello, World");
@@ -17,4 +23,3 @@ public class HelloWorld {
 		}
 	}
 }
-
