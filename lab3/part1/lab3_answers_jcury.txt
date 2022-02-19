@@ -1,0 +1,22 @@
+1. "flex nnws.l" produces lex.yy.c
+2. "gcc -c lex.yy.c" produces lex.yy.o
+3. "bison ns.y" produces ns.tab.c
+4. "gcc -c ns.tab.c "
+5. "gcc -d ns.y" produces ns.tab.h
+6. See Makefile.
+
+7. 	josiah@josiah-VirtualBox:~/cse423/lab3$ ./ns nnws.l 
+	bad char
+	bad char
+	bad char
+	bad char
+	syntax error
+	
+8.	See Makefile.
+9.	See Makefile.
+10. See Makefile.
+11.	See Makefile.
+
+12. josiah@josiah-VirtualBox:~/cse423/lab3$ ./ns twelve.txt 
+	yyparse() returns 0
+
