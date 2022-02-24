@@ -7,5 +7,7 @@
 #include "tree.h"
 #include "j0gram.tab.h"
 
+struct tree alloc_tree() {
 
 
+}
