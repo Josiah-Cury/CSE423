@@ -7,7 +7,13 @@
 #include "tree.h"
 #include "j0gram.tab.h"
 
-struct tree alloc_tree() {
+struct tree *alloc_tree(int prodrule, char *symbolname, int nkids, ...) {
+    va_list arg;
+    va_start(arg, nkids);
 
+    /*while(){
+        va_arg(arg, struct tree *);
+    }*/
 
+    return NULL;
 }

@@ -37,30 +37,32 @@ int init_token(int code){
 	yylval.treeptr->prodrule = code;
 	yylval.treeptr->nkids = 0;
 	yylval.treeptr->symbolname = NULL;
+
 	for(int i = 0; i < 9; i++){
 		yylval.treeptr->kids[i] = NULL;
 	}
-	yylval.treeptr->leaf = NULL;
 	
+	yylval.treeptr->leaf = NULL;
+
 	yylval.treeptr->leaf = malloc(sizeof(struct token));
 	yylval.treeptr->leaf->category = code;
 	yylval.treeptr->leaf->text = strdup(yytext);
 	yylval.treeptr->leaf->lineno = yylineno;
 	yylval.treeptr->leaf->filename = filename;
 	text_eval(yylval.treeptr->leaf);
-	
+
 	//add_tokenList();
 	print_node(yylval.treeptr);
-	
+
 	return code;
 }
 
 void print_node(struct tree *tree){
 	struct tree *node;
-	
+
 	node = tree;
-	
-	
+
+
 	if(node->leaf->category == STRING_LITERAL){
 		printf("%d\t\t %-16s %-8d %-22s%s\n", \
 		node->leaf->category, node->leaf->text, node->leaf->lineno, node->leaf->filename,\
@@ -85,8 +87,8 @@ void print_node(struct tree *tree){
 }
 
 void text_eval(struct token *node){
-	
-	
+
+
 	int len = strlen(node->text);
 	char buf[len+1];
 	char *step = NULL;
@@ -94,14 +96,14 @@ void text_eval(struct token *node){
 	float f = 0.0;
 	int i, j;
 	errno = 0;
-	
+
 	switch(node->category) {
 		case INTEGER_LITERAL:
 			step = node->text;
 			l = strtol(step, NULL, 0);
 			if(errno == ERANGE)
 				printf("Range error occurred.\n");
-			
+
 			node->ival = l;
 			node->dval = 0;
 			node->sval = NULL;
@@ -111,7 +113,7 @@ void text_eval(struct token *node){
 			f = strtof(step, NULL);
 			if(errno == ERANGE)
 				printf("Range error occurred.\n");
-				
+
 			node->ival = 0;
 			node->dval = f;
 			node->sval = NULL;
@@ -184,14 +186,14 @@ void text_eval(struct token *node){
 				}
 			}
 			buf[j] = '\0';
-			
+
 			//printf("%s\n", buf);
-			
+
 			node->sval = strdup(buf);
-			
+
 			node->ival = 0;
 			node->dval = 0;
-			
+
 			//free(buf);
 			break;
 		default:

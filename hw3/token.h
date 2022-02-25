@@ -1,13 +1,5 @@
-#ifndef TREE_H_
-#define TREE_H_
-
-struct tree {
-   int prodrule;
-   char *symbolname;
-   int nkids;
-   struct tree *kids[9]; /* if nkids >0 */
-   struct token *leaf;   /* if nkids == 0; NULL for ε productions */
-};
+#ifndef TOKEN_H_
+#define TOKEN_H_
 
 struct token {
 	int category;   /* the integer code returned by yylex */
@@ -32,14 +24,7 @@ char *filename;
 //jzero_main.c function declarations
 void check_extension(char *fname);
 
-//jzero.l variables
-extern int rows, words, chars;
-extern FILE *yyin;
-extern int yylex();
-extern char *yytext;
-extern int yylineno;
 
-//tree.c Function Declarations
-struct tree *alloc_tree(int prodrule, char *symbolname, int nkids, ...);
+
 
 #endif
