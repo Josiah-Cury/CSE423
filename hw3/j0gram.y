@@ -1,11 +1,10 @@
 %{
 	#include <stdio.h>
 	#include "tree.h"
-	#include "prodrules.h"
 	extern int yylex();
 	extern int yyerror(char*s);
 	//Stuff taken out of j0gram.y and not replaced. CLASSNAME
-	//#define YYDEBUG 1
+	#define YYDEBUG 1
 %}
 
 %union{
@@ -88,16 +87,19 @@
 %type <treeptr> LeftHandSide
 %type <treeptr> AssignOp
 
+%token <treeptr> '=' '+' '-' '*' '/' '%'
+%token <treeptr> '(' ')' ',' ';' ':' '[' '<' '.' '!' ']'
+%token <treeptr> '>'
 %%
 
 ClassDecl:
 	PUBLIC CLASS IDENTIFIER ClassBody
-		{}
+		{ tree_root = link_tree(PR_CLASS_DECL, "ClassDecl", 4, $1, $2, $3, $4); }
 	;
 
 ClassBody:
 	'{' ClassBodyDecls '}'
-		{}
+		{ $$ = $2; }
 	| '{' '}'
 		{}
 	;
@@ -106,7 +108,7 @@ ClassBodyDecls:
 	ClassBodyDecl
 		{}
 	| ClassBodyDecls ClassBodyDecl
-		{ $$ = alloc_tree(PR_CLASS_BODY_DECLS, "temp", 2, $1, $2); }
+		{ $$ = link_tree(PR_CLASS_BODY_DECLS, "ClassBodyDecls", 2, $1, $2); }
 	;
 
 ClassBodyDecl:
@@ -117,9 +119,10 @@ ClassBodyDecl:
 	| ConstructorDecl
 		{}
 	;
+
 FieldDecl:
 	Type VarDecls ';'
-		{}
+		{ $$ = link_tree(PR_FIELD_DECL, "FieldDecl", 2, $1, $2); }
 	;
 
 Type:
@@ -144,14 +147,14 @@ Name:
 
 QualifiedName:
 	Name '.' IDENTIFIER
-		{}
+		{ $$ = link_tree(PR_QUALIFIED_NAME, "QualifiedName", 2, $1, $3); }
 	;
 
 VarDecls:
 	VarDeclarator
 		{}
 	| VarDecls ',' VarDeclarator
-		{ $$ = alloc_tree(PR_VAR_DECLS, "temp", 2, $1, $3); }
+		{ $$ = link_tree(PR_VAR_DECLS, "VarDecls", 2, $1, $3); }
 	;
 
 VarDeclarator:
@@ -170,17 +173,17 @@ MethodReturnVal:
 
 MethodDecl:
 	MethodHeader Block
-		{ $$ = alloc_tree(PR_METHOD_DECL, "temp", 2, $1, $2); }
+		{ $$ = link_tree(PR_METHOD_DECL, "MethodDecl", 2, $1, $2); }
 	;
 
 MethodHeader:
 	PUBLIC STATIC MethodReturnVal MethodDeclarator
-		{ $$ = alloc_tree(PR_METHOD_HEADER, "temp", 2, $3, $4); }
+		{ $$ = link_tree(PR_METHOD_HEADER, "MethodHeader", 4, $1, $2, $3, $4); }
 	;
 
 MethodDeclarator:
 	IDENTIFIER '(' FormalParmListOpt ')'
-		{}
+		{ $$ = link_tree(PR_METHOD_DECLARATOR, "MethodDeclarator", 2, $1, $3); }
 	;
 
 FormalParmListOpt:
@@ -194,22 +197,22 @@ FormalParmList:
 	FormalParm
 		{}
 	| FormalParmList ',' FormalParm
-		{ $$ = alloc_tree(PR_FORMAL_PARM_LIST, "temp", 2, $1, $3); }
+		{ $$ = link_tree(PR_FORMAL_PARM_LIST, "FormalParmList", 2, $1, $3); }
 	;
 
 FormalParm:
 	Type VarDeclarator
-		{ $$ = alloc_tree(PR_FORMAL_PARM, "temp", 2, $1, $2); }
+		{ $$ = link_tree(PR_FORMAL_PARM, "FormalParm", 2, $1, $2); }
 	;
 
 ConstructorDecl:
 	ConstructorDeclarator Block
-		{ $$ = alloc_tree(PR_CONSTRUCTOR_DECL, "temp", 2, $1, $2); }
+		{ $$ = link_tree(PR_CONSTRUCTOR_DECL, "ConstructorDecl", 2, $1, $2); }
 	;
 
 ConstructorDeclarator:
 	IDENTIFIER '(' FormalParmListOpt ')'
-		{}
+		{ $$ = link_tree(PR_CONSTRUCTOR_DECLARATOR, "ConstructorDeclarator", 2, $1, $3); }
 	;
 
 ArgListOpt:
@@ -221,7 +224,7 @@ ArgListOpt:
 
 Block:
 	'{' BlockStmtsOpt '}'
-		{}
+		{ $$ = $2; }
 	;
 
 BlockStmtsOpt:
@@ -235,7 +238,7 @@ BlockStmts:
 	BlockStmt
 		{}
 	| BlockStmts BlockStmt
-		{ $$ = alloc_tree(PR_BLOCK_STMTS, "temp", 2, $1, $2); }
+		{ $$ = link_tree(PR_BLOCK_STMTS, "BlockStmts", 2, $1, $2); }
 	;
 
 BlockStmt:
@@ -252,7 +255,7 @@ LocalVarDeclStmt:
 
 LocalVarDecl:
 	Type VarDecls
-		{ $$ = alloc_tree(PR_LOCAL_VAR_DECL, "temp", 2, $1, $2); }
+		{ $$ = link_tree(PR_LOCAL_VAR_DECL, "LocalVarDecl", 2, $1, $2); }
 	;
 
 Stmt:
@@ -266,8 +269,8 @@ Stmt:
 		{}
 	| ReturnStmt
 		{}
-	| %empty
-		{ $$ = NULL; }
+	/*| %empty
+		{ $$ = NULL; }*/
 	| IfThenStmt
 	  	{}
 	| IfThenElseStmt
@@ -296,41 +299,41 @@ StmtExpr:
 
 IfThenStmt:
 	IF '(' Expr ')' Block
-		{ $$ = alloc_tree(PR_IF_THEN_STMT, "temp", 2, $3, $5); }
+		{ $$ = link_tree(PR_IF_THEN_STMT, "IfThenStmt", 2, $3, $5); }
 	;
 
 IfThenElseStmt:
 	IF '(' Expr ')' Block ELSE Block
-		{ $$ = alloc_tree(PR_IF_THEN_ELSE_STMT, "temp", 3, $3, $5, $7); }
+		{ $$ = link_tree(PR_IF_THEN_ELSE_STMT, "IfThenElseStmt", 3, $3, $5, $7); }
 	;
 
 IfThenElseIfStmt:
 	IF '(' Expr ')' Block ElseIfSequence
-		{ $$ = alloc_tree(PR_IF_ELSEIF_STMT, "temp", 3, $3, $5, $6); }
+		{ $$ = link_tree(PR_IF_ELSEIF_STMT, "IfElseIfStmt", 3, $3, $5, $6); }
 	|  IF '(' Expr ')' Block ElseIfSequence ELSE Block
-		{ $$ = alloc_tree(PR_IF_ELSEIF_ELSE_STMT, "temp", 4, $3, $5, $6, $8); }
+		{ $$ = link_tree(PR_IF_ELSEIF_ELSE_STMT, "IfElseIfElseStmt", 4, $3, $5, $6, $8); }
 	;
 
 ElseIfSequence:
 	ElseIfStmt
 		{}
 	| ElseIfSequence ElseIfStmt
-		{ $$ = alloc_tree(PR_ELSE_IF_SEQUENCE, "temp", 2, $1, $2); }
+		{ $$ = link_tree(PR_ELSE_IF_SEQUENCE, "ElseIfSequence", 2, $1, $2); }
 	;
 
 ElseIfStmt:
 	ELSE IfThenStmt
-		{}
+		{ $$ = $2; }
 	;
 
 WhileStmt:
 	WHILE '(' Expr ')' Stmt
-		{ $$ = alloc_tree(PR_WHILE_STMT, "temp", 2, $3, $5); }
+		{ $$ = link_tree(PR_WHILE_STMT, "WhileStmt", 2, $3, $5); }
 	;
 
 ForStmt:
 	FOR '(' ForInit ';' ExprOpt ';' ForUpdate ')' Block
-		{ $$ = alloc_tree(PR_FOR_STMT, "temp", 4, $3, $5, $7, $9); }
+		{ $$ = link_tree(PR_FOR_STMT, "ForStmt", 4, $3, $5, $7, $9); }
 	;
 
 ForInit:
@@ -360,19 +363,19 @@ StmtExprList:
 	StmtExpr
 		{}
 	| StmtExprList ',' StmtExpr
-		{ $$ = alloc_tree(PR_STMT_EXPR_LIST, "temp", 2, $1, $3); }
+		{ $$ = link_tree(PR_STMT_EXPR_LIST, "StmtExprList", 2, $1, $3); }
 	;
 
 BreakStmt:
 	BREAK ';'
 		{}
 	| BREAK IDENTIFIER ';'
-		{}
+		{ $$ = $2; }
 	;
 
 ReturnStmt:
 	RETURN ExprOpt ';'
-		{}
+		{ $$ = $2; }
 	;
 
 Primary:
@@ -401,30 +404,30 @@ Literal:
 
 InstantiationExpr:
 	NEW Name '(' ArgListOpt ')'
-		{ $$ = alloc_tree(PR_INSTANTIATION_EXPR, "temp", 2, $2, $4); }
+		{ $$ = link_tree(PR_INSTANTIATION_EXPR, "InstantiationExpr", 2, $2, $4); }
 	;
 
 ArgList:
 	Expr
 		{}
 	| ArgList ',' Expr
-		{ $$ = alloc_tree(PR_ARG_LIST, "temp", 2, $1, $3); }
+		{ $$ = link_tree(PR_ARG_LIST, "ArgList", 2, $1, $3); }
 	;
 
 FieldAccess:
 	Primary '.' IDENTIFIER
-		{}
+			{ $$ = link_tree(PR_FIELD_ACCESS, "FieldAccess", 2, $1, $3); }
 	;
 
 MethodCall:
 	Name '(' ArgListOpt ')'
-		{ $$ = alloc_tree(PR_METHODCALL_P, "temp", 2, $1, $3); }
+		{ $$ = link_tree(PR_METHODCALL_P, "MethodCall_P", 2, $1, $3); }
 	| Name '{' ArgListOpt '}'
-		{ $$ = alloc_tree(PR_METHODCALL_B, "temp", 2, $1, $3); }
+		{ $$ = link_tree(PR_METHODCALL_B, "MethodCall_B", 2, $1, $3); }
 	| Primary '.' IDENTIFIER '(' ArgListOpt ')'
-		{ $$ = alloc_tree(PR_METHODCALL_PP, "temp", 2, $1, $5); }
+		{ $$ = link_tree(PR_METHODCALL_PP, "MethodCall_PP", 3, $1, $3, $5); }
 	| Primary '.' IDENTIFIER '{' ArgListOpt '}'
-		{ $$ = alloc_tree(PR_METHODCALL_BB, "temp", 2, $1, $5); }
+		{ $$ = link_tree(PR_METHODCALL_BB, "MethodCall_BB", 3, $1, $3, $5); }
 	;
 
 PostFixExpr:
@@ -436,9 +439,9 @@ PostFixExpr:
 
 UnaryExpr:
 	 '-' UnaryExpr
-		{}
+		{ $$ = link_tree(PR_UNARY_EXPR_NEG, "UnaryExpr_Neg", 2, $1, $2); }
 	| '!' UnaryExpr
-		{}
+		{ $$ = link_tree(PR_UNARY_EXPR_NOT, "UnaryExpr_Not", 2, $1, $2); }
 	| PostFixExpr
 		{}
 	;
@@ -447,21 +450,21 @@ MulExpr:
 	UnaryExpr
 		{}
 	| MulExpr '*' UnaryExpr
-		{ $$ = alloc_tree(PR_MUL_EXPR_MULT, "temp", 2, $1, $3); }
+		{ $$ = link_tree(PR_MUL_EXPR_MULT, "MulExpr_Mult", 2, $1, $3); }
 
 	| MulExpr '/' UnaryExpr
-		{ $$ = alloc_tree(PR_MUL_EXPR_DIV, "temp", 2, $1, $3); }
+		{ $$ = link_tree(PR_MUL_EXPR_DIV, "MulExpr_Div", 2, $1, $3); }
 	| MulExpr '%' UnaryExpr
-		{ $$ = alloc_tree(PR_MUL_EXPR_MOD, "temp", 2, $1, $3); }
+		{ $$ = link_tree(PR_MUL_EXPR_MOD, "MulExpr_Mod", 2, $1, $3); }
 	;
 
 AddExpr:
 	MulExpr
 		{}
 	| AddExpr '+' MulExpr
-		{ $$ = alloc_tree(PR_ADD_EXPR_ADD, "temp", 2, $1, $3); }
+		{ $$ = link_tree(PR_ADD_EXPR_ADD, "AddExpr_Add", 2, $1, $3); }
 	| AddExpr '-' MulExpr
-		{ $$ = alloc_tree(PR_ADD_EXPR_SUB, "temp", 2, $1, $3); }
+		{ $$ = link_tree(PR_ADD_EXPR_SUB, "AddExpr_Sub", 2, $1, $3); }
 	;
 
 RelOp:
@@ -479,30 +482,30 @@ RelExpr:
 	AddExpr
 		{}
 	| RelExpr RelOp AddExpr
-		{ $$ = alloc_tree(PR_REL_EXPR, "temp", 3, $1, $2, $3); }
+		{ $$ = link_tree(PR_REL_EXPR, "RelExpr", 3, $1, $2, $3); }
 	;
 
 EqExpr:
 	RelExpr
 		{}
 	| EqExpr EQUAL RelExpr
-		{ $$ = alloc_tree(PR_EQ_EXPR, "temp", 2, $1, $3); }
+		{ $$ = link_tree(PR_EQ_EXPR, "EqExpr", 2, $1, $3); }
 	| EqExpr NOT_EQUAL RelExpr
-		{ $$ = alloc_tree(PR_EQ_EXPR_NOT, "temp", 2, $1, $3); }
+		{ $$ = link_tree(PR_EQ_EXPR_NOT, "EqExpr_Not", 2, $1, $3); }
 	;
 
 CondAndExpr:
 	EqExpr
 		{}
 	| CondAndExpr LOGIC_AND EqExpr
-		{ $$ = alloc_tree(PR_COND_AND_EXPR, "temp", 2, $1, $3); }
+		{ $$ = link_tree(PR_COND_AND_EXPR, "CondAndExpr", 2, $1, $3); }
 	;
 
 CondOrExpr:
 	CondAndExpr
 		{}
 	| CondOrExpr LOGIC_OR CondAndExpr
-		{ $$ = alloc_tree(PR_COND_OR_EXPR, "temp", 2, $1, $3); }
+		{ $$ = link_tree(PR_COND_OR_EXPR, "CondOrExpr", 2, $1, $3); }
 	;
 
 Expr:
@@ -514,7 +517,7 @@ Expr:
 
 Assignment:
 	LeftHandSide AssignOp Expr
-		{ $$ = alloc_tree(PR_ASSIGNMENT, "temp", 3, $1, $2, $3); }
+		{ $$ = link_tree(PR_ASSIGNMENT, "Assignment", 3, $1, $2, $3); }
 	;
 
 LeftHandSide:

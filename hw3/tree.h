@@ -1,5 +1,6 @@
 #ifndef TREE_H_
 #define TREE_H_
+#include "prodrules.h"
 
 struct tree {
    int prodrule;
@@ -39,7 +40,12 @@ extern int yylex();
 extern char *yytext;
 extern int yylineno;
 
+//j0gram.y variables
+struct tree *tree_root;
+
 //tree.c Function Declarations
-struct tree *alloc_tree(int prodrule, char *symbolname, int nkids, ...);
+struct tree *link_tree(int prodrule, char *symbolname, int nkids, ...);
+struct tree *create_tree();
+int print_tree(struct tree *root, int depth);
 
 #endif

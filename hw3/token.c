@@ -32,7 +32,7 @@ int init_token(int code){
 		return -1;
 	}*/
 
-	struct tree *new_tree = malloc(sizeof(struct tree));
+	/*struct tree *new_tree = malloc(sizeof(struct tree));
 	yylval.treeptr = new_tree;
 	yylval.treeptr->prodrule = code;
 	yylval.treeptr->nkids = 0;
@@ -41,8 +41,12 @@ int init_token(int code){
 	for(int i = 0; i < 9; i++){
 		yylval.treeptr->kids[i] = NULL;
 	}
-	
-	yylval.treeptr->leaf = NULL;
+
+	yylval.treeptr->leaf = NULL;*/
+	yylval.treeptr = create_tree();
+	yylval.treeptr->prodrule = TOKEN;
+	yylval.treeptr->symbolname = "Token";
+	yylval.treeptr->nkids = 0;
 
 	yylval.treeptr->leaf = malloc(sizeof(struct token));
 	yylval.treeptr->leaf->category = code;
@@ -51,8 +55,7 @@ int init_token(int code){
 	yylval.treeptr->leaf->filename = filename;
 	text_eval(yylval.treeptr->leaf);
 
-	//add_tokenList();
-	print_node(yylval.treeptr);
+	//print_node(yylval.treeptr);
 
 	return code;
 }
@@ -61,7 +64,6 @@ void print_node(struct tree *tree){
 	struct tree *node;
 
 	node = tree;
-
 
 	if(node->leaf->category == STRING_LITERAL){
 		printf("%d\t\t %-16s %-8d %-22s%s\n", \
@@ -87,8 +89,6 @@ void print_node(struct tree *tree){
 }
 
 void text_eval(struct token *node){
-
-
 	int len = strlen(node->text);
 	char buf[len+1];
 	char *step = NULL;
