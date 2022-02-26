@@ -13,7 +13,7 @@ j0lex: j0lex.l
 
 # Bison Object
 bison: j0gram.y
-	$(BISON) j0gram.y
+	$(BISON) -v j0gram.y
 	$(BISON) -d j0gram.y
 
 

@@ -7,5 +7,7 @@ extern FILE *yyin;
 extern int yylex();
 extern char *yytext;
 extern int yylineno;
+//jzero_main.c variables
+char *yyfilename;
 
 #endif

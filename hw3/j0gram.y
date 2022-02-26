@@ -25,6 +25,17 @@
 
 %token <treeptr> CHAR_ERROR INT_ERROR UNKNOWN
 
+%left <treeptr> THEN
+%left ELSE
+
+%left LOGIC_OR
+%left LOGIC_AND
+%left EQUAL NOT_EQUAL
+%left '<' '>' GREATER_EQUAL LESS_EQUAL
+%left '+' '-'
+%left '*' '/' '%'
+%left '!'
+
 %type <treeptr> ClassDecl
 %type <treeptr> ClassBody
 %type <treeptr> ClassBodyDecls
@@ -518,6 +529,8 @@ Expr:
 Assignment:
 	LeftHandSide AssignOp Expr
 		{ $$ = link_tree(PR_ASSIGNMENT, "Assignment", 3, $1, $2, $3); }
+	| LeftHandSide AssignOp
+		{ $$ = link_tree(PR_ASSIGNMENT_UNARY, "AssignmentUnary", 2, $1, $2); }
 	;
 
 LeftHandSide:

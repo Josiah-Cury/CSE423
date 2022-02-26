@@ -18,9 +18,6 @@ int init_token(int code);
 void print_node(struct tree *tree);
 void text_eval(struct token *node);
 
-//jzero_main.c variables
-char *filename;
-
 //jzero_main.c function declarations
 void check_extension(char *fname);
 

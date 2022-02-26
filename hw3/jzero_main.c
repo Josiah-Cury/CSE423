@@ -2,10 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include "tree.h"
+#include "defs.h"
 #include "j0gram.tab.h"
 
 int yyerror(char *s) {
-   fprintf(stderr, "%s\n", s); exit(1);
+   fprintf(stderr, "%s:%d %s before '%s' token\n", yyfilename, yylineno, s, yytext);
+   exit(1);
 }
 
 extern int yydebug;
@@ -20,7 +22,7 @@ int main(int argc, char *argv[]) {
 		if ((yyin = fopen(*++argv, "r")) == NULL)
     		return 0;
 
-    	filename = *argv;
+    	yyfilename = *argv;
     	yylineno = 1;
 
     	yydebug = 1;

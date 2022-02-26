@@ -42,4 +42,5 @@ typedef enum {
 	PR_COND_AND_EXPR,
 	PR_COND_OR_EXPR,
 	PR_ASSIGNMENT,
+	PR_ASSIGNMENT_UNARY
 } prodrule;

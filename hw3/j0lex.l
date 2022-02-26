@@ -33,7 +33,7 @@ escapes [nt'"\]
 "false"							{ return init_token(BOOLEAN_LITERAL); }
 \'\'							{ return init_token(CHAR_ERROR); }
 \'([^"\n]|("\\\""))*\'			{ return init_token(CHAR_ERROR); }
-"-"?{digit}+[^:;A-Fa-f\n]		{ return init_token(INT_ERROR); }
+"-"?{digit}+[^:;A-Fa-f\n ]		{ return init_token(INT_ERROR); }
 "null"							{ return init_token(NULLVAL); }
 
 "String"			{ return init_token(STRING); }
