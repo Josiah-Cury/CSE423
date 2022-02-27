@@ -23,5 +23,6 @@ struct tree *create_tree();
 
 void print_node(struct tree *tree);
 int print_tree(struct tree *root, int depth);
+void free_tree(struct tree *root);
 
 #endif

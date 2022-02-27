@@ -26,6 +26,24 @@ struct tree *create_tree() {
     return new_tree;
 }
 
+void free_tree(struct tree *root){
+    if(root == NULL)
+        return;
+    for(int i = 0; i < 9; i++){
+        free_tree(root->kids[i]);
+    }
+
+    if(root->leaf != NULL){
+        free(root->leaf->text);
+        if(root->leaf->sval != NULL){
+            free(root->leaf->sval);
+        }
+        free(root->leaf);
+    }
+
+    free(root);
+}
+
 int print_tree(struct tree *root, int depth) {
     int i;
     if(root == NULL){

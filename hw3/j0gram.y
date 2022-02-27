@@ -103,6 +103,8 @@
 %token <treeptr> '=' '+' '-' '*' '/' '%'
 %token <treeptr> '(' ')' ',' ';' ':' '[' '<' '.' '!' ']'
 %token <treeptr> '>'
+
+%start ClassDecl
 %%
 
 ClassDecl:
@@ -148,6 +150,8 @@ Type:
 	| BOOLEAN
 		{}
 	| STRING
+		{}
+	| CHAR
 		{}
 	| Name
 		{}
@@ -414,6 +418,8 @@ Literal:
 	| STRING_LITERAL
 		{}
 	| NULLVAL
+		{}
+	| CHARACTER_LITERAL
 		{}
 	;
 

@@ -22,13 +22,17 @@ int main(int argc, char *argv[]) {
     	yylineno = 1;
 
     	//yydebug = 1;
+    	printf("Beginning parse of file: %s\n", yyfilename);
     	yyparse();
         print_tree(tree_root, 1);
+		free_tree(tree_root);
+		printf("\n");
     }
     //printf("Category\t Text\t\t  Lineno   Filename\t\t Ival/Sval\n");
 	//printf("------------------------------------------------------------------\n");
 
 	fclose(yyin);
+	yylex_destroy();
     return 0;
 }
 

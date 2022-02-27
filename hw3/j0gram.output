@@ -1,7 +1,6 @@
 Terminals unused in grammar
 
     CASE
-    CHAR
     CONTINUE
     DEFAULT
     FLOAT
@@ -9,7 +8,6 @@ Terminals unused in grammar
     LONG
     SWITCH
     NOT_RESERVED
-    CHARACTER_LITERAL
     TYPE_CAST
     CHAR_ERROR
     INT_ERROR
@@ -41,244 +39,246 @@ Grammar
    12     | DOUBLE
    13     | BOOLEAN
    14     | STRING
-   15     | Name
+   15     | CHAR
+   16     | Name
 
-   16 Name: IDENTIFIER
-   17     | QualifiedName
+   17 Name: IDENTIFIER
+   18     | QualifiedName
 
-   18 QualifiedName: Name '.' IDENTIFIER
+   19 QualifiedName: Name '.' IDENTIFIER
 
-   19 VarDecls: VarDeclarator
-   20         | VarDecls ',' VarDeclarator
+   20 VarDecls: VarDeclarator
+   21         | VarDecls ',' VarDeclarator
 
-   21 VarDeclarator: IDENTIFIER
-   22              | VarDeclarator '[' ']'
+   22 VarDeclarator: IDENTIFIER
+   23              | VarDeclarator '[' ']'
 
-   23 MethodReturnVal: Type
-   24                | VOID
+   24 MethodReturnVal: Type
+   25                | VOID
 
-   25 MethodDecl: MethodHeader Block
+   26 MethodDecl: MethodHeader Block
 
-   26 MethodHeader: PUBLIC STATIC MethodReturnVal MethodDeclarator
+   27 MethodHeader: PUBLIC STATIC MethodReturnVal MethodDeclarator
 
-   27 MethodDeclarator: IDENTIFIER '(' FormalParmListOpt ')'
+   28 MethodDeclarator: IDENTIFIER '(' FormalParmListOpt ')'
 
-   28 FormalParmListOpt: FormalParmList
-   29                  | %empty
+   29 FormalParmListOpt: FormalParmList
+   30                  | %empty
 
-   30 FormalParmList: FormalParm
-   31               | FormalParmList ',' FormalParm
+   31 FormalParmList: FormalParm
+   32               | FormalParmList ',' FormalParm
 
-   32 FormalParm: Type VarDeclarator
+   33 FormalParm: Type VarDeclarator
 
-   33 ConstructorDecl: ConstructorDeclarator Block
+   34 ConstructorDecl: ConstructorDeclarator Block
 
-   34 ConstructorDeclarator: IDENTIFIER '(' FormalParmListOpt ')'
+   35 ConstructorDeclarator: IDENTIFIER '(' FormalParmListOpt ')'
 
-   35 ArgListOpt: ArgList
-   36           | %empty
+   36 ArgListOpt: ArgList
+   37           | %empty
 
-   37 Block: '{' BlockStmtsOpt '}'
+   38 Block: '{' BlockStmtsOpt '}'
 
-   38 BlockStmtsOpt: BlockStmts
-   39              | %empty
+   39 BlockStmtsOpt: BlockStmts
+   40              | %empty
 
-   40 BlockStmts: BlockStmt
-   41           | BlockStmts BlockStmt
+   41 BlockStmts: BlockStmt
+   42           | BlockStmts BlockStmt
 
-   42 BlockStmt: LocalVarDeclStmt
-   43          | Stmt
+   43 BlockStmt: LocalVarDeclStmt
+   44          | Stmt
 
-   44 LocalVarDeclStmt: LocalVarDecl ';'
+   45 LocalVarDeclStmt: LocalVarDecl ';'
 
-   45 LocalVarDecl: Type VarDecls
+   46 LocalVarDecl: Type VarDecls
 
-   46 Stmt: Block
-   47     | ';'
-   48     | ExprStmt
-   49     | BreakStmt
-   50     | ReturnStmt
-   51     | IfThenStmt
-   52     | IfThenElseStmt
-   53     | IfThenElseIfStmt
-   54     | WhileStmt
-   55     | ForStmt
+   47 Stmt: Block
+   48     | ';'
+   49     | ExprStmt
+   50     | BreakStmt
+   51     | ReturnStmt
+   52     | IfThenStmt
+   53     | IfThenElseStmt
+   54     | IfThenElseIfStmt
+   55     | WhileStmt
+   56     | ForStmt
 
-   56 ExprStmt: StmtExpr ';'
+   57 ExprStmt: StmtExpr ';'
 
-   57 StmtExpr: Assignment
-   58         | MethodCall
-   59         | InstantiationExpr
+   58 StmtExpr: Assignment
+   59         | MethodCall
+   60         | InstantiationExpr
 
-   60 IfThenStmt: IF '(' Expr ')' Block
+   61 IfThenStmt: IF '(' Expr ')' Block
 
-   61 IfThenElseStmt: IF '(' Expr ')' Block ELSE Block
+   62 IfThenElseStmt: IF '(' Expr ')' Block ELSE Block
 
-   62 IfThenElseIfStmt: IF '(' Expr ')' Block ElseIfSequence
-   63                 | IF '(' Expr ')' Block ElseIfSequence ELSE Block
+   63 IfThenElseIfStmt: IF '(' Expr ')' Block ElseIfSequence
+   64                 | IF '(' Expr ')' Block ElseIfSequence ELSE Block
 
-   64 ElseIfSequence: ElseIfStmt
-   65               | ElseIfSequence ElseIfStmt
+   65 ElseIfSequence: ElseIfStmt
+   66               | ElseIfSequence ElseIfStmt
 
-   66 ElseIfStmt: ELSE IfThenStmt
+   67 ElseIfStmt: ELSE IfThenStmt
 
-   67 WhileStmt: WHILE '(' Expr ')' Stmt
+   68 WhileStmt: WHILE '(' Expr ')' Stmt
 
-   68 ForStmt: FOR '(' ForInit ';' ExprOpt ';' ForUpdate ')' Block
+   69 ForStmt: FOR '(' ForInit ';' ExprOpt ';' ForUpdate ')' Block
 
-   69 ForInit: StmtExprList
-   70        | LocalVarDecl
-   71        | %empty
+   70 ForInit: StmtExprList
+   71        | LocalVarDecl
+   72        | %empty
 
-   72 ExprOpt: Expr
-   73        | %empty
+   73 ExprOpt: Expr
+   74        | %empty
 
-   74 ForUpdate: StmtExprList
-   75          | %empty
+   75 ForUpdate: StmtExprList
+   76          | %empty
 
-   76 StmtExprList: StmtExpr
-   77             | StmtExprList ',' StmtExpr
+   77 StmtExprList: StmtExpr
+   78             | StmtExprList ',' StmtExpr
 
-   78 BreakStmt: BREAK ';'
-   79          | BREAK IDENTIFIER ';'
+   79 BreakStmt: BREAK ';'
+   80          | BREAK IDENTIFIER ';'
 
-   80 ReturnStmt: RETURN ExprOpt ';'
+   81 ReturnStmt: RETURN ExprOpt ';'
 
-   81 Primary: Literal
-   82        | '(' Expr ')'
-   83        | FieldAccess
-   84        | MethodCall
+   82 Primary: Literal
+   83        | '(' Expr ')'
+   84        | FieldAccess
+   85        | MethodCall
 
-   85 Literal: INTEGER_LITERAL
-   86        | FLOAT_LITERAL
-   87        | BOOLEAN_LITERAL
-   88        | STRING_LITERAL
-   89        | NULLVAL
+   86 Literal: INTEGER_LITERAL
+   87        | FLOAT_LITERAL
+   88        | BOOLEAN_LITERAL
+   89        | STRING_LITERAL
+   90        | NULLVAL
+   91        | CHARACTER_LITERAL
 
-   90 InstantiationExpr: NEW Name '(' ArgListOpt ')'
+   92 InstantiationExpr: NEW Name '(' ArgListOpt ')'
 
-   91 ArgList: Expr
-   92        | ArgList ',' Expr
+   93 ArgList: Expr
+   94        | ArgList ',' Expr
 
-   93 FieldAccess: Primary '.' IDENTIFIER
+   95 FieldAccess: Primary '.' IDENTIFIER
 
-   94 MethodCall: Name '(' ArgListOpt ')'
-   95           | Name '{' ArgListOpt '}'
-   96           | Primary '.' IDENTIFIER '(' ArgListOpt ')'
-   97           | Primary '.' IDENTIFIER '{' ArgListOpt '}'
+   96 MethodCall: Name '(' ArgListOpt ')'
+   97           | Name '{' ArgListOpt '}'
+   98           | Primary '.' IDENTIFIER '(' ArgListOpt ')'
+   99           | Primary '.' IDENTIFIER '{' ArgListOpt '}'
 
-   98 PostFixExpr: Primary
-   99            | Name
+  100 PostFixExpr: Primary
+  101            | Name
 
-  100 UnaryExpr: '-' UnaryExpr
-  101          | '!' UnaryExpr
-  102          | PostFixExpr
+  102 UnaryExpr: '-' UnaryExpr
+  103          | '!' UnaryExpr
+  104          | PostFixExpr
 
-  103 MulExpr: UnaryExpr
-  104        | MulExpr '*' UnaryExpr
-  105        | MulExpr '/' UnaryExpr
-  106        | MulExpr '%' UnaryExpr
+  105 MulExpr: UnaryExpr
+  106        | MulExpr '*' UnaryExpr
+  107        | MulExpr '/' UnaryExpr
+  108        | MulExpr '%' UnaryExpr
 
-  107 AddExpr: MulExpr
-  108        | AddExpr '+' MulExpr
-  109        | AddExpr '-' MulExpr
+  109 AddExpr: MulExpr
+  110        | AddExpr '+' MulExpr
+  111        | AddExpr '-' MulExpr
 
-  110 RelOp: LESS_EQUAL
-  111      | GREATER_EQUAL
-  112      | '<'
-  113      | '>'
+  112 RelOp: LESS_EQUAL
+  113      | GREATER_EQUAL
+  114      | '<'
+  115      | '>'
 
-  114 RelExpr: AddExpr
-  115        | RelExpr RelOp AddExpr
+  116 RelExpr: AddExpr
+  117        | RelExpr RelOp AddExpr
 
-  116 EqExpr: RelExpr
-  117       | EqExpr EQUAL RelExpr
-  118       | EqExpr NOT_EQUAL RelExpr
+  118 EqExpr: RelExpr
+  119       | EqExpr EQUAL RelExpr
+  120       | EqExpr NOT_EQUAL RelExpr
 
-  119 CondAndExpr: EqExpr
-  120            | CondAndExpr LOGIC_AND EqExpr
+  121 CondAndExpr: EqExpr
+  122            | CondAndExpr LOGIC_AND EqExpr
 
-  121 CondOrExpr: CondAndExpr
-  122           | CondOrExpr LOGIC_OR CondAndExpr
+  123 CondOrExpr: CondAndExpr
+  124           | CondOrExpr LOGIC_OR CondAndExpr
 
-  123 Expr: CondOrExpr
-  124     | Assignment
+  125 Expr: CondOrExpr
+  126     | Assignment
 
-  125 Assignment: LeftHandSide AssignOp Expr
-  126           | LeftHandSide AssignOp
-  127           | Type VarDeclarator AssignOp Expr
+  127 Assignment: LeftHandSide AssignOp Expr
+  128           | LeftHandSide AssignOp
+  129           | Type VarDeclarator AssignOp Expr
 
-  128 LeftHandSide: Name
-  129             | FieldAccess
+  130 LeftHandSide: Name
+  131             | FieldAccess
 
-  130 AssignOp: '='
-  131         | INCREMENT
-  132         | DECREMENT
+  132 AssignOp: '='
+  133         | INCREMENT
+  134         | DECREMENT
 
 
 Terminals, with rules where they appear
 
     $end (0) 0
-    '!' <treeptr> (33) 101
-    '%' <treeptr> (37) 106
-    '(' <treeptr> (40) 27 34 60 61 62 63 67 68 82 90 94 96
-    ')' <treeptr> (41) 27 34 60 61 62 63 67 68 82 90 94 96
-    '*' <treeptr> (42) 104
-    '+' <treeptr> (43) 108
-    ',' <treeptr> (44) 20 31 77 92
-    '-' <treeptr> (45) 100 109
-    '.' <treeptr> (46) 18 93 96 97
-    '/' <treeptr> (47) 105
+    '!' <treeptr> (33) 103
+    '%' <treeptr> (37) 108
+    '(' <treeptr> (40) 28 35 61 62 63 64 68 69 83 92 96 98
+    ')' <treeptr> (41) 28 35 61 62 63 64 68 69 83 92 96 98
+    '*' <treeptr> (42) 106
+    '+' <treeptr> (43) 110
+    ',' <treeptr> (44) 21 32 78 94
+    '-' <treeptr> (45) 102 111
+    '.' <treeptr> (46) 19 95 98 99
+    '/' <treeptr> (47) 107
     ':' <treeptr> (58)
-    ';' <treeptr> (59) 9 10 44 47 56 68 78 79 80
-    '<' <treeptr> (60) 112
-    '=' <treeptr> (61) 10 130
-    '>' <treeptr> (62) 113
-    '[' <treeptr> (91) 22
-    ']' <treeptr> (93) 22
-    '{' (123) 2 3 37 95 97
-    '}' (125) 2 3 37 95 97
+    ';' <treeptr> (59) 9 10 45 48 57 69 79 80 81
+    '<' <treeptr> (60) 114
+    '=' <treeptr> (61) 10 132
+    '>' <treeptr> (62) 115
+    '[' <treeptr> (91) 23
+    ']' <treeptr> (93) 23
+    '{' (123) 2 3 38 97 99
+    '}' (125) 2 3 38 97 99
     error (256)
-    BREAK <treeptr> (258) 78 79
+    BREAK <treeptr> (258) 79 80
     DOUBLE <treeptr> (259) 12
-    ELSE <treeptr> (260) 61 63 66
-    FOR <treeptr> (261) 68
-    IF <treeptr> (262) 60 61 62 63
+    ELSE <treeptr> (260) 62 64 67
+    FOR <treeptr> (261) 69
+    IF <treeptr> (262) 61 62 63 64
     INT <treeptr> (263) 11
-    RETURN <treeptr> (264) 80
-    VOID <treeptr> (265) 24
-    WHILE <treeptr> (266) 67
+    RETURN <treeptr> (264) 81
+    VOID <treeptr> (265) 25
+    WHILE <treeptr> (266) 68
     CLASS <treeptr> (267) 1
     STRING <treeptr> (268) 14
     BOOLEAN <treeptr> (269) 13
     CASE <treeptr> (270)
-    CHAR <treeptr> (271)
+    CHAR <treeptr> (271) 15
     CONTINUE <treeptr> (272)
     DEFAULT <treeptr> (273)
     FLOAT <treeptr> (274)
     INSTANCEOF <treeptr> (275)
     LONG <treeptr> (276)
-    NEW <treeptr> (277) 90
+    NEW <treeptr> (277) 92
     SWITCH <treeptr> (278)
     NOT_RESERVED <treeptr> (279)
-    PUBLIC <treeptr> (280) 1 26
-    STATIC <treeptr> (281) 26
-    IDENTIFIER <treeptr> (282) 1 16 18 21 27 34 79 93 96 97
-    INTEGER_LITERAL <treeptr> (283) 85
-    FLOAT_LITERAL <treeptr> (284) 86
-    STRING_LITERAL <treeptr> (285) 88
-    BOOLEAN_LITERAL <treeptr> (286) 87
-    NULLVAL <treeptr> (287) 89
-    CHARACTER_LITERAL <treeptr> (288)
-    INCREMENT <treeptr> (289) 131
-    DECREMENT <treeptr> (290) 132
+    PUBLIC <treeptr> (280) 1 27
+    STATIC <treeptr> (281) 27
+    IDENTIFIER <treeptr> (282) 1 17 19 22 28 35 80 95 98 99
+    INTEGER_LITERAL <treeptr> (283) 86
+    FLOAT_LITERAL <treeptr> (284) 87
+    STRING_LITERAL <treeptr> (285) 89
+    BOOLEAN_LITERAL <treeptr> (286) 88
+    NULLVAL <treeptr> (287) 90
+    CHARACTER_LITERAL <treeptr> (288) 91
+    INCREMENT <treeptr> (289) 133
+    DECREMENT <treeptr> (290) 134
     TYPE_CAST <treeptr> (291)
-    LESS_EQUAL <treeptr> (292) 110
-    GREATER_EQUAL <treeptr> (293) 111
-    EQUAL <treeptr> (294) 117
-    NOT_EQUAL <treeptr> (295) 118
-    LOGIC_AND <treeptr> (296) 120
-    LOGIC_OR <treeptr> (297) 122
+    LESS_EQUAL <treeptr> (292) 112
+    GREATER_EQUAL <treeptr> (293) 113
+    EQUAL <treeptr> (294) 119
+    NOT_EQUAL <treeptr> (295) 120
+    LOGIC_AND <treeptr> (296) 122
+    LOGIC_OR <treeptr> (297) 124
     CHAR_ERROR <treeptr> (298)
     INT_ERROR <treeptr> (299)
     UNKNOWN <treeptr> (300)
@@ -305,173 +305,173 @@ Nonterminals, with rules where they appear
         on left: 9 10
         on right: 6
     Type <treeptr> (72)
-        on left: 11 12 13 14 15
-        on right: 9 10 23 32 45 127
+        on left: 11 12 13 14 15 16
+        on right: 9 10 24 33 46 129
     Name <treeptr> (73)
-        on left: 16 17
-        on right: 15 18 90 94 95 99 128
+        on left: 17 18
+        on right: 16 19 92 96 97 101 130
     QualifiedName <treeptr> (74)
-        on left: 18
-        on right: 17
+        on left: 19
+        on right: 18
     VarDecls <treeptr> (75)
-        on left: 19 20
-        on right: 9 20 45
+        on left: 20 21
+        on right: 9 21 46
     VarDeclarator <treeptr> (76)
-        on left: 21 22
-        on right: 10 19 20 22 32 127
+        on left: 22 23
+        on right: 10 20 21 23 33 129
     MethodReturnVal <treeptr> (77)
-        on left: 23 24
-        on right: 26
+        on left: 24 25
+        on right: 27
     MethodDecl <treeptr> (78)
-        on left: 25
+        on left: 26
         on right: 7
     MethodHeader <treeptr> (79)
-        on left: 26
-        on right: 25
-    MethodDeclarator <treeptr> (80)
         on left: 27
         on right: 26
+    MethodDeclarator <treeptr> (80)
+        on left: 28
+        on right: 27
     FormalParmListOpt <treeptr> (81)
-        on left: 28 29
-        on right: 27 34
+        on left: 29 30
+        on right: 28 35
     FormalParmList <treeptr> (82)
-        on left: 30 31
-        on right: 28 31
+        on left: 31 32
+        on right: 29 32
     FormalParm <treeptr> (83)
-        on left: 32
-        on right: 30 31
-    ConstructorDecl <treeptr> (84)
         on left: 33
+        on right: 31 32
+    ConstructorDecl <treeptr> (84)
+        on left: 34
         on right: 8
     ConstructorDeclarator <treeptr> (85)
-        on left: 34
-        on right: 33
+        on left: 35
+        on right: 34
     ArgListOpt <treeptr> (86)
-        on left: 35 36
-        on right: 90 94 95 96 97
+        on left: 36 37
+        on right: 92 96 97 98 99
     Block <treeptr> (87)
-        on left: 37
-        on right: 25 33 46 60 61 62 63 68
+        on left: 38
+        on right: 26 34 47 61 62 63 64 69
     BlockStmtsOpt <treeptr> (88)
-        on left: 38 39
-        on right: 37
+        on left: 39 40
+        on right: 38
     BlockStmts <treeptr> (89)
-        on left: 40 41
-        on right: 38 41
+        on left: 41 42
+        on right: 39 42
     BlockStmt <treeptr> (90)
-        on left: 42 43
-        on right: 40 41
+        on left: 43 44
+        on right: 41 42
     LocalVarDeclStmt <treeptr> (91)
-        on left: 44
-        on right: 42
-    LocalVarDecl <treeptr> (92)
         on left: 45
-        on right: 44 70
+        on right: 43
+    LocalVarDecl <treeptr> (92)
+        on left: 46
+        on right: 45 71
     Stmt <treeptr> (93)
-        on left: 46 47 48 49 50 51 52 53 54 55
-        on right: 43 67
+        on left: 47 48 49 50 51 52 53 54 55 56
+        on right: 44 68
     ExprStmt <treeptr> (94)
-        on left: 56
-        on right: 48
+        on left: 57
+        on right: 49
     StmtExpr <treeptr> (95)
-        on left: 57 58 59
-        on right: 56 76 77
+        on left: 58 59 60
+        on right: 57 77 78
     IfThenStmt <treeptr> (96)
-        on left: 60
-        on right: 51 66
-    IfThenElseStmt <treeptr> (97)
         on left: 61
-        on right: 52
-    IfThenElseIfStmt <treeptr> (98)
-        on left: 62 63
+        on right: 52 67
+    IfThenElseStmt <treeptr> (97)
+        on left: 62
         on right: 53
-    ElseIfSequence <treeptr> (99)
-        on left: 64 65
-        on right: 62 63 65
-    ElseIfStmt <treeptr> (100)
-        on left: 66
-        on right: 64 65
-    WhileStmt <treeptr> (101)
-        on left: 67
+    IfThenElseIfStmt <treeptr> (98)
+        on left: 63 64
         on right: 54
-    ForStmt <treeptr> (102)
+    ElseIfSequence <treeptr> (99)
+        on left: 65 66
+        on right: 63 64 66
+    ElseIfStmt <treeptr> (100)
+        on left: 67
+        on right: 65 66
+    WhileStmt <treeptr> (101)
         on left: 68
         on right: 55
+    ForStmt <treeptr> (102)
+        on left: 69
+        on right: 56
     ForInit <treeptr> (103)
-        on left: 69 70 71
-        on right: 68
+        on left: 70 71 72
+        on right: 69
     ExprOpt <treeptr> (104)
-        on left: 72 73
-        on right: 68 80
+        on left: 73 74
+        on right: 69 81
     ForUpdate <treeptr> (105)
-        on left: 74 75
-        on right: 68
+        on left: 75 76
+        on right: 69
     StmtExprList <treeptr> (106)
-        on left: 76 77
-        on right: 69 74 77
+        on left: 77 78
+        on right: 70 75 78
     BreakStmt <treeptr> (107)
-        on left: 78 79
-        on right: 49
-    ReturnStmt <treeptr> (108)
-        on left: 80
+        on left: 79 80
         on right: 50
+    ReturnStmt <treeptr> (108)
+        on left: 81
+        on right: 51
     Primary <treeptr> (109)
-        on left: 81 82 83 84
-        on right: 93 96 97 98
+        on left: 82 83 84 85
+        on right: 95 98 99 100
     Literal <treeptr> (110)
-        on left: 85 86 87 88 89
-        on right: 10 81
+        on left: 86 87 88 89 90 91
+        on right: 10 82
     InstantiationExpr <treeptr> (111)
-        on left: 90
-        on right: 59
+        on left: 92
+        on right: 60
     ArgList <treeptr> (112)
-        on left: 91 92
-        on right: 35 92
+        on left: 93 94
+        on right: 36 94
     FieldAccess <treeptr> (113)
-        on left: 93
-        on right: 83 129
+        on left: 95
+        on right: 84 131
     MethodCall <treeptr> (114)
-        on left: 94 95 96 97
-        on right: 58 84
+        on left: 96 97 98 99
+        on right: 59 85
     PostFixExpr <treeptr> (115)
-        on left: 98 99
-        on right: 102
+        on left: 100 101
+        on right: 104
     UnaryExpr <treeptr> (116)
-        on left: 100 101 102
-        on right: 100 101 103 104 105 106
+        on left: 102 103 104
+        on right: 102 103 105 106 107 108
     MulExpr <treeptr> (117)
-        on left: 103 104 105 106
-        on right: 104 105 106 107 108 109
+        on left: 105 106 107 108
+        on right: 106 107 108 109 110 111
     AddExpr <treeptr> (118)
-        on left: 107 108 109
-        on right: 108 109 114 115
+        on left: 109 110 111
+        on right: 110 111 116 117
     RelOp <treeptr> (119)
-        on left: 110 111 112 113
-        on right: 115
+        on left: 112 113 114 115
+        on right: 117
     RelExpr <treeptr> (120)
-        on left: 114 115
-        on right: 115 116 117 118
-    EqExpr <treeptr> (121)
-        on left: 116 117 118
+        on left: 116 117
         on right: 117 118 119 120
+    EqExpr <treeptr> (121)
+        on left: 118 119 120
+        on right: 119 120 121 122
     CondAndExpr <treeptr> (122)
-        on left: 119 120
-        on right: 120 121 122
-    CondOrExpr <treeptr> (123)
         on left: 121 122
-        on right: 122 123
-    Expr <treeptr> (124)
+        on right: 122 123 124
+    CondOrExpr <treeptr> (123)
         on left: 123 124
-        on right: 60 61 62 63 67 72 82 91 92 125 127
+        on right: 124 125
+    Expr <treeptr> (124)
+        on left: 125 126
+        on right: 61 62 63 64 68 73 83 93 94 127 129
     Assignment <treeptr> (125)
-        on left: 125 126 127
-        on right: 57 124
+        on left: 127 128 129
+        on right: 58 126
     LeftHandSide <treeptr> (126)
-        on left: 128 129
-        on right: 125 126
+        on left: 130 131
+        on right: 127 128
     AssignOp <treeptr> (127)
-        on left: 130 131 132
-        on right: 125 126 127
+        on left: 132 133 134
+        on right: 127 128 129
 
 
 State 0
@@ -529,20 +529,21 @@ State 6
     INT         shift, and go to state 9
     STRING      shift, and go to state 10
     BOOLEAN     shift, and go to state 11
-    PUBLIC      shift, and go to state 12
-    IDENTIFIER  shift, and go to state 13
-    '}'         shift, and go to state 14
+    CHAR        shift, and go to state 12
+    PUBLIC      shift, and go to state 13
+    IDENTIFIER  shift, and go to state 14
+    '}'         shift, and go to state 15
 
-    ClassBodyDecls         go to state 15
-    ClassBodyDecl          go to state 16
-    FieldDecl              go to state 17
-    Type                   go to state 18
-    Name                   go to state 19
-    QualifiedName          go to state 20
-    MethodDecl             go to state 21
-    MethodHeader           go to state 22
-    ConstructorDecl        go to state 23
-    ConstructorDeclarator  go to state 24
+    ClassBodyDecls         go to state 16
+    ClassBodyDecl          go to state 17
+    FieldDecl              go to state 18
+    Type                   go to state 19
+    Name                   go to state 20
+    QualifiedName          go to state 21
+    MethodDecl             go to state 22
+    MethodHeader           go to state 23
+    ConstructorDecl        go to state 24
+    ConstructorDeclarator  go to state 25
 
 
 State 7
@@ -582,29 +583,36 @@ State 11
 
 State 12
 
-   26 MethodHeader: PUBLIC . STATIC MethodReturnVal MethodDeclarator
+   15 Type: CHAR .
 
-    STATIC  shift, and go to state 25
+    $default  reduce using rule 15 (Type)
 
 
 State 13
 
-   16 Name: IDENTIFIER .
-   34 ConstructorDeclarator: IDENTIFIER . '(' FormalParmListOpt ')'
+   27 MethodHeader: PUBLIC . STATIC MethodReturnVal MethodDeclarator
 
-    '('  shift, and go to state 26
-
-    $default  reduce using rule 16 (Name)
+    STATIC  shift, and go to state 26
 
 
 State 14
+
+   17 Name: IDENTIFIER .
+   35 ConstructorDeclarator: IDENTIFIER . '(' FormalParmListOpt ')'
+
+    '('  shift, and go to state 27
+
+    $default  reduce using rule 17 (Name)
+
+
+State 15
 
     3 ClassBody: '{' '}' .
 
     $default  reduce using rule 3 (ClassBody)
 
 
-State 15
+State 16
 
     2 ClassBody: '{' ClassBodyDecls . '}'
     5 ClassBodyDecls: ClassBodyDecls . ClassBodyDecl
@@ -613,2649 +621,2714 @@ State 15
     INT         shift, and go to state 9
     STRING      shift, and go to state 10
     BOOLEAN     shift, and go to state 11
-    PUBLIC      shift, and go to state 12
-    IDENTIFIER  shift, and go to state 13
-    '}'         shift, and go to state 27
+    CHAR        shift, and go to state 12
+    PUBLIC      shift, and go to state 13
+    IDENTIFIER  shift, and go to state 14
+    '}'         shift, and go to state 28
 
-    ClassBodyDecl          go to state 28
-    FieldDecl              go to state 17
-    Type                   go to state 18
-    Name                   go to state 19
-    QualifiedName          go to state 20
-    MethodDecl             go to state 21
-    MethodHeader           go to state 22
-    ConstructorDecl        go to state 23
-    ConstructorDeclarator  go to state 24
+    ClassBodyDecl          go to state 29
+    FieldDecl              go to state 18
+    Type                   go to state 19
+    Name                   go to state 20
+    QualifiedName          go to state 21
+    MethodDecl             go to state 22
+    MethodHeader           go to state 23
+    ConstructorDecl        go to state 24
+    ConstructorDeclarator  go to state 25
 
 
-State 16
+State 17
 
     4 ClassBodyDecls: ClassBodyDecl .
 
     $default  reduce using rule 4 (ClassBodyDecls)
 
 
-State 17
+State 18
 
     6 ClassBodyDecl: FieldDecl .
 
     $default  reduce using rule 6 (ClassBodyDecl)
 
 
-State 18
+State 19
 
     9 FieldDecl: Type . VarDecls ';'
    10          | Type . VarDeclarator '=' Literal ';'
 
-    IDENTIFIER  shift, and go to state 29
+    IDENTIFIER  shift, and go to state 30
 
-    VarDecls       go to state 30
-    VarDeclarator  go to state 31
-
-
-State 19
-
-   15 Type: Name .
-   18 QualifiedName: Name . '.' IDENTIFIER
-
-    '.'  shift, and go to state 32
-
-    $default  reduce using rule 15 (Type)
+    VarDecls       go to state 31
+    VarDeclarator  go to state 32
 
 
 State 20
 
-   17 Name: QualifiedName .
+   16 Type: Name .
+   19 QualifiedName: Name . '.' IDENTIFIER
 
-    $default  reduce using rule 17 (Name)
+    '.'  shift, and go to state 33
+
+    $default  reduce using rule 16 (Type)
 
 
 State 21
+
+   18 Name: QualifiedName .
+
+    $default  reduce using rule 18 (Name)
+
+
+State 22
 
     7 ClassBodyDecl: MethodDecl .
 
     $default  reduce using rule 7 (ClassBodyDecl)
 
 
-State 22
-
-   25 MethodDecl: MethodHeader . Block
-
-    '{'  shift, and go to state 33
-
-    Block  go to state 34
-
-
 State 23
+
+   26 MethodDecl: MethodHeader . Block
+
+    '{'  shift, and go to state 34
+
+    Block  go to state 35
+
+
+State 24
 
     8 ClassBodyDecl: ConstructorDecl .
 
     $default  reduce using rule 8 (ClassBodyDecl)
 
 
-State 24
-
-   33 ConstructorDecl: ConstructorDeclarator . Block
-
-    '{'  shift, and go to state 33
-
-    Block  go to state 35
-
-
 State 25
 
-   26 MethodHeader: PUBLIC STATIC . MethodReturnVal MethodDeclarator
+   34 ConstructorDecl: ConstructorDeclarator . Block
 
-    DOUBLE      shift, and go to state 8
-    INT         shift, and go to state 9
-    VOID        shift, and go to state 36
-    STRING      shift, and go to state 10
-    BOOLEAN     shift, and go to state 11
-    IDENTIFIER  shift, and go to state 37
+    '{'  shift, and go to state 34
 
-    Type             go to state 38
-    Name             go to state 19
-    QualifiedName    go to state 20
-    MethodReturnVal  go to state 39
+    Block  go to state 36
 
 
 State 26
 
-   34 ConstructorDeclarator: IDENTIFIER '(' . FormalParmListOpt ')'
+   27 MethodHeader: PUBLIC STATIC . MethodReturnVal MethodDeclarator
+
+    DOUBLE      shift, and go to state 8
+    INT         shift, and go to state 9
+    VOID        shift, and go to state 37
+    STRING      shift, and go to state 10
+    BOOLEAN     shift, and go to state 11
+    CHAR        shift, and go to state 12
+    IDENTIFIER  shift, and go to state 38
+
+    Type             go to state 39
+    Name             go to state 20
+    QualifiedName    go to state 21
+    MethodReturnVal  go to state 40
+
+
+State 27
+
+   35 ConstructorDeclarator: IDENTIFIER '(' . FormalParmListOpt ')'
 
     DOUBLE      shift, and go to state 8
     INT         shift, and go to state 9
     STRING      shift, and go to state 10
     BOOLEAN     shift, and go to state 11
-    IDENTIFIER  shift, and go to state 37
+    CHAR        shift, and go to state 12
+    IDENTIFIER  shift, and go to state 38
 
-    $default  reduce using rule 29 (FormalParmListOpt)
+    $default  reduce using rule 30 (FormalParmListOpt)
 
-    Type               go to state 40
-    Name               go to state 19
-    QualifiedName      go to state 20
-    FormalParmListOpt  go to state 41
-    FormalParmList     go to state 42
-    FormalParm         go to state 43
+    Type               go to state 41
+    Name               go to state 20
+    QualifiedName      go to state 21
+    FormalParmListOpt  go to state 42
+    FormalParmList     go to state 43
+    FormalParm         go to state 44
 
 
-State 27
+State 28
 
     2 ClassBody: '{' ClassBodyDecls '}' .
 
     $default  reduce using rule 2 (ClassBody)
 
 
-State 28
+State 29
 
     5 ClassBodyDecls: ClassBodyDecls ClassBodyDecl .
 
     $default  reduce using rule 5 (ClassBodyDecls)
 
 
-State 29
-
-   21 VarDeclarator: IDENTIFIER .
-
-    $default  reduce using rule 21 (VarDeclarator)
-
-
 State 30
 
-    9 FieldDecl: Type VarDecls . ';'
-   20 VarDecls: VarDecls . ',' VarDeclarator
+   22 VarDeclarator: IDENTIFIER .
 
-    ','  shift, and go to state 44
-    ';'  shift, and go to state 45
+    $default  reduce using rule 22 (VarDeclarator)
 
 
 State 31
 
-   10 FieldDecl: Type VarDeclarator . '=' Literal ';'
-   19 VarDecls: VarDeclarator .
-   22 VarDeclarator: VarDeclarator . '[' ']'
+    9 FieldDecl: Type VarDecls . ';'
+   21 VarDecls: VarDecls . ',' VarDeclarator
 
-    '='  shift, and go to state 46
-    '['  shift, and go to state 47
-
-    $default  reduce using rule 19 (VarDecls)
+    ','  shift, and go to state 45
+    ';'  shift, and go to state 46
 
 
 State 32
 
-   18 QualifiedName: Name '.' . IDENTIFIER
+   10 FieldDecl: Type VarDeclarator . '=' Literal ';'
+   20 VarDecls: VarDeclarator .
+   23 VarDeclarator: VarDeclarator . '[' ']'
 
-    IDENTIFIER  shift, and go to state 48
+    '='  shift, and go to state 47
+    '['  shift, and go to state 48
+
+    $default  reduce using rule 20 (VarDecls)
 
 
 State 33
 
-   37 Block: '{' . BlockStmtsOpt '}'
+   19 QualifiedName: Name '.' . IDENTIFIER
 
-    BREAK            shift, and go to state 49
-    DOUBLE           shift, and go to state 8
-    FOR              shift, and go to state 50
-    IF               shift, and go to state 51
-    INT              shift, and go to state 9
-    RETURN           shift, and go to state 52
-    WHILE            shift, and go to state 53
-    STRING           shift, and go to state 10
-    BOOLEAN          shift, and go to state 11
-    NEW              shift, and go to state 54
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '('              shift, and go to state 60
-    ';'              shift, and go to state 61
-    '{'              shift, and go to state 33
-
-    $default  reduce using rule 39 (BlockStmtsOpt)
-
-    Type               go to state 62
-    Name               go to state 63
-    QualifiedName      go to state 20
-    Block              go to state 64
-    BlockStmtsOpt      go to state 65
-    BlockStmts         go to state 66
-    BlockStmt          go to state 67
-    LocalVarDeclStmt   go to state 68
-    LocalVarDecl       go to state 69
-    Stmt               go to state 70
-    ExprStmt           go to state 71
-    StmtExpr           go to state 72
-    IfThenStmt         go to state 73
-    IfThenElseStmt     go to state 74
-    IfThenElseIfStmt   go to state 75
-    WhileStmt          go to state 76
-    ForStmt            go to state 77
-    BreakStmt          go to state 78
-    ReturnStmt         go to state 79
-    Primary            go to state 80
-    Literal            go to state 81
-    InstantiationExpr  go to state 82
-    FieldAccess        go to state 83
-    MethodCall         go to state 84
-    Assignment         go to state 85
-    LeftHandSide       go to state 86
+    IDENTIFIER  shift, and go to state 49
 
 
 State 34
 
-   25 MethodDecl: MethodHeader Block .
+   38 Block: '{' . BlockStmtsOpt '}'
 
-    $default  reduce using rule 25 (MethodDecl)
+    BREAK              shift, and go to state 50
+    DOUBLE             shift, and go to state 8
+    FOR                shift, and go to state 51
+    IF                 shift, and go to state 52
+    INT                shift, and go to state 9
+    RETURN             shift, and go to state 53
+    WHILE              shift, and go to state 54
+    STRING             shift, and go to state 10
+    BOOLEAN            shift, and go to state 11
+    CHAR               shift, and go to state 12
+    NEW                shift, and go to state 55
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '('                shift, and go to state 62
+    ';'                shift, and go to state 63
+    '{'                shift, and go to state 34
+
+    $default  reduce using rule 40 (BlockStmtsOpt)
+
+    Type               go to state 64
+    Name               go to state 65
+    QualifiedName      go to state 21
+    Block              go to state 66
+    BlockStmtsOpt      go to state 67
+    BlockStmts         go to state 68
+    BlockStmt          go to state 69
+    LocalVarDeclStmt   go to state 70
+    LocalVarDecl       go to state 71
+    Stmt               go to state 72
+    ExprStmt           go to state 73
+    StmtExpr           go to state 74
+    IfThenStmt         go to state 75
+    IfThenElseStmt     go to state 76
+    IfThenElseIfStmt   go to state 77
+    WhileStmt          go to state 78
+    ForStmt            go to state 79
+    BreakStmt          go to state 80
+    ReturnStmt         go to state 81
+    Primary            go to state 82
+    Literal            go to state 83
+    InstantiationExpr  go to state 84
+    FieldAccess        go to state 85
+    MethodCall         go to state 86
+    Assignment         go to state 87
+    LeftHandSide       go to state 88
 
 
 State 35
 
-   33 ConstructorDecl: ConstructorDeclarator Block .
+   26 MethodDecl: MethodHeader Block .
 
-    $default  reduce using rule 33 (ConstructorDecl)
+    $default  reduce using rule 26 (MethodDecl)
 
 
 State 36
 
-   24 MethodReturnVal: VOID .
+   34 ConstructorDecl: ConstructorDeclarator Block .
 
-    $default  reduce using rule 24 (MethodReturnVal)
+    $default  reduce using rule 34 (ConstructorDecl)
 
 
 State 37
 
-   16 Name: IDENTIFIER .
+   25 MethodReturnVal: VOID .
 
-    $default  reduce using rule 16 (Name)
+    $default  reduce using rule 25 (MethodReturnVal)
 
 
 State 38
 
-   23 MethodReturnVal: Type .
+   17 Name: IDENTIFIER .
 
-    $default  reduce using rule 23 (MethodReturnVal)
+    $default  reduce using rule 17 (Name)
 
 
 State 39
 
-   26 MethodHeader: PUBLIC STATIC MethodReturnVal . MethodDeclarator
+   24 MethodReturnVal: Type .
 
-    IDENTIFIER  shift, and go to state 87
-
-    MethodDeclarator  go to state 88
+    $default  reduce using rule 24 (MethodReturnVal)
 
 
 State 40
 
-   32 FormalParm: Type . VarDeclarator
+   27 MethodHeader: PUBLIC STATIC MethodReturnVal . MethodDeclarator
 
-    IDENTIFIER  shift, and go to state 29
+    IDENTIFIER  shift, and go to state 89
 
-    VarDeclarator  go to state 89
+    MethodDeclarator  go to state 90
 
 
 State 41
 
-   34 ConstructorDeclarator: IDENTIFIER '(' FormalParmListOpt . ')'
+   33 FormalParm: Type . VarDeclarator
 
-    ')'  shift, and go to state 90
+    IDENTIFIER  shift, and go to state 30
+
+    VarDeclarator  go to state 91
 
 
 State 42
 
-   28 FormalParmListOpt: FormalParmList .
-   31 FormalParmList: FormalParmList . ',' FormalParm
+   35 ConstructorDeclarator: IDENTIFIER '(' FormalParmListOpt . ')'
 
-    ','  shift, and go to state 91
-
-    $default  reduce using rule 28 (FormalParmListOpt)
+    ')'  shift, and go to state 92
 
 
 State 43
 
-   30 FormalParmList: FormalParm .
+   29 FormalParmListOpt: FormalParmList .
+   32 FormalParmList: FormalParmList . ',' FormalParm
 
-    $default  reduce using rule 30 (FormalParmList)
+    ','  shift, and go to state 93
+
+    $default  reduce using rule 29 (FormalParmListOpt)
 
 
 State 44
 
-   20 VarDecls: VarDecls ',' . VarDeclarator
+   31 FormalParmList: FormalParm .
 
-    IDENTIFIER  shift, and go to state 29
-
-    VarDeclarator  go to state 92
+    $default  reduce using rule 31 (FormalParmList)
 
 
 State 45
+
+   21 VarDecls: VarDecls ',' . VarDeclarator
+
+    IDENTIFIER  shift, and go to state 30
+
+    VarDeclarator  go to state 94
+
+
+State 46
 
     9 FieldDecl: Type VarDecls ';' .
 
     $default  reduce using rule 9 (FieldDecl)
 
 
-State 46
+State 47
 
    10 FieldDecl: Type VarDeclarator '=' . Literal ';'
 
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
 
-    Literal  go to state 93
-
-
-State 47
-
-   22 VarDeclarator: VarDeclarator '[' . ']'
-
-    ']'  shift, and go to state 94
+    Literal  go to state 95
 
 
 State 48
 
-   18 QualifiedName: Name '.' IDENTIFIER .
+   23 VarDeclarator: VarDeclarator '[' . ']'
 
-    $default  reduce using rule 18 (QualifiedName)
+    ']'  shift, and go to state 96
 
 
 State 49
 
-   78 BreakStmt: BREAK . ';'
-   79          | BREAK . IDENTIFIER ';'
+   19 QualifiedName: Name '.' IDENTIFIER .
 
-    IDENTIFIER  shift, and go to state 95
-    ';'         shift, and go to state 96
+    $default  reduce using rule 19 (QualifiedName)
 
 
 State 50
 
-   68 ForStmt: FOR . '(' ForInit ';' ExprOpt ';' ForUpdate ')' Block
+   79 BreakStmt: BREAK . ';'
+   80          | BREAK . IDENTIFIER ';'
 
-    '('  shift, and go to state 97
+    IDENTIFIER  shift, and go to state 97
+    ';'         shift, and go to state 98
 
 
 State 51
 
-   60 IfThenStmt: IF . '(' Expr ')' Block
-   61 IfThenElseStmt: IF . '(' Expr ')' Block ELSE Block
-   62 IfThenElseIfStmt: IF . '(' Expr ')' Block ElseIfSequence
-   63                 | IF . '(' Expr ')' Block ElseIfSequence ELSE Block
+   69 ForStmt: FOR . '(' ForInit ';' ExprOpt ';' ForUpdate ')' Block
 
-    '('  shift, and go to state 98
+    '('  shift, and go to state 99
 
 
 State 52
 
-   80 ReturnStmt: RETURN . ExprOpt ';'
+   61 IfThenStmt: IF . '(' Expr ')' Block
+   62 IfThenElseStmt: IF . '(' Expr ')' Block ELSE Block
+   63 IfThenElseIfStmt: IF . '(' Expr ')' Block ElseIfSequence
+   64                 | IF . '(' Expr ')' Block ElseIfSequence ELSE Block
 
-    DOUBLE           shift, and go to state 8
-    INT              shift, and go to state 9
-    STRING           shift, and go to state 10
-    BOOLEAN          shift, and go to state 11
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '-'              shift, and go to state 99
-    '!'              shift, and go to state 100
-    '('              shift, and go to state 60
-
-    $default  reduce using rule 73 (ExprOpt)
-
-    Type           go to state 101
-    Name           go to state 102
-    QualifiedName  go to state 20
-    ExprOpt        go to state 103
-    Primary        go to state 104
-    Literal        go to state 81
-    FieldAccess    go to state 83
-    MethodCall     go to state 105
-    PostFixExpr    go to state 106
-    UnaryExpr      go to state 107
-    MulExpr        go to state 108
-    AddExpr        go to state 109
-    RelExpr        go to state 110
-    EqExpr         go to state 111
-    CondAndExpr    go to state 112
-    CondOrExpr     go to state 113
-    Expr           go to state 114
-    Assignment     go to state 115
-    LeftHandSide   go to state 86
+    '('  shift, and go to state 100
 
 
 State 53
 
-   67 WhileStmt: WHILE . '(' Expr ')' Stmt
+   81 ReturnStmt: RETURN . ExprOpt ';'
 
-    '('  shift, and go to state 116
+    DOUBLE             shift, and go to state 8
+    INT                shift, and go to state 9
+    STRING             shift, and go to state 10
+    BOOLEAN            shift, and go to state 11
+    CHAR               shift, and go to state 12
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '-'                shift, and go to state 101
+    '!'                shift, and go to state 102
+    '('                shift, and go to state 62
+
+    $default  reduce using rule 74 (ExprOpt)
+
+    Type           go to state 103
+    Name           go to state 104
+    QualifiedName  go to state 21
+    ExprOpt        go to state 105
+    Primary        go to state 106
+    Literal        go to state 83
+    FieldAccess    go to state 85
+    MethodCall     go to state 107
+    PostFixExpr    go to state 108
+    UnaryExpr      go to state 109
+    MulExpr        go to state 110
+    AddExpr        go to state 111
+    RelExpr        go to state 112
+    EqExpr         go to state 113
+    CondAndExpr    go to state 114
+    CondOrExpr     go to state 115
+    Expr           go to state 116
+    Assignment     go to state 117
+    LeftHandSide   go to state 88
 
 
 State 54
 
-   90 InstantiationExpr: NEW . Name '(' ArgListOpt ')'
+   68 WhileStmt: WHILE . '(' Expr ')' Stmt
 
-    IDENTIFIER  shift, and go to state 37
-
-    Name           go to state 117
-    QualifiedName  go to state 20
+    '('  shift, and go to state 118
 
 
 State 55
 
-   85 Literal: INTEGER_LITERAL .
+   92 InstantiationExpr: NEW . Name '(' ArgListOpt ')'
 
-    $default  reduce using rule 85 (Literal)
+    IDENTIFIER  shift, and go to state 38
+
+    Name           go to state 119
+    QualifiedName  go to state 21
 
 
 State 56
 
-   86 Literal: FLOAT_LITERAL .
+   86 Literal: INTEGER_LITERAL .
 
     $default  reduce using rule 86 (Literal)
 
 
 State 57
 
-   88 Literal: STRING_LITERAL .
-
-    $default  reduce using rule 88 (Literal)
-
-
-State 58
-
-   87 Literal: BOOLEAN_LITERAL .
+   87 Literal: FLOAT_LITERAL .
 
     $default  reduce using rule 87 (Literal)
 
 
-State 59
+State 58
 
-   89 Literal: NULLVAL .
+   89 Literal: STRING_LITERAL .
 
     $default  reduce using rule 89 (Literal)
 
 
+State 59
+
+   88 Literal: BOOLEAN_LITERAL .
+
+    $default  reduce using rule 88 (Literal)
+
+
 State 60
 
-   82 Primary: '(' . Expr ')'
+   90 Literal: NULLVAL .
 
-    DOUBLE           shift, and go to state 8
-    INT              shift, and go to state 9
-    STRING           shift, and go to state 10
-    BOOLEAN          shift, and go to state 11
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '-'              shift, and go to state 99
-    '!'              shift, and go to state 100
-    '('              shift, and go to state 60
-
-    Type           go to state 101
-    Name           go to state 102
-    QualifiedName  go to state 20
-    Primary        go to state 104
-    Literal        go to state 81
-    FieldAccess    go to state 83
-    MethodCall     go to state 105
-    PostFixExpr    go to state 106
-    UnaryExpr      go to state 107
-    MulExpr        go to state 108
-    AddExpr        go to state 109
-    RelExpr        go to state 110
-    EqExpr         go to state 111
-    CondAndExpr    go to state 112
-    CondOrExpr     go to state 113
-    Expr           go to state 118
-    Assignment     go to state 115
-    LeftHandSide   go to state 86
+    $default  reduce using rule 90 (Literal)
 
 
 State 61
 
-   47 Stmt: ';' .
+   91 Literal: CHARACTER_LITERAL .
 
-    $default  reduce using rule 47 (Stmt)
+    $default  reduce using rule 91 (Literal)
 
 
 State 62
 
-   45 LocalVarDecl: Type . VarDecls
-  127 Assignment: Type . VarDeclarator AssignOp Expr
+   83 Primary: '(' . Expr ')'
 
-    IDENTIFIER  shift, and go to state 29
+    DOUBLE             shift, and go to state 8
+    INT                shift, and go to state 9
+    STRING             shift, and go to state 10
+    BOOLEAN            shift, and go to state 11
+    CHAR               shift, and go to state 12
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '-'                shift, and go to state 101
+    '!'                shift, and go to state 102
+    '('                shift, and go to state 62
 
-    VarDecls       go to state 119
-    VarDeclarator  go to state 120
+    Type           go to state 103
+    Name           go to state 104
+    QualifiedName  go to state 21
+    Primary        go to state 106
+    Literal        go to state 83
+    FieldAccess    go to state 85
+    MethodCall     go to state 107
+    PostFixExpr    go to state 108
+    UnaryExpr      go to state 109
+    MulExpr        go to state 110
+    AddExpr        go to state 111
+    RelExpr        go to state 112
+    EqExpr         go to state 113
+    CondAndExpr    go to state 114
+    CondOrExpr     go to state 115
+    Expr           go to state 120
+    Assignment     go to state 117
+    LeftHandSide   go to state 88
 
 
 State 63
 
-   15 Type: Name .
-   18 QualifiedName: Name . '.' IDENTIFIER
-   94 MethodCall: Name . '(' ArgListOpt ')'
-   95           | Name . '{' ArgListOpt '}'
-  128 LeftHandSide: Name .
+   48 Stmt: ';' .
 
-    '('  shift, and go to state 121
-    '.'  shift, and go to state 32
-    '{'  shift, and go to state 122
-
-    IDENTIFIER  reduce using rule 15 (Type)
-    $default    reduce using rule 128 (LeftHandSide)
+    $default  reduce using rule 48 (Stmt)
 
 
 State 64
 
-   46 Stmt: Block .
+   46 LocalVarDecl: Type . VarDecls
+  129 Assignment: Type . VarDeclarator AssignOp Expr
 
-    $default  reduce using rule 46 (Stmt)
+    IDENTIFIER  shift, and go to state 30
+
+    VarDecls       go to state 121
+    VarDeclarator  go to state 122
 
 
 State 65
 
-   37 Block: '{' BlockStmtsOpt . '}'
+   16 Type: Name .
+   19 QualifiedName: Name . '.' IDENTIFIER
+   96 MethodCall: Name . '(' ArgListOpt ')'
+   97           | Name . '{' ArgListOpt '}'
+  130 LeftHandSide: Name .
 
-    '}'  shift, and go to state 123
+    '('  shift, and go to state 123
+    '.'  shift, and go to state 33
+    '{'  shift, and go to state 124
+
+    IDENTIFIER  reduce using rule 16 (Type)
+    $default    reduce using rule 130 (LeftHandSide)
 
 
 State 66
 
-   38 BlockStmtsOpt: BlockStmts .
-   41 BlockStmts: BlockStmts . BlockStmt
+   47 Stmt: Block .
 
-    BREAK            shift, and go to state 49
-    DOUBLE           shift, and go to state 8
-    FOR              shift, and go to state 50
-    IF               shift, and go to state 51
-    INT              shift, and go to state 9
-    RETURN           shift, and go to state 52
-    WHILE            shift, and go to state 53
-    STRING           shift, and go to state 10
-    BOOLEAN          shift, and go to state 11
-    NEW              shift, and go to state 54
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '('              shift, and go to state 60
-    ';'              shift, and go to state 61
-    '{'              shift, and go to state 33
-
-    $default  reduce using rule 38 (BlockStmtsOpt)
-
-    Type               go to state 62
-    Name               go to state 63
-    QualifiedName      go to state 20
-    Block              go to state 64
-    BlockStmt          go to state 124
-    LocalVarDeclStmt   go to state 68
-    LocalVarDecl       go to state 69
-    Stmt               go to state 70
-    ExprStmt           go to state 71
-    StmtExpr           go to state 72
-    IfThenStmt         go to state 73
-    IfThenElseStmt     go to state 74
-    IfThenElseIfStmt   go to state 75
-    WhileStmt          go to state 76
-    ForStmt            go to state 77
-    BreakStmt          go to state 78
-    ReturnStmt         go to state 79
-    Primary            go to state 80
-    Literal            go to state 81
-    InstantiationExpr  go to state 82
-    FieldAccess        go to state 83
-    MethodCall         go to state 84
-    Assignment         go to state 85
-    LeftHandSide       go to state 86
+    $default  reduce using rule 47 (Stmt)
 
 
 State 67
 
-   40 BlockStmts: BlockStmt .
+   38 Block: '{' BlockStmtsOpt . '}'
 
-    $default  reduce using rule 40 (BlockStmts)
+    '}'  shift, and go to state 125
 
 
 State 68
 
-   42 BlockStmt: LocalVarDeclStmt .
+   39 BlockStmtsOpt: BlockStmts .
+   42 BlockStmts: BlockStmts . BlockStmt
 
-    $default  reduce using rule 42 (BlockStmt)
+    BREAK              shift, and go to state 50
+    DOUBLE             shift, and go to state 8
+    FOR                shift, and go to state 51
+    IF                 shift, and go to state 52
+    INT                shift, and go to state 9
+    RETURN             shift, and go to state 53
+    WHILE              shift, and go to state 54
+    STRING             shift, and go to state 10
+    BOOLEAN            shift, and go to state 11
+    CHAR               shift, and go to state 12
+    NEW                shift, and go to state 55
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '('                shift, and go to state 62
+    ';'                shift, and go to state 63
+    '{'                shift, and go to state 34
+
+    $default  reduce using rule 39 (BlockStmtsOpt)
+
+    Type               go to state 64
+    Name               go to state 65
+    QualifiedName      go to state 21
+    Block              go to state 66
+    BlockStmt          go to state 126
+    LocalVarDeclStmt   go to state 70
+    LocalVarDecl       go to state 71
+    Stmt               go to state 72
+    ExprStmt           go to state 73
+    StmtExpr           go to state 74
+    IfThenStmt         go to state 75
+    IfThenElseStmt     go to state 76
+    IfThenElseIfStmt   go to state 77
+    WhileStmt          go to state 78
+    ForStmt            go to state 79
+    BreakStmt          go to state 80
+    ReturnStmt         go to state 81
+    Primary            go to state 82
+    Literal            go to state 83
+    InstantiationExpr  go to state 84
+    FieldAccess        go to state 85
+    MethodCall         go to state 86
+    Assignment         go to state 87
+    LeftHandSide       go to state 88
 
 
 State 69
 
-   44 LocalVarDeclStmt: LocalVarDecl . ';'
+   41 BlockStmts: BlockStmt .
 
-    ';'  shift, and go to state 125
+    $default  reduce using rule 41 (BlockStmts)
 
 
 State 70
 
-   43 BlockStmt: Stmt .
+   43 BlockStmt: LocalVarDeclStmt .
 
     $default  reduce using rule 43 (BlockStmt)
 
 
 State 71
 
-   48 Stmt: ExprStmt .
+   45 LocalVarDeclStmt: LocalVarDecl . ';'
 
-    $default  reduce using rule 48 (Stmt)
+    ';'  shift, and go to state 127
 
 
 State 72
 
-   56 ExprStmt: StmtExpr . ';'
+   44 BlockStmt: Stmt .
 
-    ';'  shift, and go to state 126
+    $default  reduce using rule 44 (BlockStmt)
 
 
 State 73
 
-   51 Stmt: IfThenStmt .
-
-    $default  reduce using rule 51 (Stmt)
-
-
-State 74
-
-   52 Stmt: IfThenElseStmt .
-
-    $default  reduce using rule 52 (Stmt)
-
-
-State 75
-
-   53 Stmt: IfThenElseIfStmt .
-
-    $default  reduce using rule 53 (Stmt)
-
-
-State 76
-
-   54 Stmt: WhileStmt .
-
-    $default  reduce using rule 54 (Stmt)
-
-
-State 77
-
-   55 Stmt: ForStmt .
-
-    $default  reduce using rule 55 (Stmt)
-
-
-State 78
-
-   49 Stmt: BreakStmt .
+   49 Stmt: ExprStmt .
 
     $default  reduce using rule 49 (Stmt)
 
 
+State 74
+
+   57 ExprStmt: StmtExpr . ';'
+
+    ';'  shift, and go to state 128
+
+
+State 75
+
+   52 Stmt: IfThenStmt .
+
+    $default  reduce using rule 52 (Stmt)
+
+
+State 76
+
+   53 Stmt: IfThenElseStmt .
+
+    $default  reduce using rule 53 (Stmt)
+
+
+State 77
+
+   54 Stmt: IfThenElseIfStmt .
+
+    $default  reduce using rule 54 (Stmt)
+
+
+State 78
+
+   55 Stmt: WhileStmt .
+
+    $default  reduce using rule 55 (Stmt)
+
+
 State 79
 
-   50 Stmt: ReturnStmt .
+   56 Stmt: ForStmt .
 
-    $default  reduce using rule 50 (Stmt)
+    $default  reduce using rule 56 (Stmt)
 
 
 State 80
 
-   93 FieldAccess: Primary . '.' IDENTIFIER
-   96 MethodCall: Primary . '.' IDENTIFIER '(' ArgListOpt ')'
-   97           | Primary . '.' IDENTIFIER '{' ArgListOpt '}'
+   50 Stmt: BreakStmt .
 
-    '.'  shift, and go to state 127
+    $default  reduce using rule 50 (Stmt)
 
 
 State 81
 
-   81 Primary: Literal .
+   51 Stmt: ReturnStmt .
 
-    $default  reduce using rule 81 (Primary)
+    $default  reduce using rule 51 (Stmt)
 
 
 State 82
 
-   59 StmtExpr: InstantiationExpr .
+   95 FieldAccess: Primary . '.' IDENTIFIER
+   98 MethodCall: Primary . '.' IDENTIFIER '(' ArgListOpt ')'
+   99           | Primary . '.' IDENTIFIER '{' ArgListOpt '}'
 
-    $default  reduce using rule 59 (StmtExpr)
+    '.'  shift, and go to state 129
 
 
 State 83
 
-   83 Primary: FieldAccess .
-  129 LeftHandSide: FieldAccess .
+   82 Primary: Literal .
 
-    INCREMENT  reduce using rule 129 (LeftHandSide)
-    DECREMENT  reduce using rule 129 (LeftHandSide)
-    '='        reduce using rule 129 (LeftHandSide)
-    $default   reduce using rule 83 (Primary)
+    $default  reduce using rule 82 (Primary)
 
 
 State 84
 
-   58 StmtExpr: MethodCall .
-   84 Primary: MethodCall .
+   60 StmtExpr: InstantiationExpr .
 
-    '.'       reduce using rule 84 (Primary)
-    $default  reduce using rule 58 (StmtExpr)
+    $default  reduce using rule 60 (StmtExpr)
 
 
 State 85
 
-   57 StmtExpr: Assignment .
+   84 Primary: FieldAccess .
+  131 LeftHandSide: FieldAccess .
 
-    $default  reduce using rule 57 (StmtExpr)
+    INCREMENT  reduce using rule 131 (LeftHandSide)
+    DECREMENT  reduce using rule 131 (LeftHandSide)
+    '='        reduce using rule 131 (LeftHandSide)
+    $default   reduce using rule 84 (Primary)
 
 
 State 86
 
-  125 Assignment: LeftHandSide . AssignOp Expr
-  126           | LeftHandSide . AssignOp
+   59 StmtExpr: MethodCall .
+   85 Primary: MethodCall .
 
-    INCREMENT  shift, and go to state 128
-    DECREMENT  shift, and go to state 129
-    '='        shift, and go to state 130
-
-    AssignOp  go to state 131
+    '.'       reduce using rule 85 (Primary)
+    $default  reduce using rule 59 (StmtExpr)
 
 
 State 87
 
-   27 MethodDeclarator: IDENTIFIER . '(' FormalParmListOpt ')'
+   58 StmtExpr: Assignment .
 
-    '('  shift, and go to state 132
+    $default  reduce using rule 58 (StmtExpr)
 
 
 State 88
 
-   26 MethodHeader: PUBLIC STATIC MethodReturnVal MethodDeclarator .
+  127 Assignment: LeftHandSide . AssignOp Expr
+  128           | LeftHandSide . AssignOp
 
-    $default  reduce using rule 26 (MethodHeader)
+    INCREMENT  shift, and go to state 130
+    DECREMENT  shift, and go to state 131
+    '='        shift, and go to state 132
+
+    AssignOp  go to state 133
 
 
 State 89
 
-   22 VarDeclarator: VarDeclarator . '[' ']'
-   32 FormalParm: Type VarDeclarator .
+   28 MethodDeclarator: IDENTIFIER . '(' FormalParmListOpt ')'
 
-    '['  shift, and go to state 47
-
-    $default  reduce using rule 32 (FormalParm)
+    '('  shift, and go to state 134
 
 
 State 90
 
-   34 ConstructorDeclarator: IDENTIFIER '(' FormalParmListOpt ')' .
+   27 MethodHeader: PUBLIC STATIC MethodReturnVal MethodDeclarator .
 
-    $default  reduce using rule 34 (ConstructorDeclarator)
+    $default  reduce using rule 27 (MethodHeader)
 
 
 State 91
 
-   31 FormalParmList: FormalParmList ',' . FormalParm
+   23 VarDeclarator: VarDeclarator . '[' ']'
+   33 FormalParm: Type VarDeclarator .
 
-    DOUBLE      shift, and go to state 8
-    INT         shift, and go to state 9
-    STRING      shift, and go to state 10
-    BOOLEAN     shift, and go to state 11
-    IDENTIFIER  shift, and go to state 37
+    '['  shift, and go to state 48
 
-    Type           go to state 40
-    Name           go to state 19
-    QualifiedName  go to state 20
-    FormalParm     go to state 133
+    $default  reduce using rule 33 (FormalParm)
 
 
 State 92
 
-   20 VarDecls: VarDecls ',' VarDeclarator .
-   22 VarDeclarator: VarDeclarator . '[' ']'
+   35 ConstructorDeclarator: IDENTIFIER '(' FormalParmListOpt ')' .
 
-    '['  shift, and go to state 47
-
-    $default  reduce using rule 20 (VarDecls)
+    $default  reduce using rule 35 (ConstructorDeclarator)
 
 
 State 93
 
-   10 FieldDecl: Type VarDeclarator '=' Literal . ';'
-
-    ';'  shift, and go to state 134
-
-
-State 94
-
-   22 VarDeclarator: VarDeclarator '[' ']' .
-
-    $default  reduce using rule 22 (VarDeclarator)
-
-
-State 95
-
-   79 BreakStmt: BREAK IDENTIFIER . ';'
-
-    ';'  shift, and go to state 135
-
-
-State 96
-
-   78 BreakStmt: BREAK ';' .
-
-    $default  reduce using rule 78 (BreakStmt)
-
-
-State 97
-
-   68 ForStmt: FOR '(' . ForInit ';' ExprOpt ';' ForUpdate ')' Block
-
-    DOUBLE           shift, and go to state 8
-    INT              shift, and go to state 9
-    STRING           shift, and go to state 10
-    BOOLEAN          shift, and go to state 11
-    NEW              shift, and go to state 54
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '('              shift, and go to state 60
-
-    $default  reduce using rule 71 (ForInit)
-
-    Type               go to state 62
-    Name               go to state 63
-    QualifiedName      go to state 20
-    LocalVarDecl       go to state 136
-    StmtExpr           go to state 137
-    ForInit            go to state 138
-    StmtExprList       go to state 139
-    Primary            go to state 80
-    Literal            go to state 81
-    InstantiationExpr  go to state 82
-    FieldAccess        go to state 83
-    MethodCall         go to state 84
-    Assignment         go to state 85
-    LeftHandSide       go to state 86
-
-
-State 98
-
-   60 IfThenStmt: IF '(' . Expr ')' Block
-   61 IfThenElseStmt: IF '(' . Expr ')' Block ELSE Block
-   62 IfThenElseIfStmt: IF '(' . Expr ')' Block ElseIfSequence
-   63                 | IF '(' . Expr ')' Block ElseIfSequence ELSE Block
-
-    DOUBLE           shift, and go to state 8
-    INT              shift, and go to state 9
-    STRING           shift, and go to state 10
-    BOOLEAN          shift, and go to state 11
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '-'              shift, and go to state 99
-    '!'              shift, and go to state 100
-    '('              shift, and go to state 60
-
-    Type           go to state 101
-    Name           go to state 102
-    QualifiedName  go to state 20
-    Primary        go to state 104
-    Literal        go to state 81
-    FieldAccess    go to state 83
-    MethodCall     go to state 105
-    PostFixExpr    go to state 106
-    UnaryExpr      go to state 107
-    MulExpr        go to state 108
-    AddExpr        go to state 109
-    RelExpr        go to state 110
-    EqExpr         go to state 111
-    CondAndExpr    go to state 112
-    CondOrExpr     go to state 113
-    Expr           go to state 140
-    Assignment     go to state 115
-    LeftHandSide   go to state 86
-
-
-State 99
-
-  100 UnaryExpr: '-' . UnaryExpr
-
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '-'              shift, and go to state 99
-    '!'              shift, and go to state 100
-    '('              shift, and go to state 60
-
-    Name           go to state 141
-    QualifiedName  go to state 20
-    Primary        go to state 104
-    Literal        go to state 81
-    FieldAccess    go to state 142
-    MethodCall     go to state 105
-    PostFixExpr    go to state 106
-    UnaryExpr      go to state 143
-
-
-State 100
-
-  101 UnaryExpr: '!' . UnaryExpr
-
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '-'              shift, and go to state 99
-    '!'              shift, and go to state 100
-    '('              shift, and go to state 60
-
-    Name           go to state 141
-    QualifiedName  go to state 20
-    Primary        go to state 104
-    Literal        go to state 81
-    FieldAccess    go to state 142
-    MethodCall     go to state 105
-    PostFixExpr    go to state 106
-    UnaryExpr      go to state 144
-
-
-State 101
-
-  127 Assignment: Type . VarDeclarator AssignOp Expr
-
-    IDENTIFIER  shift, and go to state 29
-
-    VarDeclarator  go to state 145
-
-
-State 102
-
-   15 Type: Name .
-   18 QualifiedName: Name . '.' IDENTIFIER
-   94 MethodCall: Name . '(' ArgListOpt ')'
-   95           | Name . '{' ArgListOpt '}'
-   99 PostFixExpr: Name .
-  128 LeftHandSide: Name .
-
-    '('  shift, and go to state 121
-    '.'  shift, and go to state 32
-    '{'  shift, and go to state 122
-
-    IDENTIFIER  reduce using rule 15 (Type)
-    INCREMENT   reduce using rule 128 (LeftHandSide)
-    DECREMENT   reduce using rule 128 (LeftHandSide)
-    '='         reduce using rule 128 (LeftHandSide)
-    $default    reduce using rule 99 (PostFixExpr)
-
-
-State 103
-
-   80 ReturnStmt: RETURN ExprOpt . ';'
-
-    ';'  shift, and go to state 146
-
-
-State 104
-
-   93 FieldAccess: Primary . '.' IDENTIFIER
-   96 MethodCall: Primary . '.' IDENTIFIER '(' ArgListOpt ')'
-   97           | Primary . '.' IDENTIFIER '{' ArgListOpt '}'
-   98 PostFixExpr: Primary .
-
-    '.'  shift, and go to state 127
-
-    $default  reduce using rule 98 (PostFixExpr)
-
-
-State 105
-
-   84 Primary: MethodCall .
-
-    $default  reduce using rule 84 (Primary)
-
-
-State 106
-
-  102 UnaryExpr: PostFixExpr .
-
-    $default  reduce using rule 102 (UnaryExpr)
-
-
-State 107
-
-  103 MulExpr: UnaryExpr .
-
-    $default  reduce using rule 103 (MulExpr)
-
-
-State 108
-
-  104 MulExpr: MulExpr . '*' UnaryExpr
-  105        | MulExpr . '/' UnaryExpr
-  106        | MulExpr . '%' UnaryExpr
-  107 AddExpr: MulExpr .
-
-    '*'  shift, and go to state 147
-    '/'  shift, and go to state 148
-    '%'  shift, and go to state 149
-
-    $default  reduce using rule 107 (AddExpr)
-
-
-State 109
-
-  108 AddExpr: AddExpr . '+' MulExpr
-  109        | AddExpr . '-' MulExpr
-  114 RelExpr: AddExpr .
-
-    '+'  shift, and go to state 150
-    '-'  shift, and go to state 151
-
-    $default  reduce using rule 114 (RelExpr)
-
-
-State 110
-
-  115 RelExpr: RelExpr . RelOp AddExpr
-  116 EqExpr: RelExpr .
-
-    LESS_EQUAL     shift, and go to state 152
-    GREATER_EQUAL  shift, and go to state 153
-    '<'            shift, and go to state 154
-    '>'            shift, and go to state 155
-
-    $default  reduce using rule 116 (EqExpr)
-
-    RelOp  go to state 156
-
-
-State 111
-
-  117 EqExpr: EqExpr . EQUAL RelExpr
-  118       | EqExpr . NOT_EQUAL RelExpr
-  119 CondAndExpr: EqExpr .
-
-    EQUAL      shift, and go to state 157
-    NOT_EQUAL  shift, and go to state 158
-
-    $default  reduce using rule 119 (CondAndExpr)
-
-
-State 112
-
-  120 CondAndExpr: CondAndExpr . LOGIC_AND EqExpr
-  121 CondOrExpr: CondAndExpr .
-
-    LOGIC_AND  shift, and go to state 159
-
-    $default  reduce using rule 121 (CondOrExpr)
-
-
-State 113
-
-  122 CondOrExpr: CondOrExpr . LOGIC_OR CondAndExpr
-  123 Expr: CondOrExpr .
-
-    LOGIC_OR  shift, and go to state 160
-
-    $default  reduce using rule 123 (Expr)
-
-
-State 114
-
-   72 ExprOpt: Expr .
-
-    $default  reduce using rule 72 (ExprOpt)
-
-
-State 115
-
-  124 Expr: Assignment .
-
-    $default  reduce using rule 124 (Expr)
-
-
-State 116
-
-   67 WhileStmt: WHILE '(' . Expr ')' Stmt
-
-    DOUBLE           shift, and go to state 8
-    INT              shift, and go to state 9
-    STRING           shift, and go to state 10
-    BOOLEAN          shift, and go to state 11
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '-'              shift, and go to state 99
-    '!'              shift, and go to state 100
-    '('              shift, and go to state 60
-
-    Type           go to state 101
-    Name           go to state 102
-    QualifiedName  go to state 20
-    Primary        go to state 104
-    Literal        go to state 81
-    FieldAccess    go to state 83
-    MethodCall     go to state 105
-    PostFixExpr    go to state 106
-    UnaryExpr      go to state 107
-    MulExpr        go to state 108
-    AddExpr        go to state 109
-    RelExpr        go to state 110
-    EqExpr         go to state 111
-    CondAndExpr    go to state 112
-    CondOrExpr     go to state 113
-    Expr           go to state 161
-    Assignment     go to state 115
-    LeftHandSide   go to state 86
-
-
-State 117
-
-   18 QualifiedName: Name . '.' IDENTIFIER
-   90 InstantiationExpr: NEW Name . '(' ArgListOpt ')'
-
-    '('  shift, and go to state 162
-    '.'  shift, and go to state 32
-
-
-State 118
-
-   82 Primary: '(' Expr . ')'
-
-    ')'  shift, and go to state 163
-
-
-State 119
-
-   20 VarDecls: VarDecls . ',' VarDeclarator
-   45 LocalVarDecl: Type VarDecls .
-
-    ','  shift, and go to state 44
-
-    $default  reduce using rule 45 (LocalVarDecl)
-
-
-State 120
-
-   19 VarDecls: VarDeclarator .
-   22 VarDeclarator: VarDeclarator . '[' ']'
-  127 Assignment: Type VarDeclarator . AssignOp Expr
-
-    INCREMENT  shift, and go to state 128
-    DECREMENT  shift, and go to state 129
-    '='        shift, and go to state 130
-    '['        shift, and go to state 47
-
-    $default  reduce using rule 19 (VarDecls)
-
-    AssignOp  go to state 164
-
-
-State 121
-
-   94 MethodCall: Name '(' . ArgListOpt ')'
-
-    DOUBLE           shift, and go to state 8
-    INT              shift, and go to state 9
-    STRING           shift, and go to state 10
-    BOOLEAN          shift, and go to state 11
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '-'              shift, and go to state 99
-    '!'              shift, and go to state 100
-    '('              shift, and go to state 60
-
-    $default  reduce using rule 36 (ArgListOpt)
-
-    Type           go to state 101
-    Name           go to state 102
-    QualifiedName  go to state 20
-    ArgListOpt     go to state 165
-    Primary        go to state 104
-    Literal        go to state 81
-    ArgList        go to state 166
-    FieldAccess    go to state 83
-    MethodCall     go to state 105
-    PostFixExpr    go to state 106
-    UnaryExpr      go to state 107
-    MulExpr        go to state 108
-    AddExpr        go to state 109
-    RelExpr        go to state 110
-    EqExpr         go to state 111
-    CondAndExpr    go to state 112
-    CondOrExpr     go to state 113
-    Expr           go to state 167
-    Assignment     go to state 115
-    LeftHandSide   go to state 86
-
-
-State 122
-
-   95 MethodCall: Name '{' . ArgListOpt '}'
-
-    DOUBLE           shift, and go to state 8
-    INT              shift, and go to state 9
-    STRING           shift, and go to state 10
-    BOOLEAN          shift, and go to state 11
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '-'              shift, and go to state 99
-    '!'              shift, and go to state 100
-    '('              shift, and go to state 60
-
-    $default  reduce using rule 36 (ArgListOpt)
-
-    Type           go to state 101
-    Name           go to state 102
-    QualifiedName  go to state 20
-    ArgListOpt     go to state 168
-    Primary        go to state 104
-    Literal        go to state 81
-    ArgList        go to state 166
-    FieldAccess    go to state 83
-    MethodCall     go to state 105
-    PostFixExpr    go to state 106
-    UnaryExpr      go to state 107
-    MulExpr        go to state 108
-    AddExpr        go to state 109
-    RelExpr        go to state 110
-    EqExpr         go to state 111
-    CondAndExpr    go to state 112
-    CondOrExpr     go to state 113
-    Expr           go to state 167
-    Assignment     go to state 115
-    LeftHandSide   go to state 86
-
-
-State 123
-
-   37 Block: '{' BlockStmtsOpt '}' .
-
-    $default  reduce using rule 37 (Block)
-
-
-State 124
-
-   41 BlockStmts: BlockStmts BlockStmt .
-
-    $default  reduce using rule 41 (BlockStmts)
-
-
-State 125
-
-   44 LocalVarDeclStmt: LocalVarDecl ';' .
-
-    $default  reduce using rule 44 (LocalVarDeclStmt)
-
-
-State 126
-
-   56 ExprStmt: StmtExpr ';' .
-
-    $default  reduce using rule 56 (ExprStmt)
-
-
-State 127
-
-   93 FieldAccess: Primary '.' . IDENTIFIER
-   96 MethodCall: Primary '.' . IDENTIFIER '(' ArgListOpt ')'
-   97           | Primary '.' . IDENTIFIER '{' ArgListOpt '}'
-
-    IDENTIFIER  shift, and go to state 169
-
-
-State 128
-
-  131 AssignOp: INCREMENT .
-
-    $default  reduce using rule 131 (AssignOp)
-
-
-State 129
-
-  132 AssignOp: DECREMENT .
-
-    $default  reduce using rule 132 (AssignOp)
-
-
-State 130
-
-  130 AssignOp: '=' .
-
-    $default  reduce using rule 130 (AssignOp)
-
-
-State 131
-
-  125 Assignment: LeftHandSide AssignOp . Expr
-  126           | LeftHandSide AssignOp .
-
-    DOUBLE           shift, and go to state 8
-    INT              shift, and go to state 9
-    STRING           shift, and go to state 10
-    BOOLEAN          shift, and go to state 11
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '-'              shift, and go to state 99
-    '!'              shift, and go to state 100
-    '('              shift, and go to state 60
-
-    $default  reduce using rule 126 (Assignment)
-
-    Type           go to state 101
-    Name           go to state 102
-    QualifiedName  go to state 20
-    Primary        go to state 104
-    Literal        go to state 81
-    FieldAccess    go to state 83
-    MethodCall     go to state 105
-    PostFixExpr    go to state 106
-    UnaryExpr      go to state 107
-    MulExpr        go to state 108
-    AddExpr        go to state 109
-    RelExpr        go to state 110
-    EqExpr         go to state 111
-    CondAndExpr    go to state 112
-    CondOrExpr     go to state 113
-    Expr           go to state 170
-    Assignment     go to state 115
-    LeftHandSide   go to state 86
-
-
-State 132
-
-   27 MethodDeclarator: IDENTIFIER '(' . FormalParmListOpt ')'
+   32 FormalParmList: FormalParmList ',' . FormalParm
 
     DOUBLE      shift, and go to state 8
     INT         shift, and go to state 9
     STRING      shift, and go to state 10
     BOOLEAN     shift, and go to state 11
-    IDENTIFIER  shift, and go to state 37
+    CHAR        shift, and go to state 12
+    IDENTIFIER  shift, and go to state 38
 
-    $default  reduce using rule 29 (FormalParmListOpt)
+    Type           go to state 41
+    Name           go to state 20
+    QualifiedName  go to state 21
+    FormalParm     go to state 135
 
-    Type               go to state 40
-    Name               go to state 19
-    QualifiedName      go to state 20
-    FormalParmListOpt  go to state 171
-    FormalParmList     go to state 42
-    FormalParm         go to state 43
+
+State 94
+
+   21 VarDecls: VarDecls ',' VarDeclarator .
+   23 VarDeclarator: VarDeclarator . '[' ']'
+
+    '['  shift, and go to state 48
+
+    $default  reduce using rule 21 (VarDecls)
+
+
+State 95
+
+   10 FieldDecl: Type VarDeclarator '=' Literal . ';'
+
+    ';'  shift, and go to state 136
+
+
+State 96
+
+   23 VarDeclarator: VarDeclarator '[' ']' .
+
+    $default  reduce using rule 23 (VarDeclarator)
+
+
+State 97
+
+   80 BreakStmt: BREAK IDENTIFIER . ';'
+
+    ';'  shift, and go to state 137
+
+
+State 98
+
+   79 BreakStmt: BREAK ';' .
+
+    $default  reduce using rule 79 (BreakStmt)
+
+
+State 99
+
+   69 ForStmt: FOR '(' . ForInit ';' ExprOpt ';' ForUpdate ')' Block
+
+    DOUBLE             shift, and go to state 8
+    INT                shift, and go to state 9
+    STRING             shift, and go to state 10
+    BOOLEAN            shift, and go to state 11
+    CHAR               shift, and go to state 12
+    NEW                shift, and go to state 55
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '('                shift, and go to state 62
+
+    $default  reduce using rule 72 (ForInit)
+
+    Type               go to state 64
+    Name               go to state 65
+    QualifiedName      go to state 21
+    LocalVarDecl       go to state 138
+    StmtExpr           go to state 139
+    ForInit            go to state 140
+    StmtExprList       go to state 141
+    Primary            go to state 82
+    Literal            go to state 83
+    InstantiationExpr  go to state 84
+    FieldAccess        go to state 85
+    MethodCall         go to state 86
+    Assignment         go to state 87
+    LeftHandSide       go to state 88
+
+
+State 100
+
+   61 IfThenStmt: IF '(' . Expr ')' Block
+   62 IfThenElseStmt: IF '(' . Expr ')' Block ELSE Block
+   63 IfThenElseIfStmt: IF '(' . Expr ')' Block ElseIfSequence
+   64                 | IF '(' . Expr ')' Block ElseIfSequence ELSE Block
+
+    DOUBLE             shift, and go to state 8
+    INT                shift, and go to state 9
+    STRING             shift, and go to state 10
+    BOOLEAN            shift, and go to state 11
+    CHAR               shift, and go to state 12
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '-'                shift, and go to state 101
+    '!'                shift, and go to state 102
+    '('                shift, and go to state 62
+
+    Type           go to state 103
+    Name           go to state 104
+    QualifiedName  go to state 21
+    Primary        go to state 106
+    Literal        go to state 83
+    FieldAccess    go to state 85
+    MethodCall     go to state 107
+    PostFixExpr    go to state 108
+    UnaryExpr      go to state 109
+    MulExpr        go to state 110
+    AddExpr        go to state 111
+    RelExpr        go to state 112
+    EqExpr         go to state 113
+    CondAndExpr    go to state 114
+    CondOrExpr     go to state 115
+    Expr           go to state 142
+    Assignment     go to state 117
+    LeftHandSide   go to state 88
+
+
+State 101
+
+  102 UnaryExpr: '-' . UnaryExpr
+
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '-'                shift, and go to state 101
+    '!'                shift, and go to state 102
+    '('                shift, and go to state 62
+
+    Name           go to state 143
+    QualifiedName  go to state 21
+    Primary        go to state 106
+    Literal        go to state 83
+    FieldAccess    go to state 144
+    MethodCall     go to state 107
+    PostFixExpr    go to state 108
+    UnaryExpr      go to state 145
+
+
+State 102
+
+  103 UnaryExpr: '!' . UnaryExpr
+
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '-'                shift, and go to state 101
+    '!'                shift, and go to state 102
+    '('                shift, and go to state 62
+
+    Name           go to state 143
+    QualifiedName  go to state 21
+    Primary        go to state 106
+    Literal        go to state 83
+    FieldAccess    go to state 144
+    MethodCall     go to state 107
+    PostFixExpr    go to state 108
+    UnaryExpr      go to state 146
+
+
+State 103
+
+  129 Assignment: Type . VarDeclarator AssignOp Expr
+
+    IDENTIFIER  shift, and go to state 30
+
+    VarDeclarator  go to state 147
+
+
+State 104
+
+   16 Type: Name .
+   19 QualifiedName: Name . '.' IDENTIFIER
+   96 MethodCall: Name . '(' ArgListOpt ')'
+   97           | Name . '{' ArgListOpt '}'
+  101 PostFixExpr: Name .
+  130 LeftHandSide: Name .
+
+    '('  shift, and go to state 123
+    '.'  shift, and go to state 33
+    '{'  shift, and go to state 124
+
+    IDENTIFIER  reduce using rule 16 (Type)
+    INCREMENT   reduce using rule 130 (LeftHandSide)
+    DECREMENT   reduce using rule 130 (LeftHandSide)
+    '='         reduce using rule 130 (LeftHandSide)
+    $default    reduce using rule 101 (PostFixExpr)
+
+
+State 105
+
+   81 ReturnStmt: RETURN ExprOpt . ';'
+
+    ';'  shift, and go to state 148
+
+
+State 106
+
+   95 FieldAccess: Primary . '.' IDENTIFIER
+   98 MethodCall: Primary . '.' IDENTIFIER '(' ArgListOpt ')'
+   99           | Primary . '.' IDENTIFIER '{' ArgListOpt '}'
+  100 PostFixExpr: Primary .
+
+    '.'  shift, and go to state 129
+
+    $default  reduce using rule 100 (PostFixExpr)
+
+
+State 107
+
+   85 Primary: MethodCall .
+
+    $default  reduce using rule 85 (Primary)
+
+
+State 108
+
+  104 UnaryExpr: PostFixExpr .
+
+    $default  reduce using rule 104 (UnaryExpr)
+
+
+State 109
+
+  105 MulExpr: UnaryExpr .
+
+    $default  reduce using rule 105 (MulExpr)
+
+
+State 110
+
+  106 MulExpr: MulExpr . '*' UnaryExpr
+  107        | MulExpr . '/' UnaryExpr
+  108        | MulExpr . '%' UnaryExpr
+  109 AddExpr: MulExpr .
+
+    '*'  shift, and go to state 149
+    '/'  shift, and go to state 150
+    '%'  shift, and go to state 151
+
+    $default  reduce using rule 109 (AddExpr)
+
+
+State 111
+
+  110 AddExpr: AddExpr . '+' MulExpr
+  111        | AddExpr . '-' MulExpr
+  116 RelExpr: AddExpr .
+
+    '+'  shift, and go to state 152
+    '-'  shift, and go to state 153
+
+    $default  reduce using rule 116 (RelExpr)
+
+
+State 112
+
+  117 RelExpr: RelExpr . RelOp AddExpr
+  118 EqExpr: RelExpr .
+
+    LESS_EQUAL     shift, and go to state 154
+    GREATER_EQUAL  shift, and go to state 155
+    '<'            shift, and go to state 156
+    '>'            shift, and go to state 157
+
+    $default  reduce using rule 118 (EqExpr)
+
+    RelOp  go to state 158
+
+
+State 113
+
+  119 EqExpr: EqExpr . EQUAL RelExpr
+  120       | EqExpr . NOT_EQUAL RelExpr
+  121 CondAndExpr: EqExpr .
+
+    EQUAL      shift, and go to state 159
+    NOT_EQUAL  shift, and go to state 160
+
+    $default  reduce using rule 121 (CondAndExpr)
+
+
+State 114
+
+  122 CondAndExpr: CondAndExpr . LOGIC_AND EqExpr
+  123 CondOrExpr: CondAndExpr .
+
+    LOGIC_AND  shift, and go to state 161
+
+    $default  reduce using rule 123 (CondOrExpr)
+
+
+State 115
+
+  124 CondOrExpr: CondOrExpr . LOGIC_OR CondAndExpr
+  125 Expr: CondOrExpr .
+
+    LOGIC_OR  shift, and go to state 162
+
+    $default  reduce using rule 125 (Expr)
+
+
+State 116
+
+   73 ExprOpt: Expr .
+
+    $default  reduce using rule 73 (ExprOpt)
+
+
+State 117
+
+  126 Expr: Assignment .
+
+    $default  reduce using rule 126 (Expr)
+
+
+State 118
+
+   68 WhileStmt: WHILE '(' . Expr ')' Stmt
+
+    DOUBLE             shift, and go to state 8
+    INT                shift, and go to state 9
+    STRING             shift, and go to state 10
+    BOOLEAN            shift, and go to state 11
+    CHAR               shift, and go to state 12
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '-'                shift, and go to state 101
+    '!'                shift, and go to state 102
+    '('                shift, and go to state 62
+
+    Type           go to state 103
+    Name           go to state 104
+    QualifiedName  go to state 21
+    Primary        go to state 106
+    Literal        go to state 83
+    FieldAccess    go to state 85
+    MethodCall     go to state 107
+    PostFixExpr    go to state 108
+    UnaryExpr      go to state 109
+    MulExpr        go to state 110
+    AddExpr        go to state 111
+    RelExpr        go to state 112
+    EqExpr         go to state 113
+    CondAndExpr    go to state 114
+    CondOrExpr     go to state 115
+    Expr           go to state 163
+    Assignment     go to state 117
+    LeftHandSide   go to state 88
+
+
+State 119
+
+   19 QualifiedName: Name . '.' IDENTIFIER
+   92 InstantiationExpr: NEW Name . '(' ArgListOpt ')'
+
+    '('  shift, and go to state 164
+    '.'  shift, and go to state 33
+
+
+State 120
+
+   83 Primary: '(' Expr . ')'
+
+    ')'  shift, and go to state 165
+
+
+State 121
+
+   21 VarDecls: VarDecls . ',' VarDeclarator
+   46 LocalVarDecl: Type VarDecls .
+
+    ','  shift, and go to state 45
+
+    $default  reduce using rule 46 (LocalVarDecl)
+
+
+State 122
+
+   20 VarDecls: VarDeclarator .
+   23 VarDeclarator: VarDeclarator . '[' ']'
+  129 Assignment: Type VarDeclarator . AssignOp Expr
+
+    INCREMENT  shift, and go to state 130
+    DECREMENT  shift, and go to state 131
+    '='        shift, and go to state 132
+    '['        shift, and go to state 48
+
+    $default  reduce using rule 20 (VarDecls)
+
+    AssignOp  go to state 166
+
+
+State 123
+
+   96 MethodCall: Name '(' . ArgListOpt ')'
+
+    DOUBLE             shift, and go to state 8
+    INT                shift, and go to state 9
+    STRING             shift, and go to state 10
+    BOOLEAN            shift, and go to state 11
+    CHAR               shift, and go to state 12
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '-'                shift, and go to state 101
+    '!'                shift, and go to state 102
+    '('                shift, and go to state 62
+
+    $default  reduce using rule 37 (ArgListOpt)
+
+    Type           go to state 103
+    Name           go to state 104
+    QualifiedName  go to state 21
+    ArgListOpt     go to state 167
+    Primary        go to state 106
+    Literal        go to state 83
+    ArgList        go to state 168
+    FieldAccess    go to state 85
+    MethodCall     go to state 107
+    PostFixExpr    go to state 108
+    UnaryExpr      go to state 109
+    MulExpr        go to state 110
+    AddExpr        go to state 111
+    RelExpr        go to state 112
+    EqExpr         go to state 113
+    CondAndExpr    go to state 114
+    CondOrExpr     go to state 115
+    Expr           go to state 169
+    Assignment     go to state 117
+    LeftHandSide   go to state 88
+
+
+State 124
+
+   97 MethodCall: Name '{' . ArgListOpt '}'
+
+    DOUBLE             shift, and go to state 8
+    INT                shift, and go to state 9
+    STRING             shift, and go to state 10
+    BOOLEAN            shift, and go to state 11
+    CHAR               shift, and go to state 12
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '-'                shift, and go to state 101
+    '!'                shift, and go to state 102
+    '('                shift, and go to state 62
+
+    $default  reduce using rule 37 (ArgListOpt)
+
+    Type           go to state 103
+    Name           go to state 104
+    QualifiedName  go to state 21
+    ArgListOpt     go to state 170
+    Primary        go to state 106
+    Literal        go to state 83
+    ArgList        go to state 168
+    FieldAccess    go to state 85
+    MethodCall     go to state 107
+    PostFixExpr    go to state 108
+    UnaryExpr      go to state 109
+    MulExpr        go to state 110
+    AddExpr        go to state 111
+    RelExpr        go to state 112
+    EqExpr         go to state 113
+    CondAndExpr    go to state 114
+    CondOrExpr     go to state 115
+    Expr           go to state 169
+    Assignment     go to state 117
+    LeftHandSide   go to state 88
+
+
+State 125
+
+   38 Block: '{' BlockStmtsOpt '}' .
+
+    $default  reduce using rule 38 (Block)
+
+
+State 126
+
+   42 BlockStmts: BlockStmts BlockStmt .
+
+    $default  reduce using rule 42 (BlockStmts)
+
+
+State 127
+
+   45 LocalVarDeclStmt: LocalVarDecl ';' .
+
+    $default  reduce using rule 45 (LocalVarDeclStmt)
+
+
+State 128
+
+   57 ExprStmt: StmtExpr ';' .
+
+    $default  reduce using rule 57 (ExprStmt)
+
+
+State 129
+
+   95 FieldAccess: Primary '.' . IDENTIFIER
+   98 MethodCall: Primary '.' . IDENTIFIER '(' ArgListOpt ')'
+   99           | Primary '.' . IDENTIFIER '{' ArgListOpt '}'
+
+    IDENTIFIER  shift, and go to state 171
+
+
+State 130
+
+  133 AssignOp: INCREMENT .
+
+    $default  reduce using rule 133 (AssignOp)
+
+
+State 131
+
+  134 AssignOp: DECREMENT .
+
+    $default  reduce using rule 134 (AssignOp)
+
+
+State 132
+
+  132 AssignOp: '=' .
+
+    $default  reduce using rule 132 (AssignOp)
 
 
 State 133
 
-   31 FormalParmList: FormalParmList ',' FormalParm .
+  127 Assignment: LeftHandSide AssignOp . Expr
+  128           | LeftHandSide AssignOp .
 
-    $default  reduce using rule 31 (FormalParmList)
+    DOUBLE             shift, and go to state 8
+    INT                shift, and go to state 9
+    STRING             shift, and go to state 10
+    BOOLEAN            shift, and go to state 11
+    CHAR               shift, and go to state 12
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '-'                shift, and go to state 101
+    '!'                shift, and go to state 102
+    '('                shift, and go to state 62
+
+    $default  reduce using rule 128 (Assignment)
+
+    Type           go to state 103
+    Name           go to state 104
+    QualifiedName  go to state 21
+    Primary        go to state 106
+    Literal        go to state 83
+    FieldAccess    go to state 85
+    MethodCall     go to state 107
+    PostFixExpr    go to state 108
+    UnaryExpr      go to state 109
+    MulExpr        go to state 110
+    AddExpr        go to state 111
+    RelExpr        go to state 112
+    EqExpr         go to state 113
+    CondAndExpr    go to state 114
+    CondOrExpr     go to state 115
+    Expr           go to state 172
+    Assignment     go to state 117
+    LeftHandSide   go to state 88
 
 
 State 134
+
+   28 MethodDeclarator: IDENTIFIER '(' . FormalParmListOpt ')'
+
+    DOUBLE      shift, and go to state 8
+    INT         shift, and go to state 9
+    STRING      shift, and go to state 10
+    BOOLEAN     shift, and go to state 11
+    CHAR        shift, and go to state 12
+    IDENTIFIER  shift, and go to state 38
+
+    $default  reduce using rule 30 (FormalParmListOpt)
+
+    Type               go to state 41
+    Name               go to state 20
+    QualifiedName      go to state 21
+    FormalParmListOpt  go to state 173
+    FormalParmList     go to state 43
+    FormalParm         go to state 44
+
+
+State 135
+
+   32 FormalParmList: FormalParmList ',' FormalParm .
+
+    $default  reduce using rule 32 (FormalParmList)
+
+
+State 136
 
    10 FieldDecl: Type VarDeclarator '=' Literal ';' .
 
     $default  reduce using rule 10 (FieldDecl)
 
 
-State 135
-
-   79 BreakStmt: BREAK IDENTIFIER ';' .
-
-    $default  reduce using rule 79 (BreakStmt)
-
-
-State 136
-
-   70 ForInit: LocalVarDecl .
-
-    $default  reduce using rule 70 (ForInit)
-
-
 State 137
 
-   76 StmtExprList: StmtExpr .
+   80 BreakStmt: BREAK IDENTIFIER ';' .
 
-    $default  reduce using rule 76 (StmtExprList)
+    $default  reduce using rule 80 (BreakStmt)
 
 
 State 138
 
-   68 ForStmt: FOR '(' ForInit . ';' ExprOpt ';' ForUpdate ')' Block
+   71 ForInit: LocalVarDecl .
 
-    ';'  shift, and go to state 172
+    $default  reduce using rule 71 (ForInit)
 
 
 State 139
 
-   69 ForInit: StmtExprList .
-   77 StmtExprList: StmtExprList . ',' StmtExpr
+   77 StmtExprList: StmtExpr .
 
-    ','  shift, and go to state 173
-
-    $default  reduce using rule 69 (ForInit)
+    $default  reduce using rule 77 (StmtExprList)
 
 
 State 140
 
-   60 IfThenStmt: IF '(' Expr . ')' Block
-   61 IfThenElseStmt: IF '(' Expr . ')' Block ELSE Block
-   62 IfThenElseIfStmt: IF '(' Expr . ')' Block ElseIfSequence
-   63                 | IF '(' Expr . ')' Block ElseIfSequence ELSE Block
+   69 ForStmt: FOR '(' ForInit . ';' ExprOpt ';' ForUpdate ')' Block
 
-    ')'  shift, and go to state 174
+    ';'  shift, and go to state 174
 
 
 State 141
 
-   18 QualifiedName: Name . '.' IDENTIFIER
-   94 MethodCall: Name . '(' ArgListOpt ')'
-   95           | Name . '{' ArgListOpt '}'
-   99 PostFixExpr: Name .
+   70 ForInit: StmtExprList .
+   78 StmtExprList: StmtExprList . ',' StmtExpr
 
-    '('  shift, and go to state 121
-    '.'  shift, and go to state 32
-    '{'  shift, and go to state 122
+    ','  shift, and go to state 175
 
-    $default  reduce using rule 99 (PostFixExpr)
+    $default  reduce using rule 70 (ForInit)
 
 
 State 142
 
-   83 Primary: FieldAccess .
+   61 IfThenStmt: IF '(' Expr . ')' Block
+   62 IfThenElseStmt: IF '(' Expr . ')' Block ELSE Block
+   63 IfThenElseIfStmt: IF '(' Expr . ')' Block ElseIfSequence
+   64                 | IF '(' Expr . ')' Block ElseIfSequence ELSE Block
 
-    $default  reduce using rule 83 (Primary)
+    ')'  shift, and go to state 176
 
 
 State 143
 
-  100 UnaryExpr: '-' UnaryExpr .
+   19 QualifiedName: Name . '.' IDENTIFIER
+   96 MethodCall: Name . '(' ArgListOpt ')'
+   97           | Name . '{' ArgListOpt '}'
+  101 PostFixExpr: Name .
 
-    $default  reduce using rule 100 (UnaryExpr)
+    '('  shift, and go to state 123
+    '.'  shift, and go to state 33
+    '{'  shift, and go to state 124
+
+    $default  reduce using rule 101 (PostFixExpr)
 
 
 State 144
 
-  101 UnaryExpr: '!' UnaryExpr .
+   84 Primary: FieldAccess .
 
-    $default  reduce using rule 101 (UnaryExpr)
+    $default  reduce using rule 84 (Primary)
 
 
 State 145
 
-   22 VarDeclarator: VarDeclarator . '[' ']'
-  127 Assignment: Type VarDeclarator . AssignOp Expr
+  102 UnaryExpr: '-' UnaryExpr .
 
-    INCREMENT  shift, and go to state 128
-    DECREMENT  shift, and go to state 129
-    '='        shift, and go to state 130
-    '['        shift, and go to state 47
-
-    AssignOp  go to state 164
+    $default  reduce using rule 102 (UnaryExpr)
 
 
 State 146
 
-   80 ReturnStmt: RETURN ExprOpt ';' .
+  103 UnaryExpr: '!' UnaryExpr .
 
-    $default  reduce using rule 80 (ReturnStmt)
+    $default  reduce using rule 103 (UnaryExpr)
 
 
 State 147
 
-  104 MulExpr: MulExpr '*' . UnaryExpr
+   23 VarDeclarator: VarDeclarator . '[' ']'
+  129 Assignment: Type VarDeclarator . AssignOp Expr
 
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '-'              shift, and go to state 99
-    '!'              shift, and go to state 100
-    '('              shift, and go to state 60
+    INCREMENT  shift, and go to state 130
+    DECREMENT  shift, and go to state 131
+    '='        shift, and go to state 132
+    '['        shift, and go to state 48
 
-    Name           go to state 141
-    QualifiedName  go to state 20
-    Primary        go to state 104
-    Literal        go to state 81
-    FieldAccess    go to state 142
-    MethodCall     go to state 105
-    PostFixExpr    go to state 106
-    UnaryExpr      go to state 175
+    AssignOp  go to state 166
 
 
 State 148
 
-  105 MulExpr: MulExpr '/' . UnaryExpr
+   81 ReturnStmt: RETURN ExprOpt ';' .
 
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '-'              shift, and go to state 99
-    '!'              shift, and go to state 100
-    '('              shift, and go to state 60
-
-    Name           go to state 141
-    QualifiedName  go to state 20
-    Primary        go to state 104
-    Literal        go to state 81
-    FieldAccess    go to state 142
-    MethodCall     go to state 105
-    PostFixExpr    go to state 106
-    UnaryExpr      go to state 176
+    $default  reduce using rule 81 (ReturnStmt)
 
 
 State 149
 
-  106 MulExpr: MulExpr '%' . UnaryExpr
+  106 MulExpr: MulExpr '*' . UnaryExpr
 
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '-'              shift, and go to state 99
-    '!'              shift, and go to state 100
-    '('              shift, and go to state 60
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '-'                shift, and go to state 101
+    '!'                shift, and go to state 102
+    '('                shift, and go to state 62
 
-    Name           go to state 141
-    QualifiedName  go to state 20
-    Primary        go to state 104
-    Literal        go to state 81
-    FieldAccess    go to state 142
-    MethodCall     go to state 105
-    PostFixExpr    go to state 106
+    Name           go to state 143
+    QualifiedName  go to state 21
+    Primary        go to state 106
+    Literal        go to state 83
+    FieldAccess    go to state 144
+    MethodCall     go to state 107
+    PostFixExpr    go to state 108
     UnaryExpr      go to state 177
 
 
 State 150
 
-  108 AddExpr: AddExpr '+' . MulExpr
+  107 MulExpr: MulExpr '/' . UnaryExpr
 
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '-'              shift, and go to state 99
-    '!'              shift, and go to state 100
-    '('              shift, and go to state 60
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '-'                shift, and go to state 101
+    '!'                shift, and go to state 102
+    '('                shift, and go to state 62
 
-    Name           go to state 141
-    QualifiedName  go to state 20
-    Primary        go to state 104
-    Literal        go to state 81
-    FieldAccess    go to state 142
-    MethodCall     go to state 105
-    PostFixExpr    go to state 106
-    UnaryExpr      go to state 107
-    MulExpr        go to state 178
+    Name           go to state 143
+    QualifiedName  go to state 21
+    Primary        go to state 106
+    Literal        go to state 83
+    FieldAccess    go to state 144
+    MethodCall     go to state 107
+    PostFixExpr    go to state 108
+    UnaryExpr      go to state 178
 
 
 State 151
 
-  109 AddExpr: AddExpr '-' . MulExpr
+  108 MulExpr: MulExpr '%' . UnaryExpr
 
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '-'              shift, and go to state 99
-    '!'              shift, and go to state 100
-    '('              shift, and go to state 60
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '-'                shift, and go to state 101
+    '!'                shift, and go to state 102
+    '('                shift, and go to state 62
 
-    Name           go to state 141
-    QualifiedName  go to state 20
-    Primary        go to state 104
-    Literal        go to state 81
-    FieldAccess    go to state 142
-    MethodCall     go to state 105
-    PostFixExpr    go to state 106
-    UnaryExpr      go to state 107
-    MulExpr        go to state 179
+    Name           go to state 143
+    QualifiedName  go to state 21
+    Primary        go to state 106
+    Literal        go to state 83
+    FieldAccess    go to state 144
+    MethodCall     go to state 107
+    PostFixExpr    go to state 108
+    UnaryExpr      go to state 179
 
 
 State 152
 
-  110 RelOp: LESS_EQUAL .
+  110 AddExpr: AddExpr '+' . MulExpr
 
-    $default  reduce using rule 110 (RelOp)
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '-'                shift, and go to state 101
+    '!'                shift, and go to state 102
+    '('                shift, and go to state 62
+
+    Name           go to state 143
+    QualifiedName  go to state 21
+    Primary        go to state 106
+    Literal        go to state 83
+    FieldAccess    go to state 144
+    MethodCall     go to state 107
+    PostFixExpr    go to state 108
+    UnaryExpr      go to state 109
+    MulExpr        go to state 180
 
 
 State 153
 
-  111 RelOp: GREATER_EQUAL .
+  111 AddExpr: AddExpr '-' . MulExpr
 
-    $default  reduce using rule 111 (RelOp)
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '-'                shift, and go to state 101
+    '!'                shift, and go to state 102
+    '('                shift, and go to state 62
+
+    Name           go to state 143
+    QualifiedName  go to state 21
+    Primary        go to state 106
+    Literal        go to state 83
+    FieldAccess    go to state 144
+    MethodCall     go to state 107
+    PostFixExpr    go to state 108
+    UnaryExpr      go to state 109
+    MulExpr        go to state 181
 
 
 State 154
 
-  112 RelOp: '<' .
+  112 RelOp: LESS_EQUAL .
 
     $default  reduce using rule 112 (RelOp)
 
 
 State 155
 
-  113 RelOp: '>' .
+  113 RelOp: GREATER_EQUAL .
 
     $default  reduce using rule 113 (RelOp)
 
 
 State 156
 
-  115 RelExpr: RelExpr RelOp . AddExpr
+  114 RelOp: '<' .
 
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '-'              shift, and go to state 99
-    '!'              shift, and go to state 100
-    '('              shift, and go to state 60
-
-    Name           go to state 141
-    QualifiedName  go to state 20
-    Primary        go to state 104
-    Literal        go to state 81
-    FieldAccess    go to state 142
-    MethodCall     go to state 105
-    PostFixExpr    go to state 106
-    UnaryExpr      go to state 107
-    MulExpr        go to state 108
-    AddExpr        go to state 180
+    $default  reduce using rule 114 (RelOp)
 
 
 State 157
 
-  117 EqExpr: EqExpr EQUAL . RelExpr
+  115 RelOp: '>' .
 
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '-'              shift, and go to state 99
-    '!'              shift, and go to state 100
-    '('              shift, and go to state 60
-
-    Name           go to state 141
-    QualifiedName  go to state 20
-    Primary        go to state 104
-    Literal        go to state 81
-    FieldAccess    go to state 142
-    MethodCall     go to state 105
-    PostFixExpr    go to state 106
-    UnaryExpr      go to state 107
-    MulExpr        go to state 108
-    AddExpr        go to state 109
-    RelExpr        go to state 181
+    $default  reduce using rule 115 (RelOp)
 
 
 State 158
 
-  118 EqExpr: EqExpr NOT_EQUAL . RelExpr
+  117 RelExpr: RelExpr RelOp . AddExpr
 
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '-'              shift, and go to state 99
-    '!'              shift, and go to state 100
-    '('              shift, and go to state 60
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '-'                shift, and go to state 101
+    '!'                shift, and go to state 102
+    '('                shift, and go to state 62
 
-    Name           go to state 141
-    QualifiedName  go to state 20
-    Primary        go to state 104
-    Literal        go to state 81
-    FieldAccess    go to state 142
-    MethodCall     go to state 105
-    PostFixExpr    go to state 106
-    UnaryExpr      go to state 107
-    MulExpr        go to state 108
-    AddExpr        go to state 109
-    RelExpr        go to state 182
+    Name           go to state 143
+    QualifiedName  go to state 21
+    Primary        go to state 106
+    Literal        go to state 83
+    FieldAccess    go to state 144
+    MethodCall     go to state 107
+    PostFixExpr    go to state 108
+    UnaryExpr      go to state 109
+    MulExpr        go to state 110
+    AddExpr        go to state 182
 
 
 State 159
 
-  120 CondAndExpr: CondAndExpr LOGIC_AND . EqExpr
+  119 EqExpr: EqExpr EQUAL . RelExpr
 
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '-'              shift, and go to state 99
-    '!'              shift, and go to state 100
-    '('              shift, and go to state 60
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '-'                shift, and go to state 101
+    '!'                shift, and go to state 102
+    '('                shift, and go to state 62
 
-    Name           go to state 141
-    QualifiedName  go to state 20
-    Primary        go to state 104
-    Literal        go to state 81
-    FieldAccess    go to state 142
-    MethodCall     go to state 105
-    PostFixExpr    go to state 106
-    UnaryExpr      go to state 107
-    MulExpr        go to state 108
-    AddExpr        go to state 109
-    RelExpr        go to state 110
-    EqExpr         go to state 183
+    Name           go to state 143
+    QualifiedName  go to state 21
+    Primary        go to state 106
+    Literal        go to state 83
+    FieldAccess    go to state 144
+    MethodCall     go to state 107
+    PostFixExpr    go to state 108
+    UnaryExpr      go to state 109
+    MulExpr        go to state 110
+    AddExpr        go to state 111
+    RelExpr        go to state 183
 
 
 State 160
 
-  122 CondOrExpr: CondOrExpr LOGIC_OR . CondAndExpr
+  120 EqExpr: EqExpr NOT_EQUAL . RelExpr
 
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '-'              shift, and go to state 99
-    '!'              shift, and go to state 100
-    '('              shift, and go to state 60
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '-'                shift, and go to state 101
+    '!'                shift, and go to state 102
+    '('                shift, and go to state 62
 
-    Name           go to state 141
-    QualifiedName  go to state 20
-    Primary        go to state 104
-    Literal        go to state 81
-    FieldAccess    go to state 142
-    MethodCall     go to state 105
-    PostFixExpr    go to state 106
-    UnaryExpr      go to state 107
-    MulExpr        go to state 108
-    AddExpr        go to state 109
-    RelExpr        go to state 110
-    EqExpr         go to state 111
-    CondAndExpr    go to state 184
+    Name           go to state 143
+    QualifiedName  go to state 21
+    Primary        go to state 106
+    Literal        go to state 83
+    FieldAccess    go to state 144
+    MethodCall     go to state 107
+    PostFixExpr    go to state 108
+    UnaryExpr      go to state 109
+    MulExpr        go to state 110
+    AddExpr        go to state 111
+    RelExpr        go to state 184
 
 
 State 161
 
-   67 WhileStmt: WHILE '(' Expr . ')' Stmt
+  122 CondAndExpr: CondAndExpr LOGIC_AND . EqExpr
 
-    ')'  shift, and go to state 185
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '-'                shift, and go to state 101
+    '!'                shift, and go to state 102
+    '('                shift, and go to state 62
+
+    Name           go to state 143
+    QualifiedName  go to state 21
+    Primary        go to state 106
+    Literal        go to state 83
+    FieldAccess    go to state 144
+    MethodCall     go to state 107
+    PostFixExpr    go to state 108
+    UnaryExpr      go to state 109
+    MulExpr        go to state 110
+    AddExpr        go to state 111
+    RelExpr        go to state 112
+    EqExpr         go to state 185
 
 
 State 162
 
-   90 InstantiationExpr: NEW Name '(' . ArgListOpt ')'
+  124 CondOrExpr: CondOrExpr LOGIC_OR . CondAndExpr
 
-    DOUBLE           shift, and go to state 8
-    INT              shift, and go to state 9
-    STRING           shift, and go to state 10
-    BOOLEAN          shift, and go to state 11
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '-'              shift, and go to state 99
-    '!'              shift, and go to state 100
-    '('              shift, and go to state 60
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '-'                shift, and go to state 101
+    '!'                shift, and go to state 102
+    '('                shift, and go to state 62
 
-    $default  reduce using rule 36 (ArgListOpt)
-
-    Type           go to state 101
-    Name           go to state 102
-    QualifiedName  go to state 20
-    ArgListOpt     go to state 186
-    Primary        go to state 104
-    Literal        go to state 81
-    ArgList        go to state 166
-    FieldAccess    go to state 83
-    MethodCall     go to state 105
-    PostFixExpr    go to state 106
-    UnaryExpr      go to state 107
-    MulExpr        go to state 108
-    AddExpr        go to state 109
-    RelExpr        go to state 110
-    EqExpr         go to state 111
-    CondAndExpr    go to state 112
-    CondOrExpr     go to state 113
-    Expr           go to state 167
-    Assignment     go to state 115
-    LeftHandSide   go to state 86
+    Name           go to state 143
+    QualifiedName  go to state 21
+    Primary        go to state 106
+    Literal        go to state 83
+    FieldAccess    go to state 144
+    MethodCall     go to state 107
+    PostFixExpr    go to state 108
+    UnaryExpr      go to state 109
+    MulExpr        go to state 110
+    AddExpr        go to state 111
+    RelExpr        go to state 112
+    EqExpr         go to state 113
+    CondAndExpr    go to state 186
 
 
 State 163
 
-   82 Primary: '(' Expr ')' .
+   68 WhileStmt: WHILE '(' Expr . ')' Stmt
 
-    $default  reduce using rule 82 (Primary)
+    ')'  shift, and go to state 187
 
 
 State 164
 
-  127 Assignment: Type VarDeclarator AssignOp . Expr
+   92 InstantiationExpr: NEW Name '(' . ArgListOpt ')'
 
-    DOUBLE           shift, and go to state 8
-    INT              shift, and go to state 9
-    STRING           shift, and go to state 10
-    BOOLEAN          shift, and go to state 11
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '-'              shift, and go to state 99
-    '!'              shift, and go to state 100
-    '('              shift, and go to state 60
+    DOUBLE             shift, and go to state 8
+    INT                shift, and go to state 9
+    STRING             shift, and go to state 10
+    BOOLEAN            shift, and go to state 11
+    CHAR               shift, and go to state 12
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '-'                shift, and go to state 101
+    '!'                shift, and go to state 102
+    '('                shift, and go to state 62
 
-    Type           go to state 101
-    Name           go to state 102
-    QualifiedName  go to state 20
-    Primary        go to state 104
-    Literal        go to state 81
-    FieldAccess    go to state 83
-    MethodCall     go to state 105
-    PostFixExpr    go to state 106
-    UnaryExpr      go to state 107
-    MulExpr        go to state 108
-    AddExpr        go to state 109
-    RelExpr        go to state 110
-    EqExpr         go to state 111
-    CondAndExpr    go to state 112
-    CondOrExpr     go to state 113
-    Expr           go to state 187
-    Assignment     go to state 115
-    LeftHandSide   go to state 86
+    $default  reduce using rule 37 (ArgListOpt)
+
+    Type           go to state 103
+    Name           go to state 104
+    QualifiedName  go to state 21
+    ArgListOpt     go to state 188
+    Primary        go to state 106
+    Literal        go to state 83
+    ArgList        go to state 168
+    FieldAccess    go to state 85
+    MethodCall     go to state 107
+    PostFixExpr    go to state 108
+    UnaryExpr      go to state 109
+    MulExpr        go to state 110
+    AddExpr        go to state 111
+    RelExpr        go to state 112
+    EqExpr         go to state 113
+    CondAndExpr    go to state 114
+    CondOrExpr     go to state 115
+    Expr           go to state 169
+    Assignment     go to state 117
+    LeftHandSide   go to state 88
 
 
 State 165
 
-   94 MethodCall: Name '(' ArgListOpt . ')'
+   83 Primary: '(' Expr ')' .
 
-    ')'  shift, and go to state 188
+    $default  reduce using rule 83 (Primary)
 
 
 State 166
 
-   35 ArgListOpt: ArgList .
-   92 ArgList: ArgList . ',' Expr
+  129 Assignment: Type VarDeclarator AssignOp . Expr
 
-    ','  shift, and go to state 189
+    DOUBLE             shift, and go to state 8
+    INT                shift, and go to state 9
+    STRING             shift, and go to state 10
+    BOOLEAN            shift, and go to state 11
+    CHAR               shift, and go to state 12
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '-'                shift, and go to state 101
+    '!'                shift, and go to state 102
+    '('                shift, and go to state 62
 
-    $default  reduce using rule 35 (ArgListOpt)
+    Type           go to state 103
+    Name           go to state 104
+    QualifiedName  go to state 21
+    Primary        go to state 106
+    Literal        go to state 83
+    FieldAccess    go to state 85
+    MethodCall     go to state 107
+    PostFixExpr    go to state 108
+    UnaryExpr      go to state 109
+    MulExpr        go to state 110
+    AddExpr        go to state 111
+    RelExpr        go to state 112
+    EqExpr         go to state 113
+    CondAndExpr    go to state 114
+    CondOrExpr     go to state 115
+    Expr           go to state 189
+    Assignment     go to state 117
+    LeftHandSide   go to state 88
 
 
 State 167
 
-   91 ArgList: Expr .
+   96 MethodCall: Name '(' ArgListOpt . ')'
 
-    $default  reduce using rule 91 (ArgList)
+    ')'  shift, and go to state 190
 
 
 State 168
 
-   95 MethodCall: Name '{' ArgListOpt . '}'
+   36 ArgListOpt: ArgList .
+   94 ArgList: ArgList . ',' Expr
 
-    '}'  shift, and go to state 190
+    ','  shift, and go to state 191
+
+    $default  reduce using rule 36 (ArgListOpt)
 
 
 State 169
 
-   93 FieldAccess: Primary '.' IDENTIFIER .
-   96 MethodCall: Primary '.' IDENTIFIER . '(' ArgListOpt ')'
-   97           | Primary '.' IDENTIFIER . '{' ArgListOpt '}'
+   93 ArgList: Expr .
 
-    '('  shift, and go to state 191
-    '{'  shift, and go to state 192
-
-    $default  reduce using rule 93 (FieldAccess)
+    $default  reduce using rule 93 (ArgList)
 
 
 State 170
 
-  125 Assignment: LeftHandSide AssignOp Expr .
+   97 MethodCall: Name '{' ArgListOpt . '}'
 
-    $default  reduce using rule 125 (Assignment)
+    '}'  shift, and go to state 192
 
 
 State 171
 
-   27 MethodDeclarator: IDENTIFIER '(' FormalParmListOpt . ')'
+   95 FieldAccess: Primary '.' IDENTIFIER .
+   98 MethodCall: Primary '.' IDENTIFIER . '(' ArgListOpt ')'
+   99           | Primary '.' IDENTIFIER . '{' ArgListOpt '}'
 
-    ')'  shift, and go to state 193
+    '('  shift, and go to state 193
+    '{'  shift, and go to state 194
+
+    $default  reduce using rule 95 (FieldAccess)
 
 
 State 172
 
-   68 ForStmt: FOR '(' ForInit ';' . ExprOpt ';' ForUpdate ')' Block
+  127 Assignment: LeftHandSide AssignOp Expr .
 
-    DOUBLE           shift, and go to state 8
-    INT              shift, and go to state 9
-    STRING           shift, and go to state 10
-    BOOLEAN          shift, and go to state 11
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '-'              shift, and go to state 99
-    '!'              shift, and go to state 100
-    '('              shift, and go to state 60
-
-    $default  reduce using rule 73 (ExprOpt)
-
-    Type           go to state 101
-    Name           go to state 102
-    QualifiedName  go to state 20
-    ExprOpt        go to state 194
-    Primary        go to state 104
-    Literal        go to state 81
-    FieldAccess    go to state 83
-    MethodCall     go to state 105
-    PostFixExpr    go to state 106
-    UnaryExpr      go to state 107
-    MulExpr        go to state 108
-    AddExpr        go to state 109
-    RelExpr        go to state 110
-    EqExpr         go to state 111
-    CondAndExpr    go to state 112
-    CondOrExpr     go to state 113
-    Expr           go to state 114
-    Assignment     go to state 115
-    LeftHandSide   go to state 86
+    $default  reduce using rule 127 (Assignment)
 
 
 State 173
 
-   77 StmtExprList: StmtExprList ',' . StmtExpr
+   28 MethodDeclarator: IDENTIFIER '(' FormalParmListOpt . ')'
 
-    DOUBLE           shift, and go to state 8
-    INT              shift, and go to state 9
-    STRING           shift, and go to state 10
-    BOOLEAN          shift, and go to state 11
-    NEW              shift, and go to state 54
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '('              shift, and go to state 60
-
-    Type               go to state 101
-    Name               go to state 63
-    QualifiedName      go to state 20
-    StmtExpr           go to state 195
-    Primary            go to state 80
-    Literal            go to state 81
-    InstantiationExpr  go to state 82
-    FieldAccess        go to state 83
-    MethodCall         go to state 84
-    Assignment         go to state 85
-    LeftHandSide       go to state 86
+    ')'  shift, and go to state 195
 
 
 State 174
 
-   60 IfThenStmt: IF '(' Expr ')' . Block
-   61 IfThenElseStmt: IF '(' Expr ')' . Block ELSE Block
-   62 IfThenElseIfStmt: IF '(' Expr ')' . Block ElseIfSequence
-   63                 | IF '(' Expr ')' . Block ElseIfSequence ELSE Block
+   69 ForStmt: FOR '(' ForInit ';' . ExprOpt ';' ForUpdate ')' Block
 
-    '{'  shift, and go to state 33
+    DOUBLE             shift, and go to state 8
+    INT                shift, and go to state 9
+    STRING             shift, and go to state 10
+    BOOLEAN            shift, and go to state 11
+    CHAR               shift, and go to state 12
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '-'                shift, and go to state 101
+    '!'                shift, and go to state 102
+    '('                shift, and go to state 62
 
-    Block  go to state 196
+    $default  reduce using rule 74 (ExprOpt)
+
+    Type           go to state 103
+    Name           go to state 104
+    QualifiedName  go to state 21
+    ExprOpt        go to state 196
+    Primary        go to state 106
+    Literal        go to state 83
+    FieldAccess    go to state 85
+    MethodCall     go to state 107
+    PostFixExpr    go to state 108
+    UnaryExpr      go to state 109
+    MulExpr        go to state 110
+    AddExpr        go to state 111
+    RelExpr        go to state 112
+    EqExpr         go to state 113
+    CondAndExpr    go to state 114
+    CondOrExpr     go to state 115
+    Expr           go to state 116
+    Assignment     go to state 117
+    LeftHandSide   go to state 88
 
 
 State 175
 
-  104 MulExpr: MulExpr '*' UnaryExpr .
+   78 StmtExprList: StmtExprList ',' . StmtExpr
 
-    $default  reduce using rule 104 (MulExpr)
+    DOUBLE             shift, and go to state 8
+    INT                shift, and go to state 9
+    STRING             shift, and go to state 10
+    BOOLEAN            shift, and go to state 11
+    CHAR               shift, and go to state 12
+    NEW                shift, and go to state 55
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '('                shift, and go to state 62
+
+    Type               go to state 103
+    Name               go to state 65
+    QualifiedName      go to state 21
+    StmtExpr           go to state 197
+    Primary            go to state 82
+    Literal            go to state 83
+    InstantiationExpr  go to state 84
+    FieldAccess        go to state 85
+    MethodCall         go to state 86
+    Assignment         go to state 87
+    LeftHandSide       go to state 88
 
 
 State 176
 
-  105 MulExpr: MulExpr '/' UnaryExpr .
+   61 IfThenStmt: IF '(' Expr ')' . Block
+   62 IfThenElseStmt: IF '(' Expr ')' . Block ELSE Block
+   63 IfThenElseIfStmt: IF '(' Expr ')' . Block ElseIfSequence
+   64                 | IF '(' Expr ')' . Block ElseIfSequence ELSE Block
 
-    $default  reduce using rule 105 (MulExpr)
+    '{'  shift, and go to state 34
+
+    Block  go to state 198
 
 
 State 177
 
-  106 MulExpr: MulExpr '%' UnaryExpr .
+  106 MulExpr: MulExpr '*' UnaryExpr .
 
     $default  reduce using rule 106 (MulExpr)
 
 
 State 178
 
-  104 MulExpr: MulExpr . '*' UnaryExpr
-  105        | MulExpr . '/' UnaryExpr
-  106        | MulExpr . '%' UnaryExpr
-  108 AddExpr: AddExpr '+' MulExpr .
+  107 MulExpr: MulExpr '/' UnaryExpr .
 
-    '*'  shift, and go to state 147
-    '/'  shift, and go to state 148
-    '%'  shift, and go to state 149
-
-    $default  reduce using rule 108 (AddExpr)
+    $default  reduce using rule 107 (MulExpr)
 
 
 State 179
 
-  104 MulExpr: MulExpr . '*' UnaryExpr
-  105        | MulExpr . '/' UnaryExpr
-  106        | MulExpr . '%' UnaryExpr
-  109 AddExpr: AddExpr '-' MulExpr .
+  108 MulExpr: MulExpr '%' UnaryExpr .
 
-    '*'  shift, and go to state 147
-    '/'  shift, and go to state 148
-    '%'  shift, and go to state 149
-
-    $default  reduce using rule 109 (AddExpr)
+    $default  reduce using rule 108 (MulExpr)
 
 
 State 180
 
-  108 AddExpr: AddExpr . '+' MulExpr
-  109        | AddExpr . '-' MulExpr
-  115 RelExpr: RelExpr RelOp AddExpr .
+  106 MulExpr: MulExpr . '*' UnaryExpr
+  107        | MulExpr . '/' UnaryExpr
+  108        | MulExpr . '%' UnaryExpr
+  110 AddExpr: AddExpr '+' MulExpr .
 
-    '+'  shift, and go to state 150
-    '-'  shift, and go to state 151
+    '*'  shift, and go to state 149
+    '/'  shift, and go to state 150
+    '%'  shift, and go to state 151
 
-    $default  reduce using rule 115 (RelExpr)
+    $default  reduce using rule 110 (AddExpr)
 
 
 State 181
 
-  115 RelExpr: RelExpr . RelOp AddExpr
-  117 EqExpr: EqExpr EQUAL RelExpr .
+  106 MulExpr: MulExpr . '*' UnaryExpr
+  107        | MulExpr . '/' UnaryExpr
+  108        | MulExpr . '%' UnaryExpr
+  111 AddExpr: AddExpr '-' MulExpr .
 
-    LESS_EQUAL     shift, and go to state 152
-    GREATER_EQUAL  shift, and go to state 153
-    '<'            shift, and go to state 154
-    '>'            shift, and go to state 155
+    '*'  shift, and go to state 149
+    '/'  shift, and go to state 150
+    '%'  shift, and go to state 151
 
-    $default  reduce using rule 117 (EqExpr)
-
-    RelOp  go to state 156
+    $default  reduce using rule 111 (AddExpr)
 
 
 State 182
 
-  115 RelExpr: RelExpr . RelOp AddExpr
-  118 EqExpr: EqExpr NOT_EQUAL RelExpr .
+  110 AddExpr: AddExpr . '+' MulExpr
+  111        | AddExpr . '-' MulExpr
+  117 RelExpr: RelExpr RelOp AddExpr .
 
-    LESS_EQUAL     shift, and go to state 152
-    GREATER_EQUAL  shift, and go to state 153
-    '<'            shift, and go to state 154
-    '>'            shift, and go to state 155
+    '+'  shift, and go to state 152
+    '-'  shift, and go to state 153
 
-    $default  reduce using rule 118 (EqExpr)
-
-    RelOp  go to state 156
+    $default  reduce using rule 117 (RelExpr)
 
 
 State 183
 
-  117 EqExpr: EqExpr . EQUAL RelExpr
-  118       | EqExpr . NOT_EQUAL RelExpr
-  120 CondAndExpr: CondAndExpr LOGIC_AND EqExpr .
+  117 RelExpr: RelExpr . RelOp AddExpr
+  119 EqExpr: EqExpr EQUAL RelExpr .
 
-    EQUAL      shift, and go to state 157
-    NOT_EQUAL  shift, and go to state 158
+    LESS_EQUAL     shift, and go to state 154
+    GREATER_EQUAL  shift, and go to state 155
+    '<'            shift, and go to state 156
+    '>'            shift, and go to state 157
 
-    $default  reduce using rule 120 (CondAndExpr)
+    $default  reduce using rule 119 (EqExpr)
+
+    RelOp  go to state 158
 
 
 State 184
 
-  120 CondAndExpr: CondAndExpr . LOGIC_AND EqExpr
-  122 CondOrExpr: CondOrExpr LOGIC_OR CondAndExpr .
+  117 RelExpr: RelExpr . RelOp AddExpr
+  120 EqExpr: EqExpr NOT_EQUAL RelExpr .
 
-    LOGIC_AND  shift, and go to state 159
+    LESS_EQUAL     shift, and go to state 154
+    GREATER_EQUAL  shift, and go to state 155
+    '<'            shift, and go to state 156
+    '>'            shift, and go to state 157
 
-    $default  reduce using rule 122 (CondOrExpr)
+    $default  reduce using rule 120 (EqExpr)
+
+    RelOp  go to state 158
 
 
 State 185
 
-   67 WhileStmt: WHILE '(' Expr ')' . Stmt
+  119 EqExpr: EqExpr . EQUAL RelExpr
+  120       | EqExpr . NOT_EQUAL RelExpr
+  122 CondAndExpr: CondAndExpr LOGIC_AND EqExpr .
 
-    BREAK            shift, and go to state 49
-    DOUBLE           shift, and go to state 8
-    FOR              shift, and go to state 50
-    IF               shift, and go to state 51
-    INT              shift, and go to state 9
-    RETURN           shift, and go to state 52
-    WHILE            shift, and go to state 53
-    STRING           shift, and go to state 10
-    BOOLEAN          shift, and go to state 11
-    NEW              shift, and go to state 54
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '('              shift, and go to state 60
-    ';'              shift, and go to state 61
-    '{'              shift, and go to state 33
+    EQUAL      shift, and go to state 159
+    NOT_EQUAL  shift, and go to state 160
 
-    Type               go to state 101
-    Name               go to state 63
-    QualifiedName      go to state 20
-    Block              go to state 64
-    Stmt               go to state 197
-    ExprStmt           go to state 71
-    StmtExpr           go to state 72
-    IfThenStmt         go to state 73
-    IfThenElseStmt     go to state 74
-    IfThenElseIfStmt   go to state 75
-    WhileStmt          go to state 76
-    ForStmt            go to state 77
-    BreakStmt          go to state 78
-    ReturnStmt         go to state 79
-    Primary            go to state 80
-    Literal            go to state 81
-    InstantiationExpr  go to state 82
-    FieldAccess        go to state 83
-    MethodCall         go to state 84
-    Assignment         go to state 85
-    LeftHandSide       go to state 86
+    $default  reduce using rule 122 (CondAndExpr)
 
 
 State 186
 
-   90 InstantiationExpr: NEW Name '(' ArgListOpt . ')'
+  122 CondAndExpr: CondAndExpr . LOGIC_AND EqExpr
+  124 CondOrExpr: CondOrExpr LOGIC_OR CondAndExpr .
 
-    ')'  shift, and go to state 198
+    LOGIC_AND  shift, and go to state 161
+
+    $default  reduce using rule 124 (CondOrExpr)
 
 
 State 187
 
-  127 Assignment: Type VarDeclarator AssignOp Expr .
+   68 WhileStmt: WHILE '(' Expr ')' . Stmt
 
-    $default  reduce using rule 127 (Assignment)
+    BREAK              shift, and go to state 50
+    DOUBLE             shift, and go to state 8
+    FOR                shift, and go to state 51
+    IF                 shift, and go to state 52
+    INT                shift, and go to state 9
+    RETURN             shift, and go to state 53
+    WHILE              shift, and go to state 54
+    STRING             shift, and go to state 10
+    BOOLEAN            shift, and go to state 11
+    CHAR               shift, and go to state 12
+    NEW                shift, and go to state 55
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '('                shift, and go to state 62
+    ';'                shift, and go to state 63
+    '{'                shift, and go to state 34
+
+    Type               go to state 103
+    Name               go to state 65
+    QualifiedName      go to state 21
+    Block              go to state 66
+    Stmt               go to state 199
+    ExprStmt           go to state 73
+    StmtExpr           go to state 74
+    IfThenStmt         go to state 75
+    IfThenElseStmt     go to state 76
+    IfThenElseIfStmt   go to state 77
+    WhileStmt          go to state 78
+    ForStmt            go to state 79
+    BreakStmt          go to state 80
+    ReturnStmt         go to state 81
+    Primary            go to state 82
+    Literal            go to state 83
+    InstantiationExpr  go to state 84
+    FieldAccess        go to state 85
+    MethodCall         go to state 86
+    Assignment         go to state 87
+    LeftHandSide       go to state 88
 
 
 State 188
 
-   94 MethodCall: Name '(' ArgListOpt ')' .
+   92 InstantiationExpr: NEW Name '(' ArgListOpt . ')'
 
-    $default  reduce using rule 94 (MethodCall)
+    ')'  shift, and go to state 200
 
 
 State 189
 
-   92 ArgList: ArgList ',' . Expr
+  129 Assignment: Type VarDeclarator AssignOp Expr .
 
-    DOUBLE           shift, and go to state 8
-    INT              shift, and go to state 9
-    STRING           shift, and go to state 10
-    BOOLEAN          shift, and go to state 11
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '-'              shift, and go to state 99
-    '!'              shift, and go to state 100
-    '('              shift, and go to state 60
-
-    Type           go to state 101
-    Name           go to state 102
-    QualifiedName  go to state 20
-    Primary        go to state 104
-    Literal        go to state 81
-    FieldAccess    go to state 83
-    MethodCall     go to state 105
-    PostFixExpr    go to state 106
-    UnaryExpr      go to state 107
-    MulExpr        go to state 108
-    AddExpr        go to state 109
-    RelExpr        go to state 110
-    EqExpr         go to state 111
-    CondAndExpr    go to state 112
-    CondOrExpr     go to state 113
-    Expr           go to state 199
-    Assignment     go to state 115
-    LeftHandSide   go to state 86
+    $default  reduce using rule 129 (Assignment)
 
 
 State 190
 
-   95 MethodCall: Name '{' ArgListOpt '}' .
-
-    $default  reduce using rule 95 (MethodCall)
-
-
-State 191
-
-   96 MethodCall: Primary '.' IDENTIFIER '(' . ArgListOpt ')'
-
-    DOUBLE           shift, and go to state 8
-    INT              shift, and go to state 9
-    STRING           shift, and go to state 10
-    BOOLEAN          shift, and go to state 11
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '-'              shift, and go to state 99
-    '!'              shift, and go to state 100
-    '('              shift, and go to state 60
-
-    $default  reduce using rule 36 (ArgListOpt)
-
-    Type           go to state 101
-    Name           go to state 102
-    QualifiedName  go to state 20
-    ArgListOpt     go to state 200
-    Primary        go to state 104
-    Literal        go to state 81
-    ArgList        go to state 166
-    FieldAccess    go to state 83
-    MethodCall     go to state 105
-    PostFixExpr    go to state 106
-    UnaryExpr      go to state 107
-    MulExpr        go to state 108
-    AddExpr        go to state 109
-    RelExpr        go to state 110
-    EqExpr         go to state 111
-    CondAndExpr    go to state 112
-    CondOrExpr     go to state 113
-    Expr           go to state 167
-    Assignment     go to state 115
-    LeftHandSide   go to state 86
-
-
-State 192
-
-   97 MethodCall: Primary '.' IDENTIFIER '{' . ArgListOpt '}'
-
-    DOUBLE           shift, and go to state 8
-    INT              shift, and go to state 9
-    STRING           shift, and go to state 10
-    BOOLEAN          shift, and go to state 11
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '-'              shift, and go to state 99
-    '!'              shift, and go to state 100
-    '('              shift, and go to state 60
-
-    $default  reduce using rule 36 (ArgListOpt)
-
-    Type           go to state 101
-    Name           go to state 102
-    QualifiedName  go to state 20
-    ArgListOpt     go to state 201
-    Primary        go to state 104
-    Literal        go to state 81
-    ArgList        go to state 166
-    FieldAccess    go to state 83
-    MethodCall     go to state 105
-    PostFixExpr    go to state 106
-    UnaryExpr      go to state 107
-    MulExpr        go to state 108
-    AddExpr        go to state 109
-    RelExpr        go to state 110
-    EqExpr         go to state 111
-    CondAndExpr    go to state 112
-    CondOrExpr     go to state 113
-    Expr           go to state 167
-    Assignment     go to state 115
-    LeftHandSide   go to state 86
-
-
-State 193
-
-   27 MethodDeclarator: IDENTIFIER '(' FormalParmListOpt ')' .
-
-    $default  reduce using rule 27 (MethodDeclarator)
-
-
-State 194
-
-   68 ForStmt: FOR '(' ForInit ';' ExprOpt . ';' ForUpdate ')' Block
-
-    ';'  shift, and go to state 202
-
-
-State 195
-
-   77 StmtExprList: StmtExprList ',' StmtExpr .
-
-    $default  reduce using rule 77 (StmtExprList)
-
-
-State 196
-
-   60 IfThenStmt: IF '(' Expr ')' Block .
-   61 IfThenElseStmt: IF '(' Expr ')' Block . ELSE Block
-   62 IfThenElseIfStmt: IF '(' Expr ')' Block . ElseIfSequence
-   63                 | IF '(' Expr ')' Block . ElseIfSequence ELSE Block
-
-    ELSE  shift, and go to state 203
-
-    $default  reduce using rule 60 (IfThenStmt)
-
-    ElseIfSequence  go to state 204
-    ElseIfStmt      go to state 205
-
-
-State 197
-
-   67 WhileStmt: WHILE '(' Expr ')' Stmt .
-
-    $default  reduce using rule 67 (WhileStmt)
-
-
-State 198
-
-   90 InstantiationExpr: NEW Name '(' ArgListOpt ')' .
-
-    $default  reduce using rule 90 (InstantiationExpr)
-
-
-State 199
-
-   92 ArgList: ArgList ',' Expr .
-
-    $default  reduce using rule 92 (ArgList)
-
-
-State 200
-
-   96 MethodCall: Primary '.' IDENTIFIER '(' ArgListOpt . ')'
-
-    ')'  shift, and go to state 206
-
-
-State 201
-
-   97 MethodCall: Primary '.' IDENTIFIER '{' ArgListOpt . '}'
-
-    '}'  shift, and go to state 207
-
-
-State 202
-
-   68 ForStmt: FOR '(' ForInit ';' ExprOpt ';' . ForUpdate ')' Block
-
-    DOUBLE           shift, and go to state 8
-    INT              shift, and go to state 9
-    STRING           shift, and go to state 10
-    BOOLEAN          shift, and go to state 11
-    NEW              shift, and go to state 54
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '('              shift, and go to state 60
-
-    $default  reduce using rule 75 (ForUpdate)
-
-    Type               go to state 101
-    Name               go to state 63
-    QualifiedName      go to state 20
-    StmtExpr           go to state 137
-    ForUpdate          go to state 208
-    StmtExprList       go to state 209
-    Primary            go to state 80
-    Literal            go to state 81
-    InstantiationExpr  go to state 82
-    FieldAccess        go to state 83
-    MethodCall         go to state 84
-    Assignment         go to state 85
-    LeftHandSide       go to state 86
-
-
-State 203
-
-   61 IfThenElseStmt: IF '(' Expr ')' Block ELSE . Block
-   66 ElseIfStmt: ELSE . IfThenStmt
-
-    IF   shift, and go to state 210
-    '{'  shift, and go to state 33
-
-    Block       go to state 211
-    IfThenStmt  go to state 212
-
-
-State 204
-
-   62 IfThenElseIfStmt: IF '(' Expr ')' Block ElseIfSequence .
-   63                 | IF '(' Expr ')' Block ElseIfSequence . ELSE Block
-   65 ElseIfSequence: ElseIfSequence . ElseIfStmt
-
-    ELSE  shift, and go to state 213
-
-    $default  reduce using rule 62 (IfThenElseIfStmt)
-
-    ElseIfStmt  go to state 214
-
-
-State 205
-
-   64 ElseIfSequence: ElseIfStmt .
-
-    $default  reduce using rule 64 (ElseIfSequence)
-
-
-State 206
-
-   96 MethodCall: Primary '.' IDENTIFIER '(' ArgListOpt ')' .
+   96 MethodCall: Name '(' ArgListOpt ')' .
 
     $default  reduce using rule 96 (MethodCall)
 
 
-State 207
+State 191
 
-   97 MethodCall: Primary '.' IDENTIFIER '{' ArgListOpt '}' .
+   94 ArgList: ArgList ',' . Expr
+
+    DOUBLE             shift, and go to state 8
+    INT                shift, and go to state 9
+    STRING             shift, and go to state 10
+    BOOLEAN            shift, and go to state 11
+    CHAR               shift, and go to state 12
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '-'                shift, and go to state 101
+    '!'                shift, and go to state 102
+    '('                shift, and go to state 62
+
+    Type           go to state 103
+    Name           go to state 104
+    QualifiedName  go to state 21
+    Primary        go to state 106
+    Literal        go to state 83
+    FieldAccess    go to state 85
+    MethodCall     go to state 107
+    PostFixExpr    go to state 108
+    UnaryExpr      go to state 109
+    MulExpr        go to state 110
+    AddExpr        go to state 111
+    RelExpr        go to state 112
+    EqExpr         go to state 113
+    CondAndExpr    go to state 114
+    CondOrExpr     go to state 115
+    Expr           go to state 201
+    Assignment     go to state 117
+    LeftHandSide   go to state 88
+
+
+State 192
+
+   97 MethodCall: Name '{' ArgListOpt '}' .
 
     $default  reduce using rule 97 (MethodCall)
 
 
-State 208
+State 193
 
-   68 ForStmt: FOR '(' ForInit ';' ExprOpt ';' ForUpdate . ')' Block
+   98 MethodCall: Primary '.' IDENTIFIER '(' . ArgListOpt ')'
 
-    ')'  shift, and go to state 215
+    DOUBLE             shift, and go to state 8
+    INT                shift, and go to state 9
+    STRING             shift, and go to state 10
+    BOOLEAN            shift, and go to state 11
+    CHAR               shift, and go to state 12
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '-'                shift, and go to state 101
+    '!'                shift, and go to state 102
+    '('                shift, and go to state 62
 
+    $default  reduce using rule 37 (ArgListOpt)
 
-State 209
-
-   74 ForUpdate: StmtExprList .
-   77 StmtExprList: StmtExprList . ',' StmtExpr
-
-    ','  shift, and go to state 173
-
-    $default  reduce using rule 74 (ForUpdate)
-
-
-State 210
-
-   60 IfThenStmt: IF . '(' Expr ')' Block
-
-    '('  shift, and go to state 216
-
-
-State 211
-
-   61 IfThenElseStmt: IF '(' Expr ')' Block ELSE Block .
-
-    $default  reduce using rule 61 (IfThenElseStmt)
-
-
-State 212
-
-   66 ElseIfStmt: ELSE IfThenStmt .
-
-    $default  reduce using rule 66 (ElseIfStmt)
-
-
-State 213
-
-   63 IfThenElseIfStmt: IF '(' Expr ')' Block ElseIfSequence ELSE . Block
-   66 ElseIfStmt: ELSE . IfThenStmt
-
-    IF   shift, and go to state 210
-    '{'  shift, and go to state 33
-
-    Block       go to state 217
-    IfThenStmt  go to state 212
+    Type           go to state 103
+    Name           go to state 104
+    QualifiedName  go to state 21
+    ArgListOpt     go to state 202
+    Primary        go to state 106
+    Literal        go to state 83
+    ArgList        go to state 168
+    FieldAccess    go to state 85
+    MethodCall     go to state 107
+    PostFixExpr    go to state 108
+    UnaryExpr      go to state 109
+    MulExpr        go to state 110
+    AddExpr        go to state 111
+    RelExpr        go to state 112
+    EqExpr         go to state 113
+    CondAndExpr    go to state 114
+    CondOrExpr     go to state 115
+    Expr           go to state 169
+    Assignment     go to state 117
+    LeftHandSide   go to state 88
 
 
-State 214
+State 194
 
-   65 ElseIfSequence: ElseIfSequence ElseIfStmt .
+   99 MethodCall: Primary '.' IDENTIFIER '{' . ArgListOpt '}'
+
+    DOUBLE             shift, and go to state 8
+    INT                shift, and go to state 9
+    STRING             shift, and go to state 10
+    BOOLEAN            shift, and go to state 11
+    CHAR               shift, and go to state 12
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '-'                shift, and go to state 101
+    '!'                shift, and go to state 102
+    '('                shift, and go to state 62
+
+    $default  reduce using rule 37 (ArgListOpt)
+
+    Type           go to state 103
+    Name           go to state 104
+    QualifiedName  go to state 21
+    ArgListOpt     go to state 203
+    Primary        go to state 106
+    Literal        go to state 83
+    ArgList        go to state 168
+    FieldAccess    go to state 85
+    MethodCall     go to state 107
+    PostFixExpr    go to state 108
+    UnaryExpr      go to state 109
+    MulExpr        go to state 110
+    AddExpr        go to state 111
+    RelExpr        go to state 112
+    EqExpr         go to state 113
+    CondAndExpr    go to state 114
+    CondOrExpr     go to state 115
+    Expr           go to state 169
+    Assignment     go to state 117
+    LeftHandSide   go to state 88
+
+
+State 195
+
+   28 MethodDeclarator: IDENTIFIER '(' FormalParmListOpt ')' .
+
+    $default  reduce using rule 28 (MethodDeclarator)
+
+
+State 196
+
+   69 ForStmt: FOR '(' ForInit ';' ExprOpt . ';' ForUpdate ')' Block
+
+    ';'  shift, and go to state 204
+
+
+State 197
+
+   78 StmtExprList: StmtExprList ',' StmtExpr .
+
+    $default  reduce using rule 78 (StmtExprList)
+
+
+State 198
+
+   61 IfThenStmt: IF '(' Expr ')' Block .
+   62 IfThenElseStmt: IF '(' Expr ')' Block . ELSE Block
+   63 IfThenElseIfStmt: IF '(' Expr ')' Block . ElseIfSequence
+   64                 | IF '(' Expr ')' Block . ElseIfSequence ELSE Block
+
+    ELSE  shift, and go to state 205
+
+    $default  reduce using rule 61 (IfThenStmt)
+
+    ElseIfSequence  go to state 206
+    ElseIfStmt      go to state 207
+
+
+State 199
+
+   68 WhileStmt: WHILE '(' Expr ')' Stmt .
+
+    $default  reduce using rule 68 (WhileStmt)
+
+
+State 200
+
+   92 InstantiationExpr: NEW Name '(' ArgListOpt ')' .
+
+    $default  reduce using rule 92 (InstantiationExpr)
+
+
+State 201
+
+   94 ArgList: ArgList ',' Expr .
+
+    $default  reduce using rule 94 (ArgList)
+
+
+State 202
+
+   98 MethodCall: Primary '.' IDENTIFIER '(' ArgListOpt . ')'
+
+    ')'  shift, and go to state 208
+
+
+State 203
+
+   99 MethodCall: Primary '.' IDENTIFIER '{' ArgListOpt . '}'
+
+    '}'  shift, and go to state 209
+
+
+State 204
+
+   69 ForStmt: FOR '(' ForInit ';' ExprOpt ';' . ForUpdate ')' Block
+
+    DOUBLE             shift, and go to state 8
+    INT                shift, and go to state 9
+    STRING             shift, and go to state 10
+    BOOLEAN            shift, and go to state 11
+    CHAR               shift, and go to state 12
+    NEW                shift, and go to state 55
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '('                shift, and go to state 62
+
+    $default  reduce using rule 76 (ForUpdate)
+
+    Type               go to state 103
+    Name               go to state 65
+    QualifiedName      go to state 21
+    StmtExpr           go to state 139
+    ForUpdate          go to state 210
+    StmtExprList       go to state 211
+    Primary            go to state 82
+    Literal            go to state 83
+    InstantiationExpr  go to state 84
+    FieldAccess        go to state 85
+    MethodCall         go to state 86
+    Assignment         go to state 87
+    LeftHandSide       go to state 88
+
+
+State 205
+
+   62 IfThenElseStmt: IF '(' Expr ')' Block ELSE . Block
+   67 ElseIfStmt: ELSE . IfThenStmt
+
+    IF   shift, and go to state 212
+    '{'  shift, and go to state 34
+
+    Block       go to state 213
+    IfThenStmt  go to state 214
+
+
+State 206
+
+   63 IfThenElseIfStmt: IF '(' Expr ')' Block ElseIfSequence .
+   64                 | IF '(' Expr ')' Block ElseIfSequence . ELSE Block
+   66 ElseIfSequence: ElseIfSequence . ElseIfStmt
+
+    ELSE  shift, and go to state 215
+
+    $default  reduce using rule 63 (IfThenElseIfStmt)
+
+    ElseIfStmt  go to state 216
+
+
+State 207
+
+   65 ElseIfSequence: ElseIfStmt .
 
     $default  reduce using rule 65 (ElseIfSequence)
 
 
+State 208
+
+   98 MethodCall: Primary '.' IDENTIFIER '(' ArgListOpt ')' .
+
+    $default  reduce using rule 98 (MethodCall)
+
+
+State 209
+
+   99 MethodCall: Primary '.' IDENTIFIER '{' ArgListOpt '}' .
+
+    $default  reduce using rule 99 (MethodCall)
+
+
+State 210
+
+   69 ForStmt: FOR '(' ForInit ';' ExprOpt ';' ForUpdate . ')' Block
+
+    ')'  shift, and go to state 217
+
+
+State 211
+
+   75 ForUpdate: StmtExprList .
+   78 StmtExprList: StmtExprList . ',' StmtExpr
+
+    ','  shift, and go to state 175
+
+    $default  reduce using rule 75 (ForUpdate)
+
+
+State 212
+
+   61 IfThenStmt: IF . '(' Expr ')' Block
+
+    '('  shift, and go to state 218
+
+
+State 213
+
+   62 IfThenElseStmt: IF '(' Expr ')' Block ELSE Block .
+
+    $default  reduce using rule 62 (IfThenElseStmt)
+
+
+State 214
+
+   67 ElseIfStmt: ELSE IfThenStmt .
+
+    $default  reduce using rule 67 (ElseIfStmt)
+
+
 State 215
 
-   68 ForStmt: FOR '(' ForInit ';' ExprOpt ';' ForUpdate ')' . Block
+   64 IfThenElseIfStmt: IF '(' Expr ')' Block ElseIfSequence ELSE . Block
+   67 ElseIfStmt: ELSE . IfThenStmt
 
-    '{'  shift, and go to state 33
+    IF   shift, and go to state 212
+    '{'  shift, and go to state 34
 
-    Block  go to state 218
+    Block       go to state 219
+    IfThenStmt  go to state 214
 
 
 State 216
 
-   60 IfThenStmt: IF '(' . Expr ')' Block
+   66 ElseIfSequence: ElseIfSequence ElseIfStmt .
 
-    DOUBLE           shift, and go to state 8
-    INT              shift, and go to state 9
-    STRING           shift, and go to state 10
-    BOOLEAN          shift, and go to state 11
-    IDENTIFIER       shift, and go to state 37
-    INTEGER_LITERAL  shift, and go to state 55
-    FLOAT_LITERAL    shift, and go to state 56
-    STRING_LITERAL   shift, and go to state 57
-    BOOLEAN_LITERAL  shift, and go to state 58
-    NULLVAL          shift, and go to state 59
-    '-'              shift, and go to state 99
-    '!'              shift, and go to state 100
-    '('              shift, and go to state 60
-
-    Type           go to state 101
-    Name           go to state 102
-    QualifiedName  go to state 20
-    Primary        go to state 104
-    Literal        go to state 81
-    FieldAccess    go to state 83
-    MethodCall     go to state 105
-    PostFixExpr    go to state 106
-    UnaryExpr      go to state 107
-    MulExpr        go to state 108
-    AddExpr        go to state 109
-    RelExpr        go to state 110
-    EqExpr         go to state 111
-    CondAndExpr    go to state 112
-    CondOrExpr     go to state 113
-    Expr           go to state 219
-    Assignment     go to state 115
-    LeftHandSide   go to state 86
+    $default  reduce using rule 66 (ElseIfSequence)
 
 
 State 217
 
-   63 IfThenElseIfStmt: IF '(' Expr ')' Block ElseIfSequence ELSE Block .
+   69 ForStmt: FOR '(' ForInit ';' ExprOpt ';' ForUpdate ')' . Block
 
-    $default  reduce using rule 63 (IfThenElseIfStmt)
+    '{'  shift, and go to state 34
+
+    Block  go to state 220
 
 
 State 218
 
-   68 ForStmt: FOR '(' ForInit ';' ExprOpt ';' ForUpdate ')' Block .
+   61 IfThenStmt: IF '(' . Expr ')' Block
 
-    $default  reduce using rule 68 (ForStmt)
+    DOUBLE             shift, and go to state 8
+    INT                shift, and go to state 9
+    STRING             shift, and go to state 10
+    BOOLEAN            shift, and go to state 11
+    CHAR               shift, and go to state 12
+    IDENTIFIER         shift, and go to state 38
+    INTEGER_LITERAL    shift, and go to state 56
+    FLOAT_LITERAL      shift, and go to state 57
+    STRING_LITERAL     shift, and go to state 58
+    BOOLEAN_LITERAL    shift, and go to state 59
+    NULLVAL            shift, and go to state 60
+    CHARACTER_LITERAL  shift, and go to state 61
+    '-'                shift, and go to state 101
+    '!'                shift, and go to state 102
+    '('                shift, and go to state 62
+
+    Type           go to state 103
+    Name           go to state 104
+    QualifiedName  go to state 21
+    Primary        go to state 106
+    Literal        go to state 83
+    FieldAccess    go to state 85
+    MethodCall     go to state 107
+    PostFixExpr    go to state 108
+    UnaryExpr      go to state 109
+    MulExpr        go to state 110
+    AddExpr        go to state 111
+    RelExpr        go to state 112
+    EqExpr         go to state 113
+    CondAndExpr    go to state 114
+    CondOrExpr     go to state 115
+    Expr           go to state 221
+    Assignment     go to state 117
+    LeftHandSide   go to state 88
 
 
 State 219
 
-   60 IfThenStmt: IF '(' Expr . ')' Block
+   64 IfThenElseIfStmt: IF '(' Expr ')' Block ElseIfSequence ELSE Block .
 
-    ')'  shift, and go to state 220
+    $default  reduce using rule 64 (IfThenElseIfStmt)
 
 
 State 220
 
-   60 IfThenStmt: IF '(' Expr ')' . Block
+   69 ForStmt: FOR '(' ForInit ';' ExprOpt ';' ForUpdate ')' Block .
 
-    '{'  shift, and go to state 33
-
-    Block  go to state 221
+    $default  reduce using rule 69 (ForStmt)
 
 
 State 221
 
-   60 IfThenStmt: IF '(' Expr ')' Block .
+   61 IfThenStmt: IF '(' Expr . ')' Block
 
-    $default  reduce using rule 60 (IfThenStmt)
+    ')'  shift, and go to state 222
+
+
+State 222
+
+   61 IfThenStmt: IF '(' Expr ')' . Block
+
+    '{'  shift, and go to state 34
+
+    Block  go to state 223
+
+
+State 223
+
+   61 IfThenStmt: IF '(' Expr ')' Block .
+
+    $default  reduce using rule 61 (IfThenStmt)

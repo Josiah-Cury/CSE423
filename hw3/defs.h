@@ -17,4 +17,6 @@ struct tree *tree_root;
 //jzero_main.c function declarations
 void check_extension(char *fname);
 
+extern int yylex_destroy();
+
 #endif

@@ -5,13 +5,11 @@
 int error_handler(int lex_code){
 	switch(lex_code) {
 		case NOT_RESERVED:
-
+			lex_error("Not a reserved word!");
 		case CHAR_ERROR:
-
+			lex_error("Not a void character literal!");
 		case UNKNOWN:
-
-			yyerror("lexical error");
-			return 1;
+			lex_error("Unknown token!");
 		default:
 
 			break;
