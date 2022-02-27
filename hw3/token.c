@@ -1,23 +1,19 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <errno.h>
-#include "tree.h"
-#include "j0gram.tab.h"
+#include "token.h"
+#include "defs.h"
+#include "error.h"
 
 int error_handler(int lex_code){
 	switch(lex_code) {
 		case NOT_RESERVED:
-			printf("%s:%d: %s is not a valid reserved word in Jzero!\n", filename, yylineno, yytext);
-			return -1;
+
 		case CHAR_ERROR:
-			printf("%s:%d: %s is not a valid character literal.\n", filename, yylineno, yytext);
-			return -1;
+
 		case UNKNOWN:
-			printf("%s:%d: An unexpected token %s occured!\n", filename, yylineno, yytext);
-			return -1;
+
+			yyerror("lexical error");
+			return 1;
 		default:
+
 			break;
 	}
 	return 0;
@@ -52,9 +48,10 @@ int init_token(int code){
 	yylval.treeptr->leaf->category = code;
 	yylval.treeptr->leaf->text = strdup(yytext);
 	yylval.treeptr->leaf->lineno = yylineno;
-	yylval.treeptr->leaf->filename = filename;
+	yylval.treeptr->leaf->filename = yyfilename;
 	text_eval(yylval.treeptr->leaf);
 
+	error_handler(yylval.treeptr->leaf->category);
 	//print_node(yylval.treeptr);
 
 	return code;
@@ -101,9 +98,10 @@ void text_eval(struct token *node){
 		case INTEGER_LITERAL:
 			step = node->text;
 			l = strtol(step, NULL, 0);
-			if(errno == ERANGE)
+			if(l < -2147483648 || l > 2147483647){
 				printf("Range error occurred.\n");
-
+				exit(1);
+			}
 			node->ival = l;
 			node->dval = 0;
 			node->sval = NULL;
@@ -111,9 +109,10 @@ void text_eval(struct token *node){
 		case FLOAT_LITERAL:
 			step = node->text;
 			f = strtof(step, NULL);
-			if(errno == ERANGE)
+			if(errno == ERANGE){
 				printf("Range error occurred.\n");
-
+				exit(1);
+			}
 			node->ival = 0;
 			node->dval = f;
 			node->sval = NULL;

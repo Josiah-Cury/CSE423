@@ -4,11 +4,7 @@
 #include "tree.h"
 #include "defs.h"
 #include "j0gram.tab.h"
-
-int yyerror(char *s) {
-   fprintf(stderr, "%s:%d %s before '%s' token\n", yyfilename, yylineno, s, yytext);
-   exit(1);
-}
+#include "error.h"
 
 extern int yydebug;
 
@@ -25,7 +21,7 @@ int main(int argc, char *argv[]) {
     	yyfilename = *argv;
     	yylineno = 1;
 
-    	yydebug = 1;
+    	//yydebug = 1;
     	yyparse();
         print_tree(tree_root, 1);
     }

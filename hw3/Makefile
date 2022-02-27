@@ -17,7 +17,7 @@ bison: j0gram.y
 	$(BISON) -d j0gram.y
 
 
-j0: jzero_main.o lex.yy.o j0gram.tab.o token.o tree.o
+j0: jzero_main.o lex.yy.o j0gram.tab.o token.o tree.o error.o
 	$(CC) $(CFLAGS) $^ -o $@
 
 jzero_main.o: jzero_main.c
@@ -27,6 +27,9 @@ token.o: token.c
 	$(CC) $(CFLAGS) -c $^
 
 tree.o: tree.c
+	$(CC) $(CFLAGS) -c $^
+
+error.o: error.c
 	$(CC) $(CFLAGS) -c $^
 
 lex.yy.o: lex.yy.c tree.h

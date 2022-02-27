@@ -7,7 +7,7 @@
 %option yylineno
 
 %{
-#include "tree.h"
+#include "token.h"
 #include "j0gram.tab.h"
 
 %}

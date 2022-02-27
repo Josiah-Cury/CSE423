@@ -1,10 +1,12 @@
 %{
 	#include <stdio.h>
 	#include "tree.h"
+	#include "defs.h"
+
 	extern int yylex();
 	extern int yyerror(char*s);
 	//Stuff taken out of j0gram.y and not replaced. CLASSNAME
-	#define YYDEBUG 1
+	//#define YYDEBUG 1
 %}
 
 %union{
@@ -134,6 +136,8 @@ ClassBodyDecl:
 FieldDecl:
 	Type VarDecls ';'
 		{ $$ = link_tree(PR_FIELD_DECL, "FieldDecl", 2, $1, $2); }
+	| Type VarDeclarator '=' Literal ';'
+		{ $$ = link_tree(PR_FIELD_DECL, "FieldDecl", 3, $1, $2, $4); }
 	;
 
 Type:
@@ -531,6 +535,8 @@ Assignment:
 		{ $$ = link_tree(PR_ASSIGNMENT, "Assignment", 3, $1, $2, $3); }
 	| LeftHandSide AssignOp
 		{ $$ = link_tree(PR_ASSIGNMENT_UNARY, "AssignmentUnary", 2, $1, $2); }
+	| Type VarDeclarator AssignOp Expr
+		{ $$ = link_tree(PR_ASSIGNMENT_UNARY, "AssignmentType", 4, $1, $2, $3, $4); }
 	;
 
 LeftHandSide:

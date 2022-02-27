@@ -1,11 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <errno.h>
-#include <stdarg.h>
 #include "tree.h"
-#include "j0gram.tab.h"
 
 struct tree *link_tree(int prodrule, char *symbolname, int nkids, ...) {
     va_list arg;
