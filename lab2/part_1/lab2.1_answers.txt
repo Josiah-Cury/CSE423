@@ -1,0 +1,15 @@
+When you run flex flex-wc.l, what output file does flex write?
+When I run flex with the given example file, the output file is lex.yy.c.
+
+When you run gcc on Flex's output .c file, what is the executable file named?
+a.out?
+./a.out
+
+Run your program on itself with ./a.out <flex-wc.l
+	17	42	268
+
+
+Fix your program to take the name of the file as a command line argument, instead of using < to redirect standard input.
+
+
+Convert to separate compilation! move main() into a separate main.c and write a makefile that compiles main.c and lex.yy.c separately and then links them.

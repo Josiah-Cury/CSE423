@@ -1,0 +1,441 @@
+State 28 conflicts: 1 reduce/reduce
+State 34 conflicts: 1 shift/reduce
+
+
+Grammar
+
+    0 $accept: Start $end
+
+    1 Start: IfThenStmt
+    2      | IfThenElseStmt
+    3      | IfThenElseIfStmt
+
+    4 IfThenStmt: IF '(' Expr ')' Block
+
+    5 IfThenElseStmt: IF '(' Expr ')' Block ELSE Block
+
+    6 IfThenElseIfStmt: IF '(' Expr ')' Block ElseIfSequence
+    7                 | IF '(' Expr ')' Block ElseIfSequence ELSE Block
+
+    8 ElseIfSequence: ElseIfStmt
+    9               | ElseIfSequence ElseIfStmt
+
+   10 ElseIfStmt: ELSE IfThenStmt
+
+   11 Block: '{' Statements '}'
+   12      | Statement
+
+   13 Statements: %empty
+   14           | Statements Statement
+
+   15 Statement: IfThenStmt
+   16          | IfThenElseStmt
+   17          | OtherStmt ';'
+
+   18 Expr: EXPR
+
+   19 OtherStmt: OTHERSTMT
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    '(' (40) 4 5 6 7
+    ')' (41) 4 5 6 7
+    ';' (59) 17
+    '{' (123) 11
+    '}' (125) 11
+    error (256)
+    IF (258) 4 5 6 7
+    ELSE (259) 5 7 10
+    EXPR (260) 18
+    OTHERSTMT (261) 19
+
+
+Nonterminals, with rules where they appear
+
+    $accept (12)
+        on left: 0
+    Start (13)
+        on left: 1 2 3
+        on right: 0
+    IfThenStmt (14)
+        on left: 4
+        on right: 1 10 15
+    IfThenElseStmt (15)
+        on left: 5
+        on right: 2 16
+    IfThenElseIfStmt (16)
+        on left: 6 7
+        on right: 3
+    ElseIfSequence (17)
+        on left: 8 9
+        on right: 6 7 9
+    ElseIfStmt (18)
+        on left: 10
+        on right: 8 9
+    Block (19)
+        on left: 11 12
+        on right: 4 5 6 7
+    Statements (20)
+        on left: 13 14
+        on right: 11 14
+    Statement (21)
+        on left: 15 16 17
+        on right: 12 14
+    Expr (22)
+        on left: 18
+        on right: 4 5 6 7
+    OtherStmt (23)
+        on left: 19
+        on right: 17
+
+
+State 0
+
+    0 $accept: . Start $end
+
+    IF  shift, and go to state 1
+
+    Start             go to state 2
+    IfThenStmt        go to state 3
+    IfThenElseStmt    go to state 4
+    IfThenElseIfStmt  go to state 5
+
+
+State 1
+
+    4 IfThenStmt: IF . '(' Expr ')' Block
+    5 IfThenElseStmt: IF . '(' Expr ')' Block ELSE Block
+    6 IfThenElseIfStmt: IF . '(' Expr ')' Block ElseIfSequence
+    7                 | IF . '(' Expr ')' Block ElseIfSequence ELSE Block
+
+    '('  shift, and go to state 6
+
+
+State 2
+
+    0 $accept: Start . $end
+
+    $end  shift, and go to state 7
+
+
+State 3
+
+    1 Start: IfThenStmt .
+
+    $default  reduce using rule 1 (Start)
+
+
+State 4
+
+    2 Start: IfThenElseStmt .
+
+    $default  reduce using rule 2 (Start)
+
+
+State 5
+
+    3 Start: IfThenElseIfStmt .
+
+    $default  reduce using rule 3 (Start)
+
+
+State 6
+
+    4 IfThenStmt: IF '(' . Expr ')' Block
+    5 IfThenElseStmt: IF '(' . Expr ')' Block ELSE Block
+    6 IfThenElseIfStmt: IF '(' . Expr ')' Block ElseIfSequence
+    7                 | IF '(' . Expr ')' Block ElseIfSequence ELSE Block
+
+    EXPR  shift, and go to state 8
+
+    Expr  go to state 9
+
+
+State 7
+
+    0 $accept: Start $end .
+
+    $default  accept
+
+
+State 8
+
+   18 Expr: EXPR .
+
+    $default  reduce using rule 18 (Expr)
+
+
+State 9
+
+    4 IfThenStmt: IF '(' Expr . ')' Block
+    5 IfThenElseStmt: IF '(' Expr . ')' Block ELSE Block
+    6 IfThenElseIfStmt: IF '(' Expr . ')' Block ElseIfSequence
+    7                 | IF '(' Expr . ')' Block ElseIfSequence ELSE Block
+
+    ')'  shift, and go to state 10
+
+
+State 10
+
+    4 IfThenStmt: IF '(' Expr ')' . Block
+    5 IfThenElseStmt: IF '(' Expr ')' . Block ELSE Block
+    6 IfThenElseIfStmt: IF '(' Expr ')' . Block ElseIfSequence
+    7                 | IF '(' Expr ')' . Block ElseIfSequence ELSE Block
+
+    IF         shift, and go to state 11
+    OTHERSTMT  shift, and go to state 12
+    '{'        shift, and go to state 13
+
+    IfThenStmt      go to state 14
+    IfThenElseStmt  go to state 15
+    Block           go to state 16
+    Statement       go to state 17
+    OtherStmt       go to state 18
+
+
+State 11
+
+    4 IfThenStmt: IF . '(' Expr ')' Block
+    5 IfThenElseStmt: IF . '(' Expr ')' Block ELSE Block
+
+    '('  shift, and go to state 19
+
+
+State 12
+
+   19 OtherStmt: OTHERSTMT .
+
+    $default  reduce using rule 19 (OtherStmt)
+
+
+State 13
+
+   11 Block: '{' . Statements '}'
+
+    $default  reduce using rule 13 (Statements)
+
+    Statements  go to state 20
+
+
+State 14
+
+   15 Statement: IfThenStmt .
+
+    $default  reduce using rule 15 (Statement)
+
+
+State 15
+
+   16 Statement: IfThenElseStmt .
+
+    $default  reduce using rule 16 (Statement)
+
+
+State 16
+
+    4 IfThenStmt: IF '(' Expr ')' Block .
+    5 IfThenElseStmt: IF '(' Expr ')' Block . ELSE Block
+    6 IfThenElseIfStmt: IF '(' Expr ')' Block . ElseIfSequence
+    7                 | IF '(' Expr ')' Block . ElseIfSequence ELSE Block
+
+    ELSE  shift, and go to state 21
+
+    $default  reduce using rule 4 (IfThenStmt)
+
+    ElseIfSequence  go to state 22
+    ElseIfStmt      go to state 23
+
+
+State 17
+
+   12 Block: Statement .
+
+    $default  reduce using rule 12 (Block)
+
+
+State 18
+
+   17 Statement: OtherStmt . ';'
+
+    ';'  shift, and go to state 24
+
+
+State 19
+
+    4 IfThenStmt: IF '(' . Expr ')' Block
+    5 IfThenElseStmt: IF '(' . Expr ')' Block ELSE Block
+
+    EXPR  shift, and go to state 8
+
+    Expr  go to state 25
+
+
+State 20
+
+   11 Block: '{' Statements . '}'
+   14 Statements: Statements . Statement
+
+    IF         shift, and go to state 11
+    OTHERSTMT  shift, and go to state 12
+    '}'        shift, and go to state 26
+
+    IfThenStmt      go to state 14
+    IfThenElseStmt  go to state 15
+    Statement       go to state 27
+    OtherStmt       go to state 18
+
+
+State 21
+
+    5 IfThenElseStmt: IF '(' Expr ')' Block ELSE . Block
+   10 ElseIfStmt: ELSE . IfThenStmt
+
+    IF         shift, and go to state 11
+    OTHERSTMT  shift, and go to state 12
+    '{'        shift, and go to state 13
+
+    IfThenStmt      go to state 28
+    IfThenElseStmt  go to state 15
+    Block           go to state 29
+    Statement       go to state 17
+    OtherStmt       go to state 18
+
+
+State 22
+
+    6 IfThenElseIfStmt: IF '(' Expr ')' Block ElseIfSequence .
+    7                 | IF '(' Expr ')' Block ElseIfSequence . ELSE Block
+    9 ElseIfSequence: ElseIfSequence . ElseIfStmt
+
+    ELSE  shift, and go to state 30
+
+    $default  reduce using rule 6 (IfThenElseIfStmt)
+
+    ElseIfStmt  go to state 31
+
+
+State 23
+
+    8 ElseIfSequence: ElseIfStmt .
+
+    $default  reduce using rule 8 (ElseIfSequence)
+
+
+State 24
+
+   17 Statement: OtherStmt ';' .
+
+    $default  reduce using rule 17 (Statement)
+
+
+State 25
+
+    4 IfThenStmt: IF '(' Expr . ')' Block
+    5 IfThenElseStmt: IF '(' Expr . ')' Block ELSE Block
+
+    ')'  shift, and go to state 32
+
+
+State 26
+
+   11 Block: '{' Statements '}' .
+
+    $default  reduce using rule 11 (Block)
+
+
+State 27
+
+   14 Statements: Statements Statement .
+
+    $default  reduce using rule 14 (Statements)
+
+
+State 28
+
+   10 ElseIfStmt: ELSE IfThenStmt .
+   15 Statement: IfThenStmt .
+
+    $end      reduce using rule 10 (ElseIfStmt)
+    $end      [reduce using rule 15 (Statement)]
+    $default  reduce using rule 10 (ElseIfStmt)
+
+
+State 29
+
+    5 IfThenElseStmt: IF '(' Expr ')' Block ELSE Block .
+
+    $default  reduce using rule 5 (IfThenElseStmt)
+
+
+State 30
+
+    7 IfThenElseIfStmt: IF '(' Expr ')' Block ElseIfSequence ELSE . Block
+   10 ElseIfStmt: ELSE . IfThenStmt
+
+    IF         shift, and go to state 11
+    OTHERSTMT  shift, and go to state 12
+    '{'        shift, and go to state 13
+
+    IfThenStmt      go to state 28
+    IfThenElseStmt  go to state 15
+    Block           go to state 33
+    Statement       go to state 17
+    OtherStmt       go to state 18
+
+
+State 31
+
+    9 ElseIfSequence: ElseIfSequence ElseIfStmt .
+
+    $default  reduce using rule 9 (ElseIfSequence)
+
+
+State 32
+
+    4 IfThenStmt: IF '(' Expr ')' . Block
+    5 IfThenElseStmt: IF '(' Expr ')' . Block ELSE Block
+
+    IF         shift, and go to state 11
+    OTHERSTMT  shift, and go to state 12
+    '{'        shift, and go to state 13
+
+    IfThenStmt      go to state 14
+    IfThenElseStmt  go to state 15
+    Block           go to state 34
+    Statement       go to state 17
+    OtherStmt       go to state 18
+
+
+State 33
+
+    7 IfThenElseIfStmt: IF '(' Expr ')' Block ElseIfSequence ELSE Block .
+
+    $default  reduce using rule 7 (IfThenElseIfStmt)
+
+
+State 34
+
+    4 IfThenStmt: IF '(' Expr ')' Block .
+    5 IfThenElseStmt: IF '(' Expr ')' Block . ELSE Block
+
+    ELSE  shift, and go to state 35
+
+    ELSE      [reduce using rule 4 (IfThenStmt)]
+    $default  reduce using rule 4 (IfThenStmt)
+
+
+State 35
+
+    5 IfThenElseStmt: IF '(' Expr ')' Block ELSE . Block
+
+    IF         shift, and go to state 11
+    OTHERSTMT  shift, and go to state 12
+    '{'        shift, and go to state 13
+
+    IfThenStmt      go to state 14
+    IfThenElseStmt  go to state 15
+    Block           go to state 29
+    Statement       go to state 17
+    OtherStmt       go to state 18

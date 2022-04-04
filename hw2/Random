@@ -1,0 +1,6 @@
+public class HelloWorld {
+	public static void main(String[] args) {
+		float t = 12.34;
+		int i = 2;
+	}
+}
