@@ -1,0 +1,125 @@
+digraph {
+	117 [shape = rectangle, label="ClassDecl"]
+	118 [label="public"]
+	119 [label="class"]
+	120 [label="Hello"]
+	121 [shape = rectangle, label="ClassBodyDecls"]
+	115 [shape = rectangle, label="ClassBodyDecls"]
+	10 [shape = rectangle, label="FieldDecl"]
+	3 [label="char"]
+	4 [shape = rectangle, label="VarDecls"]
+	1 [label="l"]
+	4 -> { 1 }
+	10 -> { 3 4 }
+	11 [shape = rectangle, label="FieldDeclAssign"]
+	6 [label="int"]
+	7 [label="k"]
+	8 [label="0"]
+	11 -> { 6 7 8 }
+	115 -> { 10 11 }
+	116 [shape = rectangle, label="MethodDecl"]
+	112 [shape = rectangle, label="MethodHeader"]
+	19 [label="public"]
+	20 [label="static"]
+	21 [label="void"]
+	22 [shape = rectangle, label="MethodDeclarator"]
+	16 [label="main"]
+	17 [shape = rectangle, label="FormalParm"]
+	13 [label="String"]
+	14 [label="argv"]
+	17 -> { 13 14 }
+	22 -> { 16 17 }
+	112 -> { 19 20 21 22 }
+	113 [shape = rectangle, label="Block"]
+	110 [shape = rectangle, label="BlockStmts"]
+	107 [shape = rectangle, label="BlockStmts"]
+	101 [shape = rectangle, label="BlockStmts"]
+	60 [shape = rectangle, label="BlockStmts"]
+	53 [shape = rectangle, label="BlockStmts"]
+	46 [shape = rectangle, label="BlockStmts"]
+	38 [shape = rectangle, label="MethodCall_P"]
+	30 [shape = rectangle, label="QualifiedName"]
+	27 [label="System"]
+	28 [shape = rectangle, label="QualifiedName"]
+	24 [label="out"]
+	25 [label="println"]
+	28 -> { 24 25 }
+	30 -> { 27 28 }
+	31 [label="hello, jzero!"]
+	38 -> { 30 31 }
+	39 [shape = rectangle, label="MethodCall_P"]
+	36 [shape = rectangle, label="QualifiedName"]
+	33 [label="InputStream"]
+	34 [label="read"]
+	36 -> { 33 34 }
+	39 -> { 36 }
+	46 -> { 38 39 }
+	47 [shape = rectangle, label="AssignmentDeclaration"]
+	41 [label="int"]
+	42 [label="f"]
+	43 [label="="]
+	44 [label="1"]
+	47 -> { 41 42 43 44 }
+	53 -> { 46 47 }
+	54 [shape = rectangle, label="Assignment"]
+	49 [label="k"]
+	50 [label="="]
+	51 [label="'h'"]
+	54 -> { 49 50 51 }
+	60 -> { 53 54 }
+	61 [shape = rectangle, label="Assignment"]
+	56 [label="f"]
+	57 [label="="]
+	58 [label="1000000"]
+	61 -> { 56 57 58 }
+	101 -> { 60 61 }
+	102 [shape = rectangle, label="IfElseIfElseStmt"]
+	96 [label="k"]
+	97 [shape = rectangle, label="Block"]
+	67 [shape = rectangle, label="Assignment"]
+	63 [label="f"]
+	64 [label="="]
+	65 [label="2"]
+	67 -> { 63 64 65 }
+	97 -> { 67 }
+	98 [shape = rectangle, label="ElseIfSequence"]
+	87 [shape = rectangle, label="IfThenStmt"]
+	75 [label="k"]
+	76 [shape = rectangle, label="Block"]
+	73 [shape = rectangle, label="Assignment"]
+	69 [label="f"]
+	70 [label="="]
+	71 [label="3"]
+	73 -> { 69 70 71 }
+	76 -> { 73 }
+	87 -> { 75 76 }
+	88 [shape = rectangle, label="IfThenStmt"]
+	84 [label="l"]
+	85 [shape = rectangle, label="Block"]
+	82 [shape = rectangle, label="Assignment"]
+	78 [label="f"]
+	79 [label="="]
+	80 [label="4"]
+	82 -> { 78 79 80 }
+	85 -> { 82 }
+	88 -> { 84 85 }
+	98 -> { 87 88 }
+	99 [shape = rectangle, label="Block"]
+	94 [shape = rectangle, label="Assignment"]
+	90 [label="f"]
+	91 [label="="]
+	92 [label="5"]
+	94 -> { 90 91 92 }
+	99 -> { 94 }
+	102 -> { 96 97 98 99 }
+	107 -> { 101 102 }
+	108 [shape = rectangle, label="AssignmentUnary"]
+	104 [label="f"]
+	105 [label="++"]
+	108 -> { 104 105 }
+	110 -> { 107 108 }
+	113 -> { 110 }
+	116 -> { 112 113 }
+	121 -> { 115 116 }
+	117 -> { 118 119 120 121 }
+}
