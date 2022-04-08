@@ -1,5 +1,8 @@
 #include "dot_tree.h"
 
+#include <stdlib.h>
+#include <string.h>
+
 void print_graph(struct tree *root, char *filename) {
 	FILE *fp = NULL;
 	char *dotfile, *dotextension = ".dot";

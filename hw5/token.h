@@ -1,11 +1,6 @@
 #ifndef TOKEN_H_
 #define TOKEN_H_
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <errno.h>
 #include "tree.h"
 #include "j0gram.tab.h"
 

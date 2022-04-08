@@ -1,4 +1,12 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdarg.h>
+
 #include "error.h"
+#include "tree.h"
+#include "defs.h"
+
 
 int yyerror(const char *s) {
 	if(strcmp(s, "lexical error") == 0){

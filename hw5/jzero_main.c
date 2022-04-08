@@ -77,17 +77,17 @@ int main(int argc, char *argv[]) {
 			system(buf);
 		}
 
+		globals = new_st("global", 10);
+		current = globals;
+		create_builtin_packages(globals);
+
+		printf("Populating symbol tables!\n");
+		populate_symboltables(tree_root);
+		printf("\n");
+
 		if (symtabFlag) {
 			printf("Beginning print of all symbols in files!\n");
 			printsyms(tree_root);
-			printf("\n");
-
-			globals = new_st("global", 10);
-			current = globals;
-			create_builtin_packages(globals);
-
-			printf("Populating symbol tables!\n");
-			populate_symboltables(tree_root);
 			printf("\n");
 
 			printf("Printing symbol tables\n\n");

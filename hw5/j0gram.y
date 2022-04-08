@@ -151,10 +151,10 @@ FieldDecl:
 	;
 
 FieldDeclAssign:
-	Type VarDeclarator '=' Literal ';'
+	Type VarDeclarator '=' Expr ';'
 		{ $$ = link_tree(PR_FIELD_DECL_ASSIGN, "FieldDeclAssign", 3, $1, $2, $4); }
-	| PUBLIC STATIC Type VarDeclarator '=' Literal ';'
-		{ $$ = link_tree(PR_FIELD_DECL_ASSIGN_MOD, "FieldDeclAssign", 3, $3, $5, $6); }
+	| PUBLIC STATIC Type VarDeclarator '=' Expr ';'
+		{ $$ = link_tree(PR_FIELD_DECL_ASSIGN_MOD, "FieldDeclAssign", 3, $3, $4, $6); }
 	;
 
 OptTypeArray:

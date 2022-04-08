@@ -7,8 +7,9 @@
 #ifndef SYMT_H
 #define SYMT_H
 
-#include "defs.h"
+#include "tree.h"
 #include "type.h"
+
 
 typedef struct sym_table {
  	int nBuckets; /* # of buckets */
@@ -37,9 +38,12 @@ SymbolTable new_st(char *name, int size); /* create symbol table */
 void delete_st(SymbolTable); /* destroy symbol table */
 int insert_sym(SymbolTable, char *, Typeptr); /* enter symbol into table */
 SymbolTableEntry lookup_st(SymbolTable, char *); /* lookup symbol */
-int enter_newscope(char *s, int type);
+int enter_newscope(char *s, Typeptr tp);
 void create_builtin_packages(SymbolTable global);
 void check_qualified_name(SymbolTable global, struct tree *n);
+void type_checker(struct tree *n);
+void class_declaration(struct tree *n);
+void func_declaration(struct tree *n);
 
 extern SymbolTable globals; /* global symbols */
 extern SymbolTable current; /* current */

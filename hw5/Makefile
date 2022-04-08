@@ -25,34 +25,33 @@ jzero_main.o: jzero_main.c
 	$(CC) $(CFLAGS) -c $^
 
 token.o: token.c token.h
-	$(CC) $(CFLAGS) -c $^
+	$(CC) $(CFLAGS) -c $<
 
 tree.o: tree.c tree.h
-	$(CC) $(CFLAGS) -c $^
+	$(CC) $(CFLAGS) -c $<
 
 dot_tree.o: dot_tree.c
 	$(CC) $(CFLAGS) -c $^
 
 error.o: error.c error.h
-	$(CC) $(CFLAGS) -c $^
+	$(CC) $(CFLAGS) -c $<
 
 lex.yy.o: lex.yy.c tree.h
-	$(CC) $(CFLAGS) -c $^
+	$(CC) $(CFLAGS) -c $<
 
 j0gram.tab.o: j0gram.tab.c j0gram.y tree.h
-	$(CC) $(CFLAGS) -c j0gram.tab.c
+	$(CC) $(CFLAGS) -c $<
 
 symt.o: symt.c symt.h
-	$(CC) $(CFLAGS) -c $^
+	$(CC) $(CFLAGS) -c $<
 
 type.o: type.c type.h
-	$(CC) $(CFLAGS) -c $^
+	$(CC) $(CFLAGS) -c $<
 
 .PHONY: clean
 clean:
 	rm -rf *.o $(targets)
 	rm lex.yy.c
 	rm -rf j0gram.tab.*
-	rm *.h.gch
 	rm ./dot/*.dot
 	rm ./dot/*.png

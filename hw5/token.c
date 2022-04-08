@@ -1,3 +1,9 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <errno.h>
+
 #include "token.h"
 #include "defs.h"
 #include "error.h"
@@ -28,20 +34,10 @@ int init_token(int code){
 		return -1;
 	}*/
 
-	/*struct tree *new_tree = malloc(sizeof(struct tree));
-	yylval.treeptr = new_tree;
-	yylval.treeptr->prodrule = code;
-	yylval.treeptr->nkids = 0;
-	yylval.treeptr->symbolname = NULL;
-
-	for(int i = 0; i < 9; i++){
-		yylval.treeptr->kids[i] = NULL;
-	}
-
-	yylval.treeptr->leaf = NULL;*/
 	yylval.treeptr = create_tree();
 	yylval.treeptr->prodrule = TOKEN;
 	yylval.treeptr->symbolname = "Token";
+	yylval.treeptr->type = NULL;
 	yylval.treeptr->nkids = 0;
 
 	yylval.treeptr->leaf = malloc(sizeof(struct token));

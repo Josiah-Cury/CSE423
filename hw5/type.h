@@ -1,7 +1,7 @@
 #ifndef TYPE_H
 #define TYPE_H
 
-#include "defs.h"
+#include "tree.h"
 
 typedef struct sym_table *SymbolTable;
 
@@ -18,6 +18,17 @@ typedef struct sym_table *SymbolTable;
 #define BOOLEAN_TYPE 1000008
 
 #define LAST_TYPE    1000008
+
+typedef struct param {
+	char *name;
+	struct typeinfo *type;
+	struct param *next;
+} *paramlist;
+
+struct field {			/* members (fields) of structs */
+	char *name;
+	struct type *elemtype;
+};
 
 typedef struct typeinfo {
 	int basetype;
@@ -48,7 +59,8 @@ typedef struct typeinfo {
 } *Typeptr;
 
 Typeptr alc_type(int base);
-Typeptr alc_func_type(SymbolTable st, char *s);
-Typeptr alc_class_type(SymbolTable st, char *s);
+Typeptr alc_func_type(struct tree *n);
+Typeptr alc_class_type(struct tree *n);
+const char *getTypeName(int basetype);
 
 #endif

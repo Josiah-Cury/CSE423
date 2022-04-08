@@ -1,4 +1,9 @@
 #include "tree.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdarg.h>
+
 
 int serial = 0;
 
@@ -12,6 +17,7 @@ struct tree *link_tree(int prodrule, char *symbolname, int nkids, ...) {
     linked_tree->symbolname = symbolname;
     linked_tree->nkids = nkids;
 	linked_tree->id = serial++;
+	linked_tree->type = NULL;
 
     for(int i = 0; i < nkids; i++){
         linked_tree->kids[i] = va_arg(arg, struct tree *);

@@ -1,6 +1,7 @@
 #ifndef DOT_TREE_H_
 #define DOT_TREE_H_
 
+#include <stdio.h>
 #include "tree.h"
 
 void print_graph(struct tree *root, char *filename);

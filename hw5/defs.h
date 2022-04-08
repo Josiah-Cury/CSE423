@@ -1,8 +1,6 @@
 #ifndef DEFS_H_
 #define DEFS_H_
 
-#include "tree.h"
-
 //jzero.l variables
 extern int rows, words, chars;
 extern FILE *yyin;

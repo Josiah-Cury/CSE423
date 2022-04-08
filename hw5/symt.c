@@ -11,6 +11,7 @@
 #include <string.h>
 #include "symt.h"
 #include "error.h"
+#include "defs.h"
 
 void dovariabledeclarator(struct tree *n);
 //void semanticerror(char *s, struct tree *n);
@@ -141,19 +142,18 @@ char * alloc(int n)
    return a;
 }
 
-int enter_newscope(char *s, int type)
+int enter_newscope(char *s, Typeptr tp)
 {
 	/* allocate a new symbol table */
 	/* insert s into current symbol table */
 	/* attach new symbol table to s's symbol table in the current symbol table*/
 	/* push new symbol on the stack, making it the current symbol table */
 	SymbolTable nst = new_st(s, 20);
-	Typeptr tp;
 
-	if (type == CLASS_TYPE) {
-		tp = alc_class_type(nst, s);
+	if (tp->basetype == CLASS_TYPE) {
+		tp->u.c.st = nst;
 	} else {
-		tp = alc_func_type(nst, s);
+		tp->u.f.st = nst;
 	}
 
 	if (!insert_sym(current, s, tp)) {
@@ -172,15 +172,12 @@ void populate_symboltables(struct tree * n)
    /* pre-order activity */
    switch (n->prodrule) {
         case PR_METHOD_DECLARATOR/* whatever production rule(s) enter a function scope */ : {
-			if (!enter_newscope(n->kids[0]->leaf->text, FUNC_TYPE)) {
-				semantic_error("There exists a function by the same name.", n->kids[0]);
-			}
+			func_declaration(n);
             break;
         }
+
         case PR_CLASS_DECL: {
-			if (!enter_newscope(n->kids[2]->leaf->text, CLASS_TYPE)) {
-				semantic_error("There exists a class by the same name.", n->kids[2]);
-			}
+			class_declaration(n);
             break;
         }
 
@@ -193,19 +190,21 @@ void populate_symboltables(struct tree * n)
 			dovariabledeclarator(n);
 			break;
 		}
+
 		case PR_QUALIFIED_NAME: {
 			check_qualified_name(current, n);
 			break;
 		}
 
 		case TOKEN: {
-
 			if (n->leaf->category == IDENTIFIER) {
 				if(lookup_st(current, n->leaf->text) == NULL) {
 					semantic_error("There is no matching symbol in the symbol table!", n);
 				}
 			}
+			break;
         }
+
    }
 
    /* visit children */
@@ -218,15 +217,112 @@ void populate_symboltables(struct tree * n)
 		   	break;
 	}
 
-   /* post-order activity */
-   switch (n->prodrule) {
+	/* post-order activity */
+	switch (n->prodrule) {
+		case PR_METHOD_DECL:
+		case PR_CLASS_DECL:
+			popscope();
+			break;
+		default:
+			type_checker(n);
+			break;
+	}
 
-       case PR_METHOD_DECL:
-	   case PR_CLASS_DECL:
-         popscope();
-         break;
-   }
+}
 
+void type_checker(struct tree *n) {
+//struct tree *node;
+SymbolTableEntry ste;
+Typeptr type;
+int int_to_float = 0;
+//char *s;
+
+switch (n->prodrule) {
+	case PR_METHODCALL_P:
+		// node = n->kids[0];
+		// if (node->prodrule != PR_QUALIFIED_NAME) {
+		// 	printf("Function PR_METHODCALL_P: %s\n", n->kids[0]->leaf->text);
+		// } else {
+		// 	printf("Builtin PR_METHODCALL_P: ");
+		// 	while (node->kids[1]->prodrule == PR_QUALIFIED_NAME) {
+		// 		printf("%s.", node->kids[0]->leaf->text);
+		// 		node = node->kids[1];
+		// 	}
+		// 	printf("%s.%s\n", node->kids[0]->leaf->text, node->kids[1]->leaf->text);
+		// }
+		//
+		// node = n->kids[1];
+		// if (node != NULL)
+		// 	printf("Checking this symbol's arguments: %s\n", node->symbolname);
+		// while()
+	break;
+
+	case PR_UNARY_EXPR_NEG:
+		ste = lookup_st(current, n->kids[1]->leaf->text);
+		type = ste->type;
+
+		printf("Negation variable: %s   Type: %s\n",
+			n->kids[1]->leaf->text, getTypeName(type->basetype));
+
+		switch (type->basetype) {
+			case INT_TYPE:
+			case FLOAT_TYPE:
+				break;
+			default:
+				semantic_error("This is not a proper type for a unary negation.", n->kids[1]);
+		}
+
+		n->type = alc_type(type->basetype);
+	break;
+
+	case PR_UNARY_EXPR_NOT:
+		ste = lookup_st(current, n->kids[1]->leaf->text);
+		type = ste->type;
+
+		printf("Logical Not variable: %s   Type: %s\n",
+			n->kids[1]->leaf->text, getTypeName(type->basetype));
+
+		switch (type->basetype) {
+			case BOOLEAN_TYPE:
+				break;
+			default:
+				semantic_error("This is not a proper type for a unary not.", n->kids[1]);
+		}
+
+		n->type = alc_type(BOOLEAN_TYPE);
+	break;
+
+	case PR_MUL_EXPR_MULT:
+	case PR_MUL_EXPR_DIV:
+	case PR_MUL_EXPR_MOD:
+		printf("Found a MUL_EXPR\n");
+		for (int i = 0; i < 2; i++) {
+			if (n->kids[i]->prodrule == TOKEN) {
+				printf("Lineno: %d   Token: %s\n",
+				n->kids[i]->leaf->lineno, n->kids[i]->leaf->text);
+				type = lookup_st(current, n->kids[i]->leaf->text)->type;
+			} else {
+				type = n->kids[i]->type;
+				printf("The type is: %s\n", getTypeName(type->basetype));
+			}
+
+			switch (type->basetype) {
+				case FLOAT_TYPE:
+					int_to_float=1;
+				case INT_TYPE:
+					break;
+				default:
+					semantic_error("This is not a proper type for a multiplication expression.", n->kids[i]);
+			}
+		}
+
+		if (int_to_float) {
+			n->type = alc_type(FLOAT_TYPE);
+		} else {
+			n->type = alc_type(INT_TYPE);
+		}
+	break;
+}
 }
 
 void printsyms(struct tree * n)
@@ -285,11 +381,11 @@ void dovariabledeclarator(struct tree * n)
 		var = alc_type(STRING_TYPE);
 	} else {
 		semantic_error("There should be no class instantiation in j0.1!", n->kids[0]);
-		if (!lookup_st(current, n->kids[0]->leaf->text)) {
-			semantic_error("There is no class by this name.", n->kids[0]);
-		}
-		SymbolTable nst = new_st(n->kids[1]->leaf->text, 20);
-		var = alc_class_type(nst, n->kids[0]->leaf->text);
+		// if (!lookup_st(current, n->kids[0]->leaf->text)) {
+		// 	semantic_error("There is no class by this name.", n->kids[0]);
+		// }
+		// SymbolTable nst = new_st(n->kids[1]->leaf->text, 20);
+		// var = alc_class_type(nst, n->kids[0]->leaf->text);
 	}
 
 	switch (n->prodrule) {
@@ -312,6 +408,20 @@ void dovariabledeclarator(struct tree * n)
 	}
 
 
+}
+
+void class_declaration(struct tree *n) {
+	Typeptr type = alc_class_type(n);
+	if (!enter_newscope(n->kids[2]->leaf->text, type)) {
+		semantic_error("There exists a class by the same name.", n->kids[2]);
+	}
+}
+
+void func_declaration(struct tree *n) {
+	Typeptr type = alc_func_type(n);
+	if (!enter_newscope(n->kids[0]->leaf->text, type)) {
+		semantic_error("There exists a function by the same name.", n->kids[0]);
+	}
 }
 
 void printsymbols(SymbolTable st, int level)
@@ -389,42 +499,42 @@ void printsymbols(SymbolTable st, int level)
 void create_builtin_packages(SymbolTable global) {
 	//SymbolTable System_st, out_st;
 
-	enter_newscope("System", CLASS_TYPE);
-		enter_newscope("out", CLASS_TYPE);
-			enter_newscope("println", FUNC_TYPE);
+	enter_newscope("System", alc_type(CLASS_TYPE));
+		enter_newscope("out", alc_type(CLASS_TYPE));
+			enter_newscope("println", alc_type(FUNC_TYPE));
 			popscope();
 
-			enter_newscope("print", FUNC_TYPE);
+			enter_newscope("print", alc_type(FUNC_TYPE));
 			popscope();
 		popscope();
 
-		enter_newscope("in", CLASS_TYPE);
-			enter_newscope("read", FUNC_TYPE);
+		enter_newscope("in", alc_type(CLASS_TYPE));
+			enter_newscope("read", alc_type(FUNC_TYPE));
 			popscope();
 		popscope();
 	popscope();
 
-	enter_newscope("String", CLASS_TYPE);
+	enter_newscope("String", alc_type(CLASS_TYPE));
 
-		enter_newscope("charAt", FUNC_TYPE);
+		enter_newscope("charAt", alc_type(FUNC_TYPE));
 		popscope();
 
-		enter_newscope("equals", FUNC_TYPE);
+		enter_newscope("equals", alc_type(FUNC_TYPE));
 		popscope();
 
-		enter_newscope("compareTo", FUNC_TYPE);
+		enter_newscope("compareTo", alc_type(FUNC_TYPE));
 		popscope();
 
-		enter_newscope("length", FUNC_TYPE);
+		enter_newscope("length", alc_type(FUNC_TYPE));
 		popscope();
 
-		enter_newscope("toString", FUNC_TYPE);
+		enter_newscope("toString", alc_type(FUNC_TYPE));
 		popscope();
 
 	popscope();
 
-	enter_newscope("InputStream", CLASS_TYPE);
-		enter_newscope("read", FUNC_TYPE);
+	enter_newscope("InputStream", alc_type(CLASS_TYPE));
+		enter_newscope("read", alc_type(FUNC_TYPE));
 		popscope();
 	popscope();
 }
