@@ -181,6 +181,10 @@ void populate_symboltables(struct tree * n)
             break;
         }
 
+		case PR_INSTANTIATION_EXPR: {
+			semantic_error("No class instantiation!", n->kids[0]);
+		}
+
 		case PR_FIELD_DECL:
 		case PR_LOCAL_VAR_DECL:
 		case PR_FIELD_DECL_ASSIGN:
@@ -232,8 +236,7 @@ void populate_symboltables(struct tree * n)
 
 void type_checker(struct tree *n) {
 //struct tree *node;
-SymbolTableEntry ste;
-Typeptr type;
+Typeptr type, other_type;
 int int_to_float = 0;
 //char *s;
 
@@ -258,13 +261,10 @@ switch (n->prodrule) {
 	break;
 
 	case PR_UNARY_EXPR_NEG:
-		ste = lookup_st(current, n->kids[1]->leaf->text);
-		type = ste->type;
-
-		printf("Negation variable: %s   Type: %s\n",
-			n->kids[1]->leaf->text, getTypeName(type->basetype));
+		type = get_type(n->kids[1]);
 
 		switch (type->basetype) {
+			case CHAR_TYPE:
 			case INT_TYPE:
 			case FLOAT_TYPE:
 				break;
@@ -272,15 +272,18 @@ switch (n->prodrule) {
 				semantic_error("This is not a proper type for a unary negation.", n->kids[1]);
 		}
 
-		n->type = alc_type(type->basetype);
+		if (type->basetype == FLOAT_TYPE) {
+			n->type = alc_type(FLOAT_TYPE);
+		} else {
+			n->type = alc_type(INT_TYPE);
+		}
+
 	break;
 
+	//very similar to PR_UNARY_EXPR_NEG
+	//Come back later to shorten
 	case PR_UNARY_EXPR_NOT:
-		ste = lookup_st(current, n->kids[1]->leaf->text);
-		type = ste->type;
-
-		printf("Logical Not variable: %s   Type: %s\n",
-			n->kids[1]->leaf->text, getTypeName(type->basetype));
+		type = get_type(n->kids[1]);
 
 		switch (type->basetype) {
 			case BOOLEAN_TYPE:
@@ -295,21 +298,23 @@ switch (n->prodrule) {
 	case PR_MUL_EXPR_MULT:
 	case PR_MUL_EXPR_DIV:
 	case PR_MUL_EXPR_MOD:
-		printf("Found a MUL_EXPR\n");
 		for (int i = 0; i < 2; i++) {
-			if (n->kids[i]->prodrule == TOKEN) {
-				printf("Lineno: %d   Token: %s\n",
-				n->kids[i]->leaf->lineno, n->kids[i]->leaf->text);
-				type = lookup_st(current, n->kids[i]->leaf->text)->type;
-			} else {
-				type = n->kids[i]->type;
-				printf("The type is: %s\n", getTypeName(type->basetype));
-			}
+			type = get_type(n->kids[i]);
+
+			//just a print to see expression values
+			// if (n->kids[i]->prodrule == TOKEN) {
+			// 	printf("Lineno: %d   Token: %s\n",
+			// 	n->kids[i]->leaf->lineno, n->kids[i]->leaf->text);
+			// } else {
+			//
+			// 	printf("The type is: %s\n", getTypeName(type->basetype));
+			// }
 
 			switch (type->basetype) {
 				case FLOAT_TYPE:
 					int_to_float=1;
 				case INT_TYPE:
+				case CHAR_TYPE:
 					break;
 				default:
 					semantic_error("This is not a proper type for a multiplication expression.", n->kids[i]);
@@ -322,6 +327,149 @@ switch (n->prodrule) {
 			n->type = alc_type(INT_TYPE);
 		}
 	break;
+
+	//This is the same case as PR_MUL_EXPR
+	////Come back later to shorten
+	case PR_ADD_EXPR_ADD:
+	case PR_ADD_EXPR_SUB:
+		for (int i = 0; i < 2; i++) {
+			type = get_type(n->kids[i]);
+
+			switch (type->basetype) {
+				case FLOAT_TYPE:
+					int_to_float=1;
+				case INT_TYPE:
+				case CHAR_TYPE:
+					break;
+				default:
+					semantic_error("This is not a proper type for a multiplication expression.", n->kids[i]);
+			}
+		}
+
+		if (int_to_float) {
+			n->type = alc_type(FLOAT_TYPE);
+		} else {
+			n->type = alc_type(INT_TYPE);
+		}
+		break;
+
+	case PR_REL_EXPR:
+		for (int i = 0; i < 3; i+=2) {
+			type = get_type(n->kids[i]);
+
+			switch (type->basetype) {
+				case FLOAT_TYPE:
+				case INT_TYPE:
+				case CHAR_TYPE:
+					break;
+				default:
+					semantic_error("This is not a proper type for a relational expression.", n->kids[i]);
+			}
+		}
+		n->type = alc_type(BOOLEAN_TYPE);
+
+	case PR_EQ_EXPR:
+	case PR_EQ_EXPR_NOT:
+		type = get_type(n->kids[0]);
+		other_type = get_type(n->kids[2]);
+
+		if (type != other_type) {
+			switch (type->basetype) {
+				case FLOAT_TYPE:
+				case INT_TYPE:
+				case CHAR_TYPE:
+					break;
+				default:
+					semantic_error("This is not a proper type for a equality expression.", n->kids[0]);
+			}
+			switch (other_type->basetype) {
+				case FLOAT_TYPE:
+				case INT_TYPE:
+				case CHAR_TYPE:
+					break;
+				default:
+					semantic_error("This is not a proper type for an equality expression.", n->kids[2]);
+			}
+		}
+
+		n->type = alc_type(BOOLEAN_TYPE);
+		break;
+
+		case PR_COND_OR_EXPR:
+		case PR_COND_AND_EXPR:
+			for (int i = 0; i < 2; i++) {
+				type = get_type(n->kids[i]);
+
+				if (type->basetype != BOOLEAN_TYPE) {
+					semantic_error("This is not a boolean type for a Conditional Expression.", n->kids[i]);
+				}
+			}
+			n->type = alc_type(BOOLEAN_TYPE);
+			break;
+
+		case PR_ASSIGNMENT_UNARY:
+			type = get_type(n->kids[0]);
+
+			switch (type->basetype) {
+				case CHAR_TYPE:
+				case INT_TYPE:
+				case FLOAT_TYPE:
+					break;
+				default:
+					semantic_error("This is not a proper type for a unary negation.", n->kids[0]);
+			}
+			n->type = type;
+			break;
+
+		case PR_ASSIGNMENT:
+			type = get_type(n->kids[0]);
+			other_type = get_type(n->kids[2]);
+
+			if (type != other_type) {
+				switch (type->basetype) {
+					case FLOAT_TYPE:
+						switch (other_type->basetype) {
+							case FLOAT_TYPE:
+							case INT_TYPE:
+							case CHAR_TYPE:
+								other_type = alc_type(FLOAT_TYPE);
+								break;
+							default:
+								semantic_error("Mismatched type for assignment",
+									n->kids[0]);
+						}
+						break;
+					case INT_TYPE:
+						switch (other_type->basetype) {
+							case FLOAT_TYPE:
+								semantic_error("No type demotion.", n->kids[0]);
+							case INT_TYPE:
+							case CHAR_TYPE:
+								other_type = alc_type(INT_TYPE);
+								break;
+							default:
+								semantic_error("Mismatched type for assignment",
+								n->kids[0]);
+						}
+						break;
+					case CHAR_TYPE:
+						switch (other_type->basetype) {
+							case FLOAT_TYPE:
+							case INT_TYPE:
+								semantic_error("No type demotion.", n->kids[0]);
+								break;
+							default:
+								semantic_error("Mismatched type for assignment",
+									n->kids[0]);
+						}
+					default:
+						semantic_error("This is not a proper type for an assignment expression.", n->kids[0]);
+				}
+			}
+			break;
+
+		case PR_ASSIGNMENT_DECL:
+			break;
 }
 }
 
@@ -379,14 +527,15 @@ void dovariabledeclarator(struct tree * n)
 	} else if (!strcmp(type, "String")) {
 		//printf("FOUND STRING!\n");
 		var = alc_type(STRING_TYPE);
-	} else {
-		semantic_error("There should be no class instantiation in j0.1!", n->kids[0]);
+	}
+	// else {
+	// 	semantic_error("There should be no class instantiation in j0.1!", n->kids[0]);
 		// if (!lookup_st(current, n->kids[0]->leaf->text)) {
 		// 	semantic_error("There is no class by this name.", n->kids[0]);
 		// }
 		// SymbolTable nst = new_st(n->kids[1]->leaf->text, 20);
 		// var = alc_class_type(nst, n->kids[0]->leaf->text);
-	}
+	// }
 
 	switch (n->prodrule) {
 		case PR_FIELD_DECL:

@@ -10,7 +10,12 @@ public class TypeChecking {
 	public static int foo(int x, String s) {
 		int y = 5;
 		boolean b;
+		boolean t;
+		boolean f;
 		x = y * -x;
+		x = x + -y * x;
+		b = x < y;
+		b = t && f;
 		//x = y * x;
 		//x = -x;
 		//b = !b;

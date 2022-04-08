@@ -61,6 +61,7 @@ typedef struct typeinfo {
 Typeptr alc_type(int base);
 Typeptr alc_func_type(struct tree *n);
 Typeptr alc_class_type(struct tree *n);
+Typeptr get_type(struct tree *n);
 const char *getTypeName(int basetype);
 
 #endif

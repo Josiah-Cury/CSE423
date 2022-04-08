@@ -20,6 +20,7 @@ public class pet {
 
 	public static void main(String[] argv) {
 		pet myDog = new pet();
-		myDog.play();
+		// myDog.play();
+
 	}
 }

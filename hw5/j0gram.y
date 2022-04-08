@@ -85,7 +85,7 @@
 %type <treeptr> ReturnStmt
 %type <treeptr> Primary
 %type <treeptr> Literal
-%type <treeptr> OptLiteral
+%type <treeptr> OptInt
 %type <treeptr> InstantiationExpr
 %type <treeptr> ArgList
 %type <treeptr> FieldAccess
@@ -165,7 +165,7 @@ OptTypeArray:
 	;
 
 TypeArray:
-	Type '[' OptLiteral ']'
+	Type '[' OptInt ']'
 		{ $$ = link_tree(PR_TYPE_ARRAY, "TypeArrayAfter", 2, $1, $3); }
 	| '[' ']' Type
 		{ $$ = $3; }
@@ -447,8 +447,8 @@ Primary:
 		{}
 	;
 
-OptLiteral:
-	Literal
+OptInt:
+	INT
 		{}
 	| %empty
 		{}
@@ -558,9 +558,9 @@ EqExpr:
 	RelExpr
 		{}
 	| EqExpr EQUAL RelExpr
-		{ $$ = link_tree(PR_EQ_EXPR, "EqExpr", 2, $1, $3); }
+		{ $$ = link_tree(PR_EQ_EXPR, "EqExpr", 3, $1, $2, $3); }
 	| EqExpr NOT_EQUAL RelExpr
-		{ $$ = link_tree(PR_EQ_EXPR_NOT, "EqExpr_Not", 2, $1, $3); }
+		{ $$ = link_tree(PR_EQ_EXPR_NOT, "EqExpr_Not", 3, $1, $2, $3); }
 	;
 
 CondAndExpr:

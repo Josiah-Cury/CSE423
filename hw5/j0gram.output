@@ -49,7 +49,7 @@ Grammar
    14 OptTypeArray: TypeArray
    15             | Type
 
-   16 TypeArray: Type '[' OptLiteral ']'
+   16 TypeArray: Type '[' OptInt ']'
    17          | '[' ']' Type
 
    18 Type: INT
@@ -170,8 +170,8 @@ Grammar
    96        | FieldAccess
    97        | MethodCall
 
-   98 OptLiteral: Literal
-   99           | %empty
+   98 OptInt: INT
+   99       | %empty
 
   100 Literal: INTEGER_LITERAL
   101        | FLOAT_LITERAL
@@ -272,7 +272,7 @@ Terminals, with rules where they appear
     ELSE <treeptr> (260) 74 76 79
     FOR <treeptr> (261) 81
     IF <treeptr> (262) 73 74 75 76
-    INT <treeptr> (263) 18
+    INT <treeptr> (263) 18 98
     RETURN <treeptr> (264) 93
     VOID <treeptr> (265) 34
     WHILE <treeptr> (266) 80
@@ -457,12 +457,12 @@ Nonterminals, with rules where they appear
     Primary <treeptr> (114)
         on left: 94 95 96 97
         on right: 110 113 114 115
-    OptLiteral <treeptr> (115)
+    OptInt <treeptr> (115)
         on left: 98 99
         on right: 16
     Literal <treeptr> (116)
         on left: 100 101 102 103 104 105
-        on right: 94 98
+        on right: 94
     InstantiationExpr <treeptr> (117)
         on left: 106 107
         on right: 72 141
@@ -799,7 +799,7 @@ State 26
    10 FieldDecl: Type . VarDecls ';'
    12 FieldDeclAssign: Type . VarDeclarator '=' Expr ';'
    15 OptTypeArray: Type .
-   16 TypeArray: Type . '[' OptLiteral ']'
+   16 TypeArray: Type . '[' OptInt ']'
 
     IDENTIFIER  shift, and go to state 44
     '['         shift, and go to state 45
@@ -902,7 +902,7 @@ State 35
 State 36
 
    15 OptTypeArray: Type .
-   16 TypeArray: Type . '[' OptLiteral ']'
+   16 TypeArray: Type . '[' OptInt ']'
 
     '['  shift, and go to state 55
 
@@ -999,21 +999,15 @@ State 44
 
 State 45
 
-   16 TypeArray: Type '[' . OptLiteral ']'
+   16 TypeArray: Type '[' . OptInt ']'
    32 VarDeclarator: '[' . ']' VarDeclarator
 
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
-    ']'                shift, and go to state 70
+    INT  shift, and go to state 64
+    ']'  shift, and go to state 65
 
-    ']'  [reduce using rule 99 (OptLiteral)]
+    ']'  [reduce using rule 99 (OptInt)]
 
-    OptLiteral  go to state 71
-    Literal     go to state 72
+    OptInt  go to state 66
 
 
 State 46
@@ -1021,8 +1015,8 @@ State 46
    10 FieldDecl: Type VarDecls . ';'
    29 VarDecls: VarDecls . ',' VarDeclarator
 
-    ','  shift, and go to state 73
-    ';'  shift, and go to state 74
+    ','  shift, and go to state 67
+    ';'  shift, and go to state 68
 
 
 State 47
@@ -1031,8 +1025,8 @@ State 47
    28 VarDecls: VarDeclarator .
    31 VarDeclarator: VarDeclarator . '[' ']'
 
-    '='  shift, and go to state 75
-    '['  shift, and go to state 76
+    '='  shift, and go to state 69
+    '['  shift, and go to state 70
 
     $default  reduce using rule 28 (VarDecls)
 
@@ -1041,7 +1035,7 @@ State 48
 
    40 MethodDeclarator: IDENTIFIER . '(' FormalParmListOpt ')'
 
-    '('  shift, and go to state 77
+    '('  shift, and go to state 71
 
 
 State 49
@@ -1055,25 +1049,25 @@ State 50
 
    50 Block: '{' . BlockStmtsOpt '}'
 
-    BREAK              shift, and go to state 78
+    BREAK              shift, and go to state 72
     DOUBLE             shift, and go to state 8
-    FOR                shift, and go to state 79
-    IF                 shift, and go to state 80
+    FOR                shift, and go to state 73
+    IF                 shift, and go to state 74
     INT                shift, and go to state 9
-    RETURN             shift, and go to state 81
-    WHILE              shift, and go to state 82
+    RETURN             shift, and go to state 75
+    WHILE              shift, and go to state 76
     STRING             shift, and go to state 11
     BOOLEAN            shift, and go to state 12
     CHAR               shift, and go to state 13
     FLOAT              shift, and go to state 14
-    NEW                shift, and go to state 83
+    NEW                shift, and go to state 77
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '('                shift, and go to state 84
     ';'                shift, and go to state 85
     '['                shift, and go to state 18
@@ -1129,7 +1123,7 @@ State 53
    11 FieldDecl: PUBLIC STATIC Type . VarDecls ';'
    13 FieldDeclAssign: PUBLIC STATIC Type . VarDeclarator '=' Expr ';'
    15 OptTypeArray: Type .
-   16 TypeArray: Type . '[' OptLiteral ']'
+   16 TypeArray: Type . '[' OptInt ']'
 
     IDENTIFIER  shift, and go to state 44
     '['         shift, and go to state 45
@@ -1151,19 +1145,13 @@ State 54
 
 State 55
 
-   16 TypeArray: Type '[' . OptLiteral ']'
+   16 TypeArray: Type '[' . OptInt ']'
 
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INT  shift, and go to state 64
 
-    $default  reduce using rule 99 (OptLiteral)
+    $default  reduce using rule 99 (OptInt)
 
-    OptLiteral  go to state 71
-    Literal     go to state 72
+    OptInt  go to state 66
 
 
 State 56
@@ -1230,47 +1218,12 @@ State 63
 
 State 64
 
-  100 Literal: INTEGER_LITERAL .
+   98 OptInt: INT .
 
-    $default  reduce using rule 100 (Literal)
+    $default  reduce using rule 98 (OptInt)
 
 
 State 65
-
-  101 Literal: FLOAT_LITERAL .
-
-    $default  reduce using rule 101 (Literal)
-
-
-State 66
-
-  103 Literal: STRING_LITERAL .
-
-    $default  reduce using rule 103 (Literal)
-
-
-State 67
-
-  102 Literal: BOOLEAN_LITERAL .
-
-    $default  reduce using rule 102 (Literal)
-
-
-State 68
-
-  104 Literal: NULLVAL .
-
-    $default  reduce using rule 104 (Literal)
-
-
-State 69
-
-  105 Literal: CHARACTER_LITERAL .
-
-    $default  reduce using rule 105 (Literal)
-
-
-State 70
 
    32 VarDeclarator: '[' ']' . VarDeclarator
 
@@ -1280,21 +1233,14 @@ State 70
     VarDeclarator  go to state 119
 
 
-State 71
+State 66
 
-   16 TypeArray: Type '[' OptLiteral . ']'
+   16 TypeArray: Type '[' OptInt . ']'
 
     ']'  shift, and go to state 120
 
 
-State 72
-
-   98 OptLiteral: Literal .
-
-    $default  reduce using rule 98 (OptLiteral)
-
-
-State 73
+State 67
 
    29 VarDecls: VarDecls ',' . VarDeclarator
 
@@ -1304,14 +1250,14 @@ State 73
     VarDeclarator  go to state 121
 
 
-State 74
+State 68
 
    10 FieldDecl: Type VarDecls ';' .
 
     $default  reduce using rule 10 (FieldDecl)
 
 
-State 75
+State 69
 
    12 FieldDeclAssign: Type VarDeclarator '=' . Expr ';'
 
@@ -1321,14 +1267,14 @@ State 75
     BOOLEAN            shift, and go to state 12
     CHAR               shift, and go to state 13
     FLOAT              shift, and go to state 14
-    NEW                shift, and go to state 83
+    NEW                shift, and go to state 77
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '-'                shift, and go to state 122
     '!'                shift, and go to state 123
     '('                shift, and go to state 84
@@ -1356,14 +1302,14 @@ State 75
     LeftHandSide       go to state 111
 
 
-State 76
+State 70
 
    31 VarDeclarator: VarDeclarator '[' . ']'
 
     ']'  shift, and go to state 139
 
 
-State 77
+State 71
 
    40 MethodDeclarator: IDENTIFIER '(' . FormalParmListOpt ')'
 
@@ -1385,7 +1331,7 @@ State 77
     FormalParm         go to state 61
 
 
-State 78
+State 72
 
    91 BreakStmt: BREAK . ';'
    92          | BREAK . IDENTIFIER ';'
@@ -1394,14 +1340,14 @@ State 78
     ';'         shift, and go to state 142
 
 
-State 79
+State 73
 
    81 ForStmt: FOR . '(' ForInit ';' ExprOpt ';' ForUpdate ')' Block
 
     '('  shift, and go to state 143
 
 
-State 80
+State 74
 
    73 IfThenStmt: IF . '(' Expr ')' Block
    74 IfThenElseStmt: IF . '(' Expr ')' Block ELSE Block
@@ -1411,7 +1357,7 @@ State 80
     '('  shift, and go to state 144
 
 
-State 81
+State 75
 
    93 ReturnStmt: RETURN . ExprOpt ';'
 
@@ -1421,14 +1367,14 @@ State 81
     BOOLEAN            shift, and go to state 12
     CHAR               shift, and go to state 13
     FLOAT              shift, and go to state 14
-    NEW                shift, and go to state 83
+    NEW                shift, and go to state 77
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '-'                shift, and go to state 122
     '!'                shift, and go to state 123
     '('                shift, and go to state 84
@@ -1459,14 +1405,14 @@ State 81
     LeftHandSide       go to state 111
 
 
-State 82
+State 76
 
    80 WhileStmt: WHILE . '(' Expr ')' Stmt
 
     '('  shift, and go to state 147
 
 
-State 83
+State 77
 
   106 InstantiationExpr: NEW . Type '(' ArgListOpt ')'
   107                  | NEW . TypeArray
@@ -1486,6 +1432,48 @@ State 83
     QualifiedName  go to state 28
 
 
+State 78
+
+  100 Literal: INTEGER_LITERAL .
+
+    $default  reduce using rule 100 (Literal)
+
+
+State 79
+
+  101 Literal: FLOAT_LITERAL .
+
+    $default  reduce using rule 101 (Literal)
+
+
+State 80
+
+  103 Literal: STRING_LITERAL .
+
+    $default  reduce using rule 103 (Literal)
+
+
+State 81
+
+  102 Literal: BOOLEAN_LITERAL .
+
+    $default  reduce using rule 102 (Literal)
+
+
+State 82
+
+  104 Literal: NULLVAL .
+
+    $default  reduce using rule 104 (Literal)
+
+
+State 83
+
+  105 Literal: CHARACTER_LITERAL .
+
+    $default  reduce using rule 105 (Literal)
+
+
 State 84
 
    95 Primary: '(' . Expr ')'
@@ -1496,14 +1484,14 @@ State 84
     BOOLEAN            shift, and go to state 12
     CHAR               shift, and go to state 13
     FLOAT              shift, and go to state 14
-    NEW                shift, and go to state 83
+    NEW                shift, and go to state 77
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '-'                shift, and go to state 122
     '!'                shift, and go to state 123
     '('                shift, and go to state 84
@@ -1547,7 +1535,7 @@ State 86
 
 State 87
 
-   16 TypeArray: Type . '[' OptLiteral ']'
+   16 TypeArray: Type . '[' OptInt ']'
    58 LocalVarDecl: Type . VarDecls
   145 Assignment: Type . VarDeclarator AssignOp Expr
 
@@ -1592,25 +1580,25 @@ State 91
    51 BlockStmtsOpt: BlockStmts .
    54 BlockStmts: BlockStmts . BlockStmt
 
-    BREAK              shift, and go to state 78
+    BREAK              shift, and go to state 72
     DOUBLE             shift, and go to state 8
-    FOR                shift, and go to state 79
-    IF                 shift, and go to state 80
+    FOR                shift, and go to state 73
+    IF                 shift, and go to state 74
     INT                shift, and go to state 9
-    RETURN             shift, and go to state 81
-    WHILE              shift, and go to state 82
+    RETURN             shift, and go to state 75
+    WHILE              shift, and go to state 76
     STRING             shift, and go to state 11
     BOOLEAN            shift, and go to state 12
     CHAR               shift, and go to state 13
     FLOAT              shift, and go to state 14
-    NEW                shift, and go to state 83
+    NEW                shift, and go to state 77
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '('                shift, and go to state 84
     ';'                shift, and go to state 85
     '['                shift, and go to state 18
@@ -1803,7 +1791,7 @@ State 112
    11 FieldDecl: PUBLIC STATIC Type VarDecls . ';'
    29 VarDecls: VarDecls . ',' VarDeclarator
 
-    ','  shift, and go to state 73
+    ','  shift, and go to state 67
     ';'  shift, and go to state 164
 
 
@@ -1814,7 +1802,7 @@ State 113
    31 VarDeclarator: VarDeclarator . '[' ']'
 
     '='  shift, and go to state 165
-    '['  shift, and go to state 76
+    '['  shift, and go to state 70
 
     $default  reduce using rule 28 (VarDecls)
 
@@ -1830,7 +1818,7 @@ State 115
 
    32 VarDeclarator: '[' . ']' VarDeclarator
 
-    ']'  shift, and go to state 70
+    ']'  shift, and go to state 65
 
 
 State 116
@@ -1838,7 +1826,7 @@ State 116
    31 VarDeclarator: VarDeclarator . '[' ']'
    45 FormalParm: Type VarDeclarator .
 
-    '['  shift, and go to state 76
+    '['  shift, and go to state 70
 
     $default  reduce using rule 45 (FormalParm)
 
@@ -1873,7 +1861,7 @@ State 119
    31 VarDeclarator: VarDeclarator . '[' ']'
    32              | '[' ']' VarDeclarator .
 
-    '['  shift, and go to state 76
+    '['  shift, and go to state 70
 
     '['       [reduce using rule 32 (VarDeclarator)]
     $default  reduce using rule 32 (VarDeclarator)
@@ -1881,7 +1869,7 @@ State 119
 
 State 120
 
-   16 TypeArray: Type '[' OptLiteral ']' .
+   16 TypeArray: Type '[' OptInt ']' .
 
     $default  reduce using rule 16 (TypeArray)
 
@@ -1891,7 +1879,7 @@ State 121
    29 VarDecls: VarDecls ',' VarDeclarator .
    31 VarDeclarator: VarDeclarator . '[' ']'
 
-    '['  shift, and go to state 76
+    '['  shift, and go to state 70
 
     $default  reduce using rule 29 (VarDecls)
 
@@ -1901,12 +1889,12 @@ State 122
   117 UnaryExpr: '-' . UnaryExpr
 
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '-'                shift, and go to state 122
     '!'                shift, and go to state 123
     '('                shift, and go to state 84
@@ -1926,12 +1914,12 @@ State 123
   118 UnaryExpr: '!' . UnaryExpr
 
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '-'                shift, and go to state 122
     '!'                shift, and go to state 123
     '('                shift, and go to state 84
@@ -1948,7 +1936,7 @@ State 123
 
 State 124
 
-   16 TypeArray: Type . '[' OptLiteral ']'
+   16 TypeArray: Type . '[' OptInt ']'
   145 Assignment: Type . VarDeclarator AssignOp Expr
 
     IDENTIFIER  shift, and go to state 44
@@ -2141,14 +2129,14 @@ State 143
     BOOLEAN            shift, and go to state 12
     CHAR               shift, and go to state 13
     FLOAT              shift, and go to state 14
-    NEW                shift, and go to state 83
+    NEW                shift, and go to state 77
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '('                shift, and go to state 84
     '['                shift, and go to state 18
 
@@ -2184,14 +2172,14 @@ State 144
     BOOLEAN            shift, and go to state 12
     CHAR               shift, and go to state 13
     FLOAT              shift, and go to state 14
-    NEW                shift, and go to state 83
+    NEW                shift, and go to state 77
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '-'                shift, and go to state 122
     '!'                shift, and go to state 123
     '('                shift, and go to state 84
@@ -2243,14 +2231,14 @@ State 147
     BOOLEAN            shift, and go to state 12
     CHAR               shift, and go to state 13
     FLOAT              shift, and go to state 14
-    NEW                shift, and go to state 83
+    NEW                shift, and go to state 77
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '-'                shift, and go to state 122
     '!'                shift, and go to state 123
     '('                shift, and go to state 84
@@ -2287,7 +2275,7 @@ State 148
 
 State 149
 
-   16 TypeArray: Type . '[' OptLiteral ']'
+   16 TypeArray: Type . '[' OptInt ']'
   106 InstantiationExpr: NEW Type . '(' ArgListOpt ')'
 
     '('  shift, and go to state 196
@@ -2306,7 +2294,7 @@ State 151
    29 VarDecls: VarDecls . ',' VarDeclarator
    58 LocalVarDecl: Type VarDecls .
 
-    ','  shift, and go to state 73
+    ','  shift, and go to state 67
 
     $default  reduce using rule 58 (LocalVarDecl)
 
@@ -2320,7 +2308,7 @@ State 152
     INCREMENT  shift, and go to state 160
     DECREMENT  shift, and go to state 161
     '='        shift, and go to state 162
-    '['        shift, and go to state 76
+    '['        shift, and go to state 70
 
     $default  reduce using rule 28 (VarDecls)
 
@@ -2337,14 +2325,14 @@ State 153
     BOOLEAN            shift, and go to state 12
     CHAR               shift, and go to state 13
     FLOAT              shift, and go to state 14
-    NEW                shift, and go to state 83
+    NEW                shift, and go to state 77
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '-'                shift, and go to state 122
     '!'                shift, and go to state 123
     '('                shift, and go to state 84
@@ -2386,14 +2374,14 @@ State 154
     BOOLEAN            shift, and go to state 12
     CHAR               shift, and go to state 13
     FLOAT              shift, and go to state 14
-    NEW                shift, and go to state 83
+    NEW                shift, and go to state 77
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '-'                shift, and go to state 122
     '!'                shift, and go to state 123
     '('                shift, and go to state 84
@@ -2494,14 +2482,14 @@ State 163
     BOOLEAN            shift, and go to state 12
     CHAR               shift, and go to state 13
     FLOAT              shift, and go to state 14
-    NEW                shift, and go to state 83
+    NEW                shift, and go to state 77
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '-'                shift, and go to state 122
     '!'                shift, and go to state 123
     '('                shift, and go to state 84
@@ -2548,14 +2536,14 @@ State 165
     BOOLEAN            shift, and go to state 12
     CHAR               shift, and go to state 13
     FLOAT              shift, and go to state 14
-    NEW                shift, and go to state 83
+    NEW                shift, and go to state 77
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '-'                shift, and go to state 122
     '!'                shift, and go to state 123
     '('                shift, and go to state 84
@@ -2631,7 +2619,7 @@ State 171
     INCREMENT  shift, and go to state 160
     DECREMENT  shift, and go to state 161
     '='        shift, and go to state 162
-    '['        shift, and go to state 76
+    '['        shift, and go to state 70
 
     AssignOp  go to state 198
 
@@ -2641,12 +2629,12 @@ State 172
   121 MulExpr: MulExpr '*' . UnaryExpr
 
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '-'                shift, and go to state 122
     '!'                shift, and go to state 123
     '('                shift, and go to state 84
@@ -2666,12 +2654,12 @@ State 173
   122 MulExpr: MulExpr '/' . UnaryExpr
 
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '-'                shift, and go to state 122
     '!'                shift, and go to state 123
     '('                shift, and go to state 84
@@ -2691,12 +2679,12 @@ State 174
   123 MulExpr: MulExpr '%' . UnaryExpr
 
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '-'                shift, and go to state 122
     '!'                shift, and go to state 123
     '('                shift, and go to state 84
@@ -2716,12 +2704,12 @@ State 175
   125 AddExpr: AddExpr '+' . MulExpr
 
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '-'                shift, and go to state 122
     '!'                shift, and go to state 123
     '('                shift, and go to state 84
@@ -2742,12 +2730,12 @@ State 176
   126 AddExpr: AddExpr '-' . MulExpr
 
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '-'                shift, and go to state 122
     '!'                shift, and go to state 123
     '('                shift, and go to state 84
@@ -2796,12 +2784,12 @@ State 181
   132 RelExpr: RelExpr RelOp . AddExpr
 
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '-'                shift, and go to state 122
     '!'                shift, and go to state 123
     '('                shift, and go to state 84
@@ -2823,12 +2811,12 @@ State 182
   134 EqExpr: EqExpr EQUAL . RelExpr
 
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '-'                shift, and go to state 122
     '!'                shift, and go to state 123
     '('                shift, and go to state 84
@@ -2851,12 +2839,12 @@ State 183
   135 EqExpr: EqExpr NOT_EQUAL . RelExpr
 
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '-'                shift, and go to state 122
     '!'                shift, and go to state 123
     '('                shift, and go to state 84
@@ -2879,12 +2867,12 @@ State 184
   137 CondAndExpr: CondAndExpr LOGIC_AND . EqExpr
 
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '-'                shift, and go to state 122
     '!'                shift, and go to state 123
     '('                shift, and go to state 84
@@ -2908,12 +2896,12 @@ State 185
   139 CondOrExpr: CondOrExpr LOGIC_OR . CondAndExpr
 
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '-'                shift, and go to state 122
     '!'                shift, and go to state 123
     '('                shift, and go to state 84
@@ -3019,14 +3007,14 @@ State 196
     BOOLEAN            shift, and go to state 12
     CHAR               shift, and go to state 13
     FLOAT              shift, and go to state 14
-    NEW                shift, and go to state 83
+    NEW                shift, and go to state 77
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '-'                shift, and go to state 122
     '!'                shift, and go to state 123
     '('                shift, and go to state 84
@@ -3075,14 +3063,14 @@ State 198
     BOOLEAN            shift, and go to state 12
     CHAR               shift, and go to state 13
     FLOAT              shift, and go to state 14
-    NEW                shift, and go to state 83
+    NEW                shift, and go to state 77
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '-'                shift, and go to state 122
     '!'                shift, and go to state 123
     '('                shift, and go to state 84
@@ -3290,14 +3278,14 @@ State 216
     BOOLEAN            shift, and go to state 12
     CHAR               shift, and go to state 13
     FLOAT              shift, and go to state 14
-    NEW                shift, and go to state 83
+    NEW                shift, and go to state 77
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '-'                shift, and go to state 122
     '!'                shift, and go to state 123
     '('                shift, and go to state 84
@@ -3338,14 +3326,14 @@ State 217
     BOOLEAN            shift, and go to state 12
     CHAR               shift, and go to state 13
     FLOAT              shift, and go to state 14
-    NEW                shift, and go to state 83
+    NEW                shift, and go to state 77
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '('                shift, and go to state 84
     '['                shift, and go to state 18
 
@@ -3379,25 +3367,25 @@ State 219
 
    80 WhileStmt: WHILE '(' Expr ')' . Stmt
 
-    BREAK              shift, and go to state 78
+    BREAK              shift, and go to state 72
     DOUBLE             shift, and go to state 8
-    FOR                shift, and go to state 79
-    IF                 shift, and go to state 80
+    FOR                shift, and go to state 73
+    IF                 shift, and go to state 74
     INT                shift, and go to state 9
-    RETURN             shift, and go to state 81
-    WHILE              shift, and go to state 82
+    RETURN             shift, and go to state 75
+    WHILE              shift, and go to state 76
     STRING             shift, and go to state 11
     BOOLEAN            shift, and go to state 12
     CHAR               shift, and go to state 13
     FLOAT              shift, and go to state 14
-    NEW                shift, and go to state 83
+    NEW                shift, and go to state 77
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '('                shift, and go to state 84
     ';'                shift, and go to state 85
     '['                shift, and go to state 18
@@ -3458,14 +3446,14 @@ State 223
     BOOLEAN            shift, and go to state 12
     CHAR               shift, and go to state 13
     FLOAT              shift, and go to state 14
-    NEW                shift, and go to state 83
+    NEW                shift, and go to state 77
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '-'                shift, and go to state 122
     '!'                shift, and go to state 123
     '('                shift, and go to state 84
@@ -3510,14 +3498,14 @@ State 225
     BOOLEAN            shift, and go to state 12
     CHAR               shift, and go to state 13
     FLOAT              shift, and go to state 14
-    NEW                shift, and go to state 83
+    NEW                shift, and go to state 77
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '-'                shift, and go to state 122
     '!'                shift, and go to state 123
     '('                shift, and go to state 84
@@ -3559,14 +3547,14 @@ State 226
     BOOLEAN            shift, and go to state 12
     CHAR               shift, and go to state 13
     FLOAT              shift, and go to state 14
-    NEW                shift, and go to state 83
+    NEW                shift, and go to state 77
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '-'                shift, and go to state 122
     '!'                shift, and go to state 123
     '('                shift, and go to state 84
@@ -3679,14 +3667,14 @@ State 236
     BOOLEAN            shift, and go to state 12
     CHAR               shift, and go to state 13
     FLOAT              shift, and go to state 14
-    NEW                shift, and go to state 83
+    NEW                shift, and go to state 77
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '('                shift, and go to state 84
     '['                shift, and go to state 18
 
@@ -3830,14 +3818,14 @@ State 250
     BOOLEAN            shift, and go to state 12
     CHAR               shift, and go to state 13
     FLOAT              shift, and go to state 14
-    NEW                shift, and go to state 83
+    NEW                shift, and go to state 77
     IDENTIFIER         shift, and go to state 35
-    INTEGER_LITERAL    shift, and go to state 64
-    FLOAT_LITERAL      shift, and go to state 65
-    STRING_LITERAL     shift, and go to state 66
-    BOOLEAN_LITERAL    shift, and go to state 67
-    NULLVAL            shift, and go to state 68
-    CHARACTER_LITERAL  shift, and go to state 69
+    INTEGER_LITERAL    shift, and go to state 78
+    FLOAT_LITERAL      shift, and go to state 79
+    STRING_LITERAL     shift, and go to state 80
+    BOOLEAN_LITERAL    shift, and go to state 81
+    NULLVAL            shift, and go to state 82
+    CHARACTER_LITERAL  shift, and go to state 83
     '-'                shift, and go to state 122
     '!'                shift, and go to state 123
     '('                shift, and go to state 84
