@@ -23,7 +23,7 @@ typedef struct param {
 	char *name;
 	struct typeinfo *type;
 	struct param *next;
-} *paramlist;
+} *Paramlist;
 
 struct field {			/* members (fields) of structs */
 	char *name;

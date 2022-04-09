@@ -171,7 +171,7 @@ void populate_symboltables(struct tree * n)
 
    /* pre-order activity */
    switch (n->prodrule) {
-        case PR_METHOD_DECLARATOR/* whatever production rule(s) enter a function scope */ : {
+        case PR_METHOD_HEADER/* whatever production rule(s) enter a function scope */ : {
 			func_declaration(n);
             break;
         }
@@ -242,7 +242,7 @@ int int_to_float = 0;
 //char *s;
 
 switch (n->prodrule) {
-	case PR_METHODCALL_P:
+	//case PR_METHODCALL_P:
 		// node = n->kids[0];
 		// if (node->prodrule != PR_QUALIFIED_NAME) {
 		// 	printf("Function PR_METHODCALL_P: %s\n", n->kids[0]->leaf->text);
@@ -427,6 +427,14 @@ switch (n->prodrule) {
 			n->type = type;
 			break;
 
+		case PR_METHODCALL_P:
+			if (n->kids[0]->prodrule != PR_QUALIFIED_NAME) {
+				type = get_type(n->kids[0]);
+				//printf("Method name: %s, Type: %s\n", n->kids[0]->leaf->text, getTypeName(type->basetype));
+			}
+			n->type = type;
+			break;
+
 		case PR_ASSIGNMENT:
 			type = get_type(n->kids[0]);
 			other_type = get_type(n->kids[2]);
@@ -604,7 +612,7 @@ void class_declaration(struct tree *n) {
 
 void func_declaration(struct tree *n) {
 	Typeptr type = alc_func_type(n);
-	if (!enter_newscope(n->kids[0]->leaf->text, type)) {
+	if (!enter_newscope(n->kids[3]->kids[0]->leaf->text, type)) {
 		semantic_error("There exists a function by the same name.", n->kids[0]);
 	}
 }

@@ -7,9 +7,8 @@ public class TypeChecking {
     char l;
 	int k = 3;
 
-	public static int foo(int x, String s) {
+	public static int foo(int x, String s, boolean b) {
 		int y = 5;
-		boolean b;
 		boolean t;
 		boolean f;
 		x = y * -x;
@@ -32,6 +31,6 @@ public class TypeChecking {
 	  String str = "Hello this is a string";
 	  f++;
 
-	  foo(f, str);
+	  f = foo(f, str);
    }
 }

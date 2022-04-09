@@ -232,11 +232,11 @@ MethodHeader:
 	PUBLIC STATIC MethodReturnVal MethodDeclarator
 		{ $$ = link_tree(PR_METHOD_HEADER, "MethodHeader", 4, $1, $2, $3, $4); }
 	| PUBLIC MethodReturnVal MethodDeclarator
-		{ $$ = link_tree(PR_METHOD_HEADER, "MethodHeader", 3, $1, $2, $3); }
+		{ $$ = link_tree(PR_METHOD_HEADER_ERROR, "MethodHeaderError", 3, $1, $2, $3); }
 	| STATIC MethodReturnVal MethodDeclarator
-		{ $$ = link_tree(PR_METHOD_HEADER, "MethodHeader", 3, $1, $2, $3); }
+		{ $$ = link_tree(PR_METHOD_HEADER_ERROR, "MethodHeaderError", 3, $1, $2, $3); }
 	| MethodReturnVal MethodDeclarator
-		{ $$ = link_tree(PR_METHOD_HEADER, "MethodHeader", 2, $1, $2); }
+		{ $$ = link_tree(PR_METHOD_HEADER_ERROR, "MethodHeaderError", 2, $1, $2); }
 	;
 
 MethodDeclarator:
