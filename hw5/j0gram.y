@@ -448,7 +448,7 @@ Primary:
 	;
 
 OptInt:
-	INT
+	INTEGER_LITERAL
 		{}
 	| %empty
 		{}

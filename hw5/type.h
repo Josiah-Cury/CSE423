@@ -62,6 +62,8 @@ Typeptr alc_type(int base);
 Typeptr alc_func_type(struct tree *n);
 Typeptr alc_class_type(struct tree *n);
 Typeptr get_type(struct tree *n);
+Typeptr string_to_type(char *str);
+
 const char *getTypeName(int basetype);
 
 #endif

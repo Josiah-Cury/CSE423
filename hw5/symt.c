@@ -189,6 +189,7 @@ void populate_symboltables(struct tree * n)
 		case PR_LOCAL_VAR_DECL:
 		case PR_FIELD_DECL_ASSIGN:
 		case PR_FORMAL_PARM:
+
 		case PR_ASSIGNMENT_DECL:
 		case PR_FIELD_DECL_MOD: {
 			dovariabledeclarator(n);
@@ -301,15 +302,6 @@ switch (n->prodrule) {
 		for (int i = 0; i < 2; i++) {
 			type = get_type(n->kids[i]);
 
-			//just a print to see expression values
-			// if (n->kids[i]->prodrule == TOKEN) {
-			// 	printf("Lineno: %d   Token: %s\n",
-			// 	n->kids[i]->leaf->lineno, n->kids[i]->leaf->text);
-			// } else {
-			//
-			// 	printf("The type is: %s\n", getTypeName(type->basetype));
-			// }
-
 			switch (type->basetype) {
 				case FLOAT_TYPE:
 					int_to_float=1;
@@ -342,7 +334,7 @@ switch (n->prodrule) {
 				case CHAR_TYPE:
 					break;
 				default:
-					semantic_error("This is not a proper type for a multiplication expression.", n->kids[i]);
+					semantic_error("This is not a proper type for an addition expression.", n->kids[i]);
 			}
 		}
 
@@ -380,7 +372,7 @@ switch (n->prodrule) {
 				case CHAR_TYPE:
 					break;
 				default:
-					semantic_error("This is not a proper type for a equality expression.", n->kids[0]);
+					semantic_error("This is not a proper type for an equality expression.", n->kids[0]);
 			}
 			switch (other_type->basetype) {
 				case FLOAT_TYPE:
@@ -401,10 +393,24 @@ switch (n->prodrule) {
 				type = get_type(n->kids[i]);
 
 				if (type->basetype != BOOLEAN_TYPE) {
-					semantic_error("This is not a boolean type for a Conditional Expression.", n->kids[i]);
+					semantic_error("This is not a boolean type for a conditional expression.", n->kids[i]);
 				}
 			}
 			n->type = alc_type(BOOLEAN_TYPE);
+			break;
+
+		case PR_TYPE_ARRAY:
+			type = get_type(n->kids[0]);
+			if(!type)
+				type = string_to_type(n->kids[0]->leaf->text);
+
+			n->type = alc_type(type->basetype);
+			break;
+
+		case PR_INSTANTIATION_EXPR_ARRAY:
+			type = string_to_type(n->kids[0]->kids[0]->leaf->text);
+
+			n->type = alc_type(type->basetype);
 			break;
 
 		case PR_ASSIGNMENT_UNARY:
@@ -425,7 +431,8 @@ switch (n->prodrule) {
 			type = get_type(n->kids[0]);
 			other_type = get_type(n->kids[2]);
 
-			if (type != other_type) {
+			if (type->basetype != other_type->basetype) {
+				// printf("Mismatched type 1: %s, type 2: %s\n", getTypeName(type->basetype), getTypeName(other_type->basetype));
 				switch (type->basetype) {
 					case FLOAT_TYPE:
 						switch (other_type->basetype) {
@@ -469,7 +476,51 @@ switch (n->prodrule) {
 			break;
 
 		case PR_ASSIGNMENT_DECL:
-			break;
+		type = get_type(n->kids[1]);
+		other_type = get_type(n->kids[3]);
+
+		if (type->basetype != other_type->basetype) {
+			switch (type->basetype) {
+				case FLOAT_TYPE:
+					switch (other_type->basetype) {
+						case FLOAT_TYPE:
+						case INT_TYPE:
+						case CHAR_TYPE:
+							other_type = alc_type(FLOAT_TYPE);
+							break;
+						default:
+							semantic_error("Mismatched type for assignment",
+								n->kids[1]);
+					}
+					break;
+				case INT_TYPE:
+					switch (other_type->basetype) {
+						case FLOAT_TYPE:
+							semantic_error("No type demotion.", n->kids[1]);
+						case INT_TYPE:
+						case CHAR_TYPE:
+							other_type = alc_type(INT_TYPE);
+							break;
+						default:
+							semantic_error("Mismatched type for assignment",
+							n->kids[1]);
+					}
+					break;
+				case CHAR_TYPE:
+					switch (other_type->basetype) {
+						case FLOAT_TYPE:
+						case INT_TYPE:
+							semantic_error("No type demotion.", n->kids[1]);
+							break;
+						default:
+							semantic_error("Mismatched type for assignment",
+								n->kids[1]);
+					}
+				default:
+					semantic_error("This is not a proper type for an assignment expression.", n->kids[0]);
+			}
+		}
+		break;
 }
 }
 
@@ -512,22 +563,7 @@ void dovariabledeclarator(struct tree * n)
 	char *type = n->kids[0]->leaf->text;
 	Typeptr var;
 
-	if (!strcmp(type,"int")) {
-		//printf("FOUND INT!\n");
-		var = alc_type(INT_TYPE);
-	} else if (!strcmp(type, "char")) {
-		//printf("FOUND CHAR!\n");
-		var = alc_type(CHAR_TYPE);
-	} else if (!strcmp(type, "boolean")) {
-		//printf("FOUND BOOL!\n");
-		var = alc_type(BOOLEAN_TYPE);
-	} else if (!strcmp(type, "float") || !strcmp(type, "double")) {
-		//printf("FOUND FLOAT!\n");
-		var = alc_type(FLOAT_TYPE);
-	} else if (!strcmp(type, "String")) {
-		//printf("FOUND STRING!\n");
-		var = alc_type(STRING_TYPE);
-	}
+	var = string_to_type(type);
 	// else {
 	// 	semantic_error("There should be no class instantiation in j0.1!", n->kids[0]);
 		// if (!lookup_st(current, n->kids[0]->leaf->text)) {

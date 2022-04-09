@@ -42,6 +42,30 @@ const char *getTypeName(int basetype) {
 	return typenames[basetype - FIRST_TYPE];
 }
 
+Typeptr string_to_type(char *str) {
+	Typeptr type;
+	if (!strcmp(str,"int") || !strcmp(str,"short") || !strcmp(str,"long")) {
+		//printf("FOUND INT!\n");
+		type = alc_type(INT_TYPE);
+	} else if (!strcmp(str, "char")) {
+		//printf("FOUND CHAR!\n");
+		type = alc_type(CHAR_TYPE);
+	} else if (!strcmp(str, "boolean")) {
+		//printf("FOUND BOOL!\n");
+		type = alc_type(BOOLEAN_TYPE);
+	} else if (!strcmp(str, "float") || !strcmp(str, "double")) {
+		//printf("FOUND FLOAT!\n");
+		type = alc_type(FLOAT_TYPE);
+	} else if (!strcmp(str, "String")) {
+		//printf("FOUND STRING!\n");
+		type = alc_type(STRING_TYPE);
+	} else {
+		return NULL;
+	}
+
+	return type;
+}
+
 Typeptr get_type(struct tree *n) {
 	Typeptr type;
 	SymbolTableEntry ste;
@@ -49,7 +73,7 @@ Typeptr get_type(struct tree *n) {
 	if (n->prodrule == TOKEN) {
 		ste = lookup_st(current, n->leaf->text);
 		if (ste) {
-			return ste->type;			
+			return ste->type;
 		}
 
 		switch(n->leaf->category) {
@@ -70,10 +94,13 @@ Typeptr get_type(struct tree *n) {
 				break;
 			default:
 				//semantic_error("I don't know what type this is.", n);
-				printf("made it here\n");
+				//printf("made it here\n");
 				return NULL;
 		}
 	} else {
+		if (n->nkids != 0 && n->prodrule == PR_TYPE_ARRAY) {
+			type = get_type(n->kids[0]);
+		}
 		type = n->type;
 	}
 

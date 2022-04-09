@@ -170,7 +170,7 @@ Grammar
    96        | FieldAccess
    97        | MethodCall
 
-   98 OptInt: INT
+   98 OptInt: INTEGER_LITERAL
    99       | %empty
 
   100 Literal: INTEGER_LITERAL
@@ -272,7 +272,7 @@ Terminals, with rules where they appear
     ELSE <treeptr> (260) 74 76 79
     FOR <treeptr> (261) 81
     IF <treeptr> (262) 73 74 75 76
-    INT <treeptr> (263) 18 98
+    INT <treeptr> (263) 18
     RETURN <treeptr> (264) 93
     VOID <treeptr> (265) 34
     WHILE <treeptr> (266) 80
@@ -292,7 +292,7 @@ Terminals, with rules where they appear
     PUBLIC <treeptr> (280) 1 11 13 36 37
     STATIC <treeptr> (281) 11 13 36 38
     IDENTIFIER <treeptr> (282) 1 25 27 30 40 47 92 110 113 114
-    INTEGER_LITERAL <treeptr> (283) 100
+    INTEGER_LITERAL <treeptr> (283) 98 100
     FLOAT_LITERAL <treeptr> (284) 101
     STRING_LITERAL <treeptr> (285) 103
     BOOLEAN_LITERAL <treeptr> (286) 102
@@ -1002,8 +1002,8 @@ State 45
    16 TypeArray: Type '[' . OptInt ']'
    32 VarDeclarator: '[' . ']' VarDeclarator
 
-    INT  shift, and go to state 64
-    ']'  shift, and go to state 65
+    INTEGER_LITERAL  shift, and go to state 64
+    ']'              shift, and go to state 65
 
     ']'  [reduce using rule 99 (OptInt)]
 
@@ -1147,7 +1147,7 @@ State 55
 
    16 TypeArray: Type '[' . OptInt ']'
 
-    INT  shift, and go to state 64
+    INTEGER_LITERAL  shift, and go to state 64
 
     $default  reduce using rule 99 (OptInt)
 
@@ -1218,7 +1218,7 @@ State 63
 
 State 64
 
-   98 OptInt: INT .
+   98 OptInt: INTEGER_LITERAL .
 
     $default  reduce using rule 98 (OptInt)
 
