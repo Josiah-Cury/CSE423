@@ -29,9 +29,21 @@ void print_param_list(Paramlist paramlist) {
 	Paramlist current = paramlist;
 
 	while(current) {
-		//printf("Param Name: %s\n", current->name);
+		printf("Param Name: %s, Type: %s\n", current->name, getTypeName(current->type->basetype));
 		current = current->next;
 	}
+}
+
+int count_param_list(Paramlist paramlist) {
+	Paramlist current = paramlist;
+	int count = 0;
+
+	while(current) {
+		count++;
+		current = current->next;
+	}
+
+	return count;
 }
 
 // Adapted from: https://www.educative.io/courses/coderust-hacking-the-coding-interview/lq2j
@@ -59,22 +71,59 @@ Paramlist reverse_param_list(Paramlist head_params) {
 	return reversed_params;
 }
 
-Typeptr alc_type(int base) {
+Paramlist arg_list_to_params(struct tree *head) {
+	Paramlist parameters = NULL, curr_param = NULL;
+	Typeptr type = NULL;
+	char *name = NULL;
+	struct tree *curr_node = head;
 
-	Typeptr rv = (Typeptr) malloc(sizeof(struct typeinfo));
-	rv->basetype = base;
+	if(head == NULL)
+		return NULL;
 
-	return rv;
+	// The node passed is not an ArgList!
+	if (head->prodrule != PR_ARG_LIST)
+		return NULL;
+
+	// Allocate first param and start of list
+	name = curr_node->kids[1]->leaf->text;
+	type = get_type(curr_node->kids[1]);
+	parameters = alc_param(name, type);
+
+	// Pointer to the last inserted param
+	curr_param = parameters;
+
+	// Advance to next arg in list
+	curr_node = curr_node->kids[0];
+
+	// Loop till the end of the list, link each to param list
+	while(curr_node->prodrule == PR_ARG_LIST) {
+		name = curr_node->kids[1]->leaf->text;
+		type = get_type(curr_node->kids[1]);
+		curr_param->next = alc_param(name, type);
+		curr_param = curr_param->next;
+		curr_node = curr_node->kids[0];
+	}
+
+	// Add the last node and reverse param list
+	name = curr_node->leaf->text;
+	type = get_type(curr_node);
+	curr_param->next = alc_param(name, type);
+
+	parameters = reverse_param_list(parameters);
+	//print_param_list(parameters);
+
+	return parameters;
 }
 
-Typeptr alc_func_type(struct tree *n) {
-	Typeptr tp = alc_type(FUNC_TYPE);
-
-	struct tree *current_node = n->kids[3]->kids[1];
+Paramlist formal_args_to_list(struct tree *current_node) {
 	Typeptr param_type = NULL;
 	char *param_name = NULL;
 	Paramlist func_params = NULL, current_param = NULL;
 	int nparams = 0;
+
+	if (current_node == NULL) {
+		return NULL;
+	}
 
 	if(current_node->prodrule == PR_FORMAL_PARM) {
 		param_name = current_node->kids[1]->leaf->text;
@@ -115,10 +164,39 @@ Typeptr alc_func_type(struct tree *n) {
 
 	func_params = reverse_param_list(func_params);
 
-	print_param_list(func_params);
+	return func_params;
+}
+
+Typeptr alc_type(int base) {
+
+	Typeptr rv = (Typeptr) malloc(sizeof(struct typeinfo));
+	rv->basetype = base;
+
+	return rv;
+}
+
+Typeptr alc_func_type(struct tree *n) {
+	Typeptr tp = alc_type(FUNC_TYPE);
+
+	struct tree *current_node = n->kids[3]->kids[1];
+	Paramlist func_params = NULL;
+	int nparams = 0;
+
+	func_params = formal_args_to_list(current_node);
+	nparams = count_param_list(func_params);
+
+	//printf("INSIDE PARAMS: %d\n", nparams);
+	//print_param_list(func_params);
+
 	tp->u.f.name = n->kids[3]->kids[0]->leaf->text;
 	tp->u.f.nparams = nparams;
-	tp->u.f.returntype = string_to_type(n->kids[2]->leaf->text);
+
+	if (n->kids[2]->prodrule == PR_TYPE_ARRAY) {
+		tp->u.f.returntype = string_to_type(n->kids[2]->kids[0]->leaf->text);
+	} else {
+		tp->u.f.returntype = string_to_type(n->kids[2]->leaf->text);
+	}
+
 	tp->u.f.parameters = func_params;
 
 	return tp;
@@ -166,12 +244,7 @@ Typeptr get_type(struct tree *n) {
 	if (n->prodrule == TOKEN) {
 		ste = lookup_st(current, n->leaf->text);
 
-		if (ste) {
-			if (ste->type->basetype == FUNC_TYPE) {
-				return ste->type->u.f.returntype;
-			}
-			return ste->type;
-		}
+		if (ste) { return ste->type; }
 
 		switch(n->leaf->category) {
 			case STRING_LITERAL:

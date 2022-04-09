@@ -176,6 +176,8 @@ Type:
 		{}
 	| DOUBLE
 		{}
+	| LONG
+		{}
 	| BOOLEAN
 		{}
 	| FLOAT

@@ -42,6 +42,8 @@ int enter_newscope(char *s, Typeptr tp);
 void create_builtin_packages(SymbolTable global);
 void check_qualified_name(SymbolTable global, struct tree *n);
 void type_checker(struct tree *n);
+void check_method_arg(struct tree *func_node, Paramlist method_call_params);
+
 void class_declaration(struct tree *n);
 void func_declaration(struct tree *n);
 

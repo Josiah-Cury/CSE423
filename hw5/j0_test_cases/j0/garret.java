@@ -3,24 +3,25 @@ public class HelloWorld{
   /*multiple
   lines*/
   int a;
-  char a;
-  float a;
-  boolean a;
-  String a;
-  int a;
+  char b;
+  float c;
+  boolean d;
+  String e;
+  int f;
   //short a;
-  long a;
-  double a;
+  long g;
+  double h;
   int num[];
+  int x;
   public static void main(){
     a = 5;
     a = 'a';
     a = 5 + 7;
-    a = 583.6 * 32;
+    c = 583.6 * 32;
     for ( ; ; ) {
-      b = 5;
+      a = 5;
     }
-    if (a || b) {
+    if (d || b < a) {
       b = 'd';
     }
     if (x < 0) {}

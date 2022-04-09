@@ -238,6 +238,7 @@ void populate_symboltables(struct tree * n)
 void type_checker(struct tree *n) {
 //struct tree *node;
 Typeptr type, other_type;
+Paramlist method_call_params;
 int int_to_float = 0;
 //char *s;
 
@@ -259,7 +260,7 @@ switch (n->prodrule) {
 		// if (node != NULL)
 		// 	printf("Checking this symbol's arguments: %s\n", node->symbolname);
 		// while()
-	break;
+	// break;
 
 	case PR_UNARY_EXPR_NEG:
 		type = get_type(n->kids[1]);
@@ -422,7 +423,8 @@ switch (n->prodrule) {
 				case FLOAT_TYPE:
 					break;
 				default:
-					semantic_error("This is not a proper type for a unary negation.", n->kids[0]);
+					semantic_error("This is not a proper type for a unary negation.",
+						n->kids[0]);
 			}
 			n->type = type;
 			break;
@@ -430,9 +432,13 @@ switch (n->prodrule) {
 		case PR_METHODCALL_P:
 			if (n->kids[0]->prodrule != PR_QUALIFIED_NAME) {
 				type = get_type(n->kids[0]);
-				//printf("Method name: %s, Type: %s\n", n->kids[0]->leaf->text, getTypeName(type->basetype));
+				method_call_params = arg_list_to_params(n->kids[1]);
+				// printf("Method name: %s, Type: %s, Call_Nparams: %d, Method_Nparams: %d\n",
+				// 	n->kids[0]->leaf->text, getTypeName(type->basetype),
+				// 	count_param_list(method_call_params), type->u.f.nparams);
+				check_method_arg(n->kids[0], method_call_params);
+				n->type = type->u.f.returntype;
 			}
-			n->type = type;
 			break;
 
 		case PR_ASSIGNMENT:
@@ -450,6 +456,10 @@ switch (n->prodrule) {
 								other_type = alc_type(FLOAT_TYPE);
 								break;
 							default:
+								if (n->kids[0]->prodrule == PR_TYPE_ARRAY) {
+									semantic_error("Mismatched type for assignment",
+									n->kids[0]->kids[0]);
+								}
 								semantic_error("Mismatched type for assignment",
 									n->kids[0]);
 						}
@@ -463,6 +473,10 @@ switch (n->prodrule) {
 								other_type = alc_type(INT_TYPE);
 								break;
 							default:
+								if (n->kids[0]->prodrule == PR_TYPE_ARRAY) {
+									semantic_error("Mismatched type for assignment",
+									n->kids[0]->kids[0]);
+								}
 								semantic_error("Mismatched type for assignment",
 								n->kids[0]);
 						}
@@ -474,11 +488,20 @@ switch (n->prodrule) {
 								semantic_error("No type demotion.", n->kids[0]);
 								break;
 							default:
+								if (n->kids[0]->prodrule == PR_TYPE_ARRAY) {
+									semantic_error("Mismatched type for assignment",
+									n->kids[0]->kids[0]);
+								}
 								semantic_error("Mismatched type for assignment",
 									n->kids[0]);
 						}
 					default:
-						semantic_error("This is not a proper type for an assignment expression.", n->kids[0]);
+						if (n->kids[0]->prodrule == PR_TYPE_ARRAY) {
+							semantic_error("Mismatched type for assignment",
+							n->kids[0]->kids[0]);
+						}
+						semantic_error("This is not a proper type for an assignment expression.",
+							n->kids[0]);
 				}
 			}
 			break;
@@ -511,7 +534,7 @@ switch (n->prodrule) {
 							break;
 						default:
 							semantic_error("Mismatched type for assignment",
-							n->kids[1]);
+								n->kids[1]);
 					}
 					break;
 				case CHAR_TYPE:
@@ -525,11 +548,34 @@ switch (n->prodrule) {
 								n->kids[1]);
 					}
 				default:
-					semantic_error("This is not a proper type for an assignment expression.", n->kids[0]);
+					semantic_error("This is not a proper type for an assignment expression.",
+						n->kids[0]);
 			}
 		}
 		break;
 }
+}
+
+void check_method_arg(struct tree *func_node, Paramlist method_call_params) {
+	Typeptr func_type = get_type(func_node);
+	Paramlist formal = func_type->u.f.parameters, call = method_call_params;
+	int method_nparams = count_param_list(method_call_params);
+
+	if (func_type->u.f.nparams != method_nparams) {
+		semantic_error("The number of parameters in the method call does not match definition",
+			func_node);
+	}
+
+	for(int i = 0; i < method_nparams; i++) {
+		if (formal->type->basetype != call->type->basetype){
+			printf("Var %s has a type of %s, but should be %s.\n",
+			call->name, getTypeName(call->type->basetype), getTypeName(formal->type->basetype));
+
+			semantic_error("Mismatched method parameter type.", func_node);
+		}
+		formal = formal->next;
+		call = call->next;
+	}
 }
 
 void printsyms(struct tree * n)

@@ -7,8 +7,7 @@ public class TypeChecking {
     char l;
 	int k = 3;
 
-	public static int foo(int x, String s, boolean b) {
-		int y = 5;
+	public static int foo(int x, int y, int z, String s, boolean b) {
 		boolean t;
 		boolean f;
 		x = y * -x;
@@ -28,9 +27,13 @@ public class TypeChecking {
       System.out.println("hello, jzero!");
 	  InputStream.read();
       int f = 1;
+	  int x;
+	  int y;
+	  int z;
+	  boolean bool;
 	  String str = "Hello this is a string";
 	  f++;
 
-	  f = foo(f, str);
+	  f = foo(f, x, k, str, bool);
    }
 }

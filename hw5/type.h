@@ -59,10 +59,18 @@ typedef struct typeinfo {
 } *Typeptr;
 
 Typeptr alc_type(int base);
+Paramlist alc_param(char *name, Typeptr type);
 Typeptr alc_func_type(struct tree *n);
 Typeptr alc_class_type(struct tree *n);
 Typeptr get_type(struct tree *n);
 Typeptr string_to_type(char *str);
+
+Paramlist formal_args_to_list(struct tree *current_node);
+Paramlist arg_list_to_params(struct tree *head);
+Paramlist reverse_param_list(Paramlist head_params);
+int count_param_list(Paramlist paramlist);
+void print_param_list(Paramlist paramlist);
+
 
 const char *getTypeName(int basetype);
 

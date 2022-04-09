@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "tree.h"
 #include "defs.h"
 #include "j0gram.tab.h"
@@ -11,6 +12,10 @@
 extern int yydebug;
 
 int main(int argc, char *argv[]) {
+
+	// double time_spent = 0.0;
+	// clock_t begin = clock();
+
 	int dotFlag = 0;
 	int symtabFlag = 0;
 
@@ -103,6 +108,11 @@ int main(int argc, char *argv[]) {
 
 	fclose(yyin);
 	yylex_destroy();
+
+	// clock_t end = clock();
+	// time_spent += (double) (end - begin) / CLOCKS_PER_SEC;
+	// printf("The elapsed time is %f seconds\n", time_spent);
+
     return 0;
 }
 
