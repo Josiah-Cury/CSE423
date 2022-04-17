@@ -1,7 +1,7 @@
 public class hello {
 
-	int penis;
-	int weiner;
+	int girth;
+	int length;
 
 	public static int foo() {
 		int j;

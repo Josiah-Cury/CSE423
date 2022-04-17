@@ -230,6 +230,8 @@ Typeptr string_to_type(char *str) {
 	} else if (!strcmp(str, "String")) {
 		//printf("FOUND STRING!\n");
 		type = alc_type(STRING_TYPE);
+	} else if (!strcmp(str, "void")) {
+		type = alc_type(VOID_TYPE);
 	} else {
 		return NULL;
 	}

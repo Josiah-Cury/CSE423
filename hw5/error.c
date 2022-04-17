@@ -26,6 +26,11 @@ void lex_error(char *s) {
     yyerror("lexical error");
 }
 
+void jzero_error(char *s) {
+	fprintf(stderr, "This is not a valid j0.1 feature: %s\n", s);
+	exit(2);
+}
+
 void semantic_error(char *s, struct tree *n) {
 	fprintf(stderr, "%s\n", s);
 

@@ -787,6 +787,8 @@ void check_qualified_name(SymbolTable current, struct tree *n) {
 		ste = lookup_st(st, node->kids[0]->leaf->text);
 		if (ste == NULL) {
 			semantic_error("This is not a valid built-in package!", node->kids[0]);
+		} else if (ste->type->basetype == STRING_TYPE) {
+			ste = lookup_st(st, "String");
 		}
 		//printf("QualifiedName: %s\n", node->kids[0]->leaf->text);
 		if (ste->type->basetype == CLASS_TYPE) {

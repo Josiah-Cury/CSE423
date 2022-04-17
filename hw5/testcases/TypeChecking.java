@@ -32,6 +32,8 @@ public class TypeChecking {
 	  int z;
 	  boolean bool;
 	  String str = "Hello this is a string";
+
+	  str.charAt();
 	  f++;
 
 	  f = foo(f, x, k, str, bool);

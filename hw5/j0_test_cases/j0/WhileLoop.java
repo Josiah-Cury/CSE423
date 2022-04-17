@@ -1,8 +1,8 @@
 public class hello {
-    int a;
+    boolean a;
     int i;
    public static void main(String argv[]) {
-      while(a && i || !a){
+      while(a && !a || a){
           System.out.println("juicy\t");
       }
    }

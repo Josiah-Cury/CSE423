@@ -16,8 +16,9 @@ typedef struct sym_table *SymbolTable;
 #define CHAR_TYPE    1000006
 #define STRING_TYPE	 1000007
 #define BOOLEAN_TYPE 1000008
+#define VOID_TYPE    1000009
 
-#define LAST_TYPE    1000008
+#define LAST_TYPE    1000009
 
 typedef struct param {
 	char *name;

@@ -1,5 +1,6 @@
 %{
 	#include <stdio.h>
+	#include "error.h"
 	#include "tree.h"
 	#include "defs.h"
 
@@ -70,6 +71,7 @@
 %type <treeptr> Stmt
 %type <treeptr> ExprStmt
 %type <treeptr> StmtExpr
+%type <treeptr> SwitchStmt
 %type <treeptr> IfThenStmt
 %type <treeptr> IfThenElseStmt
 %type <treeptr> IfThenElseIfStmt
@@ -341,6 +343,8 @@ Stmt:
 	  	{}
 	| ForStmt
 	  	{}
+	| SwitchStmt
+		{}
 	;
 
 ExprStmt:
@@ -355,6 +359,11 @@ StmtExpr:
 		{}
 	| InstantiationExpr
 		{}
+	;
+
+SwitchStmt:
+	SWITCH '(' Name ')' Block
+		{ jzero_error("SWITCH"); }
 	;
 
 IfThenStmt:
