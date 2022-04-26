@@ -3,16 +3,31 @@ public class Hello {
 
     /* Multiline comment
     goes this long.*/
+	public static int foo(int i) {
+	// public static int foo(int i, int k) {
+	// public static int foo(int i, int k, int l) {
+		return i;
+		// return i + k;
+		// return i + k - l;
+	}
 
 	//int k = 1;
     public static void main(String argv[]) {
-      int f;
-	  int k;
-	  int l;
+      int i = 5;
 
-	  f = 1;
-	  l = k + 3;
+	  i = i * i + 1;
+	  i = i + (i - 2);
+	  i = i / i + 23;
 
-      //l = k + f;
+	  foo(i);
+	  // foo(i, 5);
+	  // foo(i, 5, 3);
+
+	  System.out.println("test");
+	  System.out.println("test1");
+
+	  System.out.println("test2");
+	  System.out.println("test3");
+
    }
 }

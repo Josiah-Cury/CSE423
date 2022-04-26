@@ -29,7 +29,7 @@ struct addr {
 
 struct instr {
 	int opcode;
-	struct addr dest, src1, src2;
+	struct addr *dest, *src1, *src2;
 	struct instr *next;
 };
 /* Opcodes, per lecture notes */
@@ -63,7 +63,7 @@ struct instr {
 #define D_PROT  3056 /* prototype "declaration" */
 
 void codegen(struct tree * t);
-struct instr *gen(int, struct addr, struct addr, struct addr);
+struct instr *gen(int, struct addr *, struct addr *, struct addr *);
 struct instr *concat(struct instr *, struct instr *);
 char *regionname(int i);
 char *opcodename(int i);
@@ -72,14 +72,14 @@ struct addr *genlabel();
 
 struct instr *append(struct instr *l1, struct instr *l2);
 struct instr *copylist(struct instr *l);
-struct addr call_addr(char *s);
+struct addr *call_addr(char *s);
 struct addr *gen_local_addr(SymbolTable st);
-struct addr *gen_int_addr(int ival);
+struct addr *gen_int_addr(int region, int ival);
 
 struct addr *new_temp(int n);
 
 void print_instr(struct instr *rv);
-char *print_addr(struct addr a);
+char *print_addr(struct addr *a);
 void tacprint(struct instr *rv);
 
 #endif

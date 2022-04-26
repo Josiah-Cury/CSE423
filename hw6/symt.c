@@ -20,7 +20,7 @@ void dovariabledeclarator(struct tree *n);
 
 SymbolTable globals;
 SymbolTable current;
-
+struct string_list *stringpool;
 char *alloc(int n);		    /* calloc + check for NULL */
 
 
@@ -215,6 +215,9 @@ void populate_symboltables(struct tree * n)
 					semantic_error("There is no matching symbol in the symbol table!", n);
 				}
 				n->address = ste->address;
+			}
+			if (n->leaf->category == STRING_LITERAL) {
+				add_stringpool(n);
 			}
 			break;
         }
@@ -572,7 +575,13 @@ void check_method_arg(struct tree *func_node, Paramlist method_call_params) {
 	Paramlist formal = func_type->u.f.parameters, call = method_call_params;
 	int method_nparams = count_param_list(method_call_params);
 
+	// printf("METHOD CALL PARAMS\n");
+	// print_param_list(method_call_params);
+	// printf("FORMAL PARAMS\n");
+	// print_param_list(formal);
+
 	if (func_type->u.f.nparams != method_nparams) {
+		printf("NUMBER OF PARAMS NEEDED: %d\nNUMBER OF PARAMS PASSED: %d\n", func_type->u.f.nparams, method_nparams);
 		semantic_error("The number of parameters in the method call does not match definition",
 			func_node);
 	}
@@ -819,6 +828,32 @@ void check_qualified_name(SymbolTable current, struct tree *n) {
 		}
 
 		node = node->kids[1];
+	}
+}
+
+void add_stringpool(struct tree *n) {
+	if (stringpool == NULL) {
+		stringpool = malloc(sizeof(struct string_list));
+		stringpool->string_node = n;
+		stringpool->next = NULL;
+	} else {
+		struct string_list *curr = stringpool;
+
+		while (curr->next) { curr = curr->next; }
+
+		curr->next = malloc(sizeof(struct string_list));
+		curr->next->string_node = n;
+		curr->next->next = NULL;
+	}
+}
+
+void print_stringpool() {
+	struct string_list *curr = stringpool;
+
+	printf("BEGINNING PRINT OF STRING POOL STRINGS\n");
+	while (curr) {
+		printf("%s\n", curr->string_node->leaf->text);
+		curr = curr->next;
 	}
 }
 

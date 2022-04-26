@@ -12,6 +12,10 @@
 typedef struct param *Paramlist;
 typedef struct typeinfo *Typeptr;
 
+struct string_list {
+	struct tree *string_node;
+	struct string_list *next;
+};
 
 typedef struct sym_table {
  	int nBuckets; /* # of buckets */
@@ -42,16 +46,21 @@ void delete_st(SymbolTable); /* destroy symbol table */
 int insert_sym(SymbolTable, char *, Typeptr); /* enter symbol into table */
 SymbolTableEntry lookup_st(SymbolTable, char *); /* lookup symbol */
 int enter_newscope(char *s, Typeptr tp);
+
 void create_builtin_packages(SymbolTable global);
 void check_qualified_name(SymbolTable global, struct tree *n);
 void type_checker(struct tree *n);
 void check_method_arg(struct tree *func_node, Paramlist method_call_params);
+void add_stringpool(struct tree *n);
+void print_stringpool();
 
 void class_declaration(struct tree *n);
 void func_declaration(struct tree *n);
 
 extern SymbolTable globals; /* global symbols */
 extern SymbolTable current; /* current */
+extern struct string_list *stringpool;
+
 extern void printsymbols(SymbolTable st, int level);
 
 void populate_symboltables(struct tree * n);

@@ -90,8 +90,12 @@ int main(int argc, char *argv[]) {
 		populate_symboltables(tree_root);
 		printf("\n");
 
+		print_stringpool();
+		printf("\n");
+
 		printf("Generating Intermediate Code!\n");
 		codegen(tree_root);
+		tacprint(tree_root->icode);
 		printf("\n");
 
 		if (symtabFlag) {

@@ -451,7 +451,7 @@ Primary:
 	 Literal
 		{}
 	| '(' Expr ')'
-		{}
+		{ $$ = $2; }
 	| FieldAccess
 		{}
 	| MethodCall

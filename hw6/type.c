@@ -39,7 +39,7 @@ int count_param_list(Paramlist paramlist) {
 	int count = 0;
 
 	while(current) {
-		count++;
+		++count;
 		current = current->next;
 	}
 
@@ -81,13 +81,21 @@ Paramlist arg_list_to_params(struct tree *head) {
 		return NULL;
 
 	// The node passed is not an ArgList!
-	if (head->prodrule != PR_ARG_LIST)
+	if (head->prodrule != PR_ARG_LIST) {
+		if (head->prodrule == TOKEN) {
+			name = curr_node->leaf->text;
+			type = get_type(curr_node);
+			parameters = alc_param(name, type);
+			return parameters;
+		}
 		return NULL;
+	}
 
 	// Allocate first param and start of list
 	name = curr_node->kids[1]->leaf->text;
 	type = get_type(curr_node->kids[1]);
 	parameters = alc_param(name, type);
+	//printf("TESTING: %s\n\n", parameters->name);
 
 	// Pointer to the last inserted param
 	curr_param = parameters;
@@ -130,6 +138,10 @@ Paramlist formal_args_to_list(struct tree *current_node) {
 		param_type = string_to_type(current_node->kids[0]->leaf->text);
 		//printf("Type: %s, Var: %s\n", param_name, current_node->kids[0]->leaf->text);
 		nparams++;
+		func_params = alc_param(param_name, param_type);
+		current_param = func_params;
+		return func_params;
+
 	} else {
 		param_name = current_node->kids[1]->kids[1]->leaf->text;
 		param_type = string_to_type(current_node->kids[1]->kids[0]->leaf->text);
@@ -145,7 +157,7 @@ Paramlist formal_args_to_list(struct tree *current_node) {
 	while (current_node->prodrule == PR_FORMAL_PARM_LIST) {
 		param_name = current_node->kids[1]->kids[1]->leaf->text;
 		param_type = string_to_type(current_node->kids[1]->kids[0]->leaf->text);
-		//printf("Type: %s, Var: %s\n", param_name, current_node->kids[1]->kids[0]->leaf->text);
+		printf("MADE IT HERE Type: %s, Var: %s\n", param_name, current_node->kids[1]->kids[0]->leaf->text);
 		nparams++;
 		current_param->next = alc_param(param_name, param_type);
 		current_param = current_param->next;
@@ -153,7 +165,8 @@ Paramlist formal_args_to_list(struct tree *current_node) {
 		current_node = current_node->kids[0];
 	}
 
-	if (nparams > 1) {
+	if (nparams > 0) {
+		printf("NUM OF PARAMS LOL: %d\n\n\n", nparams);
 		param_name = current_node->kids[1]->leaf->text;
 		param_type = string_to_type(current_node->kids[0]->leaf->text);
 		current_param->next = alc_param(param_name, param_type);
@@ -163,6 +176,7 @@ Paramlist formal_args_to_list(struct tree *current_node) {
 	}
 
 	func_params = reverse_param_list(func_params);
+	//print_param_list(func_params);
 
 	return func_params;
 }
@@ -184,6 +198,7 @@ Typeptr alc_func_type(struct tree *n) {
 
 	func_params = formal_args_to_list(current_node);
 	nparams = count_param_list(func_params);
+	//printf("TEST: nparams = %d\n", nparams);
 
 	//printf("INSIDE PARAMS: %d\n", nparams);
 	//print_param_list(func_params);
