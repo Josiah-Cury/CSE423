@@ -13,6 +13,7 @@ typedef struct param *Paramlist;
 typedef struct typeinfo *Typeptr;
 
 struct string_list {
+	int offset;
 	struct tree *string_node;
 	struct string_list *next;
 };

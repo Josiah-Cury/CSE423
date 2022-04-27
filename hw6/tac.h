@@ -26,6 +26,7 @@ struct addr {
 
 #define R_PROCCALL 2008 /* FOUND IN LECTURE NOTES */
 #define R_STRING 2009 /* IDK HOW ELSE TO DO THIS */
+#define R_PARAMNUM 2010
 
 struct instr {
 	int opcode;
@@ -76,7 +77,7 @@ struct addr *call_addr(char *s);
 struct addr *gen_local_addr(SymbolTable st);
 struct addr *gen_int_addr(int region, int ival);
 
-struct addr *new_temp(int n);
+struct addr *new_temp(SymbolTable st);
 
 void print_instr(struct instr *rv);
 char *print_addr(struct addr *a);

@@ -639,14 +639,6 @@ void dovariabledeclarator(struct tree * n)
 	Typeptr var;
 
 	var = string_to_type(type);
-	// else {
-	// 	semantic_error("There should be no class instantiation in j0.1!", n->kids[0]);
-		// if (!lookup_st(current, n->kids[0]->leaf->text)) {
-		// 	semantic_error("There is no class by this name.", n->kids[0]);
-		// }
-		// SymbolTable nst = new_st(n->kids[1]->leaf->text, 20);
-		// var = alc_class_type(nst, n->kids[0]->leaf->text);
-	// }
 
 	switch (n->prodrule) {
 		case PR_FIELD_DECL:
@@ -835,7 +827,11 @@ void add_stringpool(struct tree *n) {
 	if (stringpool == NULL) {
 		stringpool = malloc(sizeof(struct string_list));
 		stringpool->string_node = n;
+		n->address = malloc(sizeof(struct addr));
+		n->address->region = R_STRING;
+		n->address->u.offset = stringpool->offset = 0;
 		stringpool->next = NULL;
+
 	} else {
 		struct string_list *curr = stringpool;
 
@@ -843,6 +839,9 @@ void add_stringpool(struct tree *n) {
 
 		curr->next = malloc(sizeof(struct string_list));
 		curr->next->string_node = n;
+		n->address = malloc(sizeof(struct addr));
+		n->address->region = R_STRING;
+		n->address->u.offset = curr->next->offset = curr->offset + 16;
 		curr->next->next = NULL;
 	}
 }
@@ -852,7 +851,7 @@ void print_stringpool() {
 
 	printf("BEGINNING PRINT OF STRING POOL STRINGS\n");
 	while (curr) {
-		printf("%s\n", curr->string_node->leaf->text);
+		printf("%s: %d\n", curr->string_node->leaf->text, curr->offset);
 		curr = curr->next;
 	}
 }

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "tac.h"
 
 char *regionnames[] = {"global","loc", "class", "lab", "const", "", "none", "proccall", "str"};
@@ -44,9 +45,9 @@ void codegen(struct tree * t) {
 		case PR_MUL_EXPR_MULT:
 		case PR_MUL_EXPR_DIV: {
 			t->icode = concat(t->kids[0]->icode, t->kids[1]->icode);
-			t->address = new_temp(t->symtab->byte_count);
+			t->address = new_temp(t->symtab);
 			//printf("BYTE COUNT FOR CURRENT SCOPE: %d\n", t->symtab->byte_count);
-			t->symtab->byte_count += 8;
+
 			//printf("BYTE COUNT FOR CURRENT SCOPE: %d\n", t->symtab->byte_count);
 
 			if (t->prodrule == PR_ADD_EXPR_ADD) {
@@ -85,12 +86,19 @@ void codegen(struct tree * t) {
 		}
 
 		case PR_METHOD_DECLARATOR: {
+
 			a1 = malloc(sizeof(struct addr));
-			a2 = malloc(sizeof(struct addr));
-			a3 = malloc(sizeof(struct addr));
+			a1->region = R_NAME;
 			a1->u.name = t->kids[0]->leaf->text;
+
+			a2 = malloc(sizeof(struct addr));
+			a2->region = R_PARAMNUM;
 			a2->u.offset = 0;
+
+			a3 = malloc(sizeof(struct addr));
+			a3->region = R_PARAMNUM;
 			a3->u.offset = t->symtab->byte_count;
+
 			g = gen(D_PROC, a1, a2, a3);
 			t->icode = concat(g, t->kids[0]->icode);
 			break;
@@ -104,17 +112,59 @@ void codegen(struct tree * t) {
 
 		case PR_METHODCALL_P: {
 			if (t->kids[0]->prodrule != PR_QUALIFIED_NAME) {
-				ste = lookup_st(t->kids[1]->symtab, t->kids[1]->leaf->text);
-				t->kids[1]->address = ste->address;
+
+				a1 = malloc(sizeof(struct addr));
+				a1->region = R_PROCCALL;
+				a1->u.name = t->kids[0]->leaf->text;
+
+				a2 = malloc(sizeof(struct addr));
+				a2->region = R_PARAMNUM;
+				a2->u.offset = 0;
+
+				a3 = malloc(sizeof(struct addr));
+				a3 = new_temp(t->kids[1]->symtab);
 				//printf("%s\n", print_addr(t->kids[1]->address));
-				g = gen(O_PARM, t->kids[1]->address, null_addr, null_addr);
-				t->icode = g;
+
+				if (t->kids[1]->prodrule != PR_ARG_LIST) {
+					g = gen(O_PARM, t->kids[1]->address, null_addr, null_addr);
+					t->icode = concat(t->icode, g);
+				} else {
+					node = t->kids[1];
+					while (node->kids[0]->prodrule == PR_ARG_LIST) {
+						g = gen(O_PARM, node->kids[1]->address, null_addr, null_addr);
+						t->icode = concat(t->icode, g);
+						node = node->kids[0];
+					}
+					g = gen(O_PARM, node->kids[0]->address, null_addr, null_addr);
+					t->icode = concat(t->icode, g);
+					g = gen(O_PARM, node->kids[1]->address, null_addr, null_addr);
+					t->icode = concat(t->icode, g);
+				}
+
+
+				g = gen(O_CALL, a1, a2, a3);
+				t->icode = concat(t->icode, g);
 			} else {
 				node = t->kids[0];
 				while (node->kids[1]->prodrule == PR_QUALIFIED_NAME) {
 					node = node->kids[1];
 				}
-				//printf("QualifiedName Function: %s Parameter: %s\n", node->kids[1]->leaf->text, t->kids[1]->leaf->text);
+
+				a1 = malloc(sizeof(struct addr));
+				a1->region = R_PROCCALL;
+				a1->u.name = node->kids[1]->leaf->text;
+
+				a2 = malloc(sizeof(struct addr));
+				a2->region = R_PARAMNUM;
+				a2->u.offset = 0;
+
+				a3 = malloc(sizeof(struct addr));
+				a3 = new_temp(t->symtab);
+				//printf("%s\n", print_addr(t->kids[1]->address));
+				g = gen(O_PARM, t->kids[1]->address, null_addr, null_addr);
+				t->icode = g;
+				g = gen(O_CALL, a1, a2, a3);
+				t->icode = concat(t->icode, g);
 			}
 
 			break;
@@ -127,6 +177,12 @@ void codegen(struct tree * t) {
 			if (t->leaf->category == INTEGER_LITERAL) {
 				t->address = gen_int_addr(R_CONST, t->leaf->ival);
 				//printf("Found %d:%s\n", t->leaf->ival, print_addr(*t->address));
+			}
+
+			if (t->leaf->category == IDENTIFIER) {
+				ste = lookup_st(t->symtab, t->leaf->text);
+				if (ste)
+					t->address = ste->address;
 			}
 		}
 
@@ -190,10 +246,11 @@ struct instr *gen(int op, struct addr *a1, struct addr *a2, struct addr *a3)
 	return rv;
 }
 
-struct addr *new_temp(int n) {
+struct addr *new_temp(SymbolTable st) {
 	struct addr *a = malloc(sizeof(struct addr));
 	a->region = R_LOCAL;
-	a->u.offset = n;
+	a->u.offset = st->byte_count;
+	st->byte_count += 8;
 	return a;
 }
 
@@ -226,16 +283,26 @@ char *print_addr(struct addr *a) {
 
 	if (a->region == R_NONE)
 		return 0;
-	if (a->region == R_PROCCALL){
+
+	if (a->region == R_PROCCALL || a->region == R_NAME){
 		sprintf(buf,"%s", a->u.name);
-		printf("%s\n", a->u.name);
-		s = malloc(sizeof(buf));
+		//printf("%s\n", a->u.name);
+		s = malloc(strlen(buf));
+		memcpy(s, buf, strlen(buf));
 		return s;
 	}
+
+	if (a->region == R_PARAMNUM) {
+		sprintf(buf, "%d", a->u.offset);
+		s = malloc(strlen(buf));
+		memcpy(s, buf, strlen(buf));
+		return s;
+	}
+
 	sprintf(buf, "%s:%d", r, a->u.offset);
 	//printf("Test 2: %s\n", buf);
-	s = malloc(sizeof(buf)+1);
-	s = buf;
+	s = malloc(strlen(buf)+1);
+	memcpy(s, buf, strlen(buf));
 	//printf("test 1: %s\n", s);
 	return s;
 }
@@ -247,12 +314,14 @@ void print_instr(struct instr *rv) {
 
 	if (rv->opcode == D_PROC) {
 		o = pseudoname(rv->opcode);
-		printf("%s ", o);
-		printf("%s,%d,%d\n", rv->dest->u.name, rv->src1->u.offset, rv->src2->u.offset);
-		return;
+	// 	printf("%s ", o);
+	// 	printf("%s,%d,%d\n", rv->dest->u.name, rv->src1->u.offset, rv->src2->u.offset);
+	// 	return;
+	} else {
+		printf("\t");
+		o = opcodename(rv->opcode);
 	}
-	printf("\t");
-	o = opcodename(rv->opcode);
+
 	printf("%s\t", o);
 
 	if (rv->dest->region != R_NONE) { printf("%s", print_addr(rv->dest)); }
