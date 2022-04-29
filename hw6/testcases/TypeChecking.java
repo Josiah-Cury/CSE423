@@ -14,9 +14,9 @@ public class TypeChecking {
 		x = x + -y * x;
 		b = x < y;
 		b = t && f;
-		//x = y * x;
-		//x = -x;
-		//b = !b;
+		x = y * x;
+		x = -x;
+		b = !b;
 
 		System.out.print(s);
 
@@ -33,7 +33,7 @@ public class TypeChecking {
 	  boolean bool;
 	  String str = "Hello this is a string";
 
-	  str.charAt();
+	  str.charAt(3);
 	  f++;
 
 	  f = foo(f, x, k, str, bool);

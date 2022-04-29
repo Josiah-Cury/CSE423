@@ -18,6 +18,7 @@ int main(int argc, char *argv[]) {
 
 	int dotFlag = 0;
 	int symtabFlag = 0;
+	int treeFlag = 0;
 
 	if(argc < 2) {
 		printf("Need an input file!\n");
@@ -31,6 +32,9 @@ int main(int argc, char *argv[]) {
 			} else if (!strcmp(argv[1]+1, "symtab")) {
 				symtabFlag = 1;
 				printf("Setting symtabFlag to %d.\n", symtabFlag);
+			} else if (!strcmp(argv[1]+1, "tree")) {
+				treeFlag = 1;
+				printf("Setting symtabFlag to %d.\n", treeFlag);
 			} else {
 				printf("There is no %s flag option.\n", argv[1]+1);
 				exit(0);
@@ -59,17 +63,17 @@ int main(int argc, char *argv[]) {
     		return 0;
 		}
 
-
-    	//yyfilename = *argv;
 		yyfilename = strrchr(*argv, '/') + 1;
 		yylineno = 1;
 
     	//yydebug = 1;
     	printf("Beginning parse of file: %s\n", yyfilename);
     	yyparse();
-        print_tree(tree_root, 1);
+        if (treeFlag) {
+        	print_tree(tree_root, 1);
+			printf("\n");
+        }
 		//free_tree(tree_root);
-		printf("\n");
 
 		if (dotFlag) {
 			char buf[100];
@@ -90,10 +94,6 @@ int main(int argc, char *argv[]) {
 		populate_symboltables(tree_root);
 		printf("\n");
 
-		print_stringpool();
-		printf("\n");
-
-		printf("Generating Intermediate Code!\n");
 		codegen(tree_root);
 		tacprint(tree_root->icode);
 		printf("\n");
@@ -111,8 +111,6 @@ int main(int argc, char *argv[]) {
 			printf("\n");
 		}
     }
-    //printf("Category\t Text\t\t  Lineno   Filename\t\t Ival/Sval\n");
-	//printf("------------------------------------------------------------------\n");
 
 	fclose(yyin);
 	yylex_destroy();
@@ -126,10 +124,8 @@ int main(int argc, char *argv[]) {
 
 void check_extension(char *fname) {
 	int len = strlen(fname);
-	//printf("%d\n", len);
 
 	if(len <= 5 || strcmp(fname+len-5, ".java") != 0) {
 		strcat(fname, ".java");
-		//printf("%s\n", fname);
 	}
 }

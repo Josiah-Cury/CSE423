@@ -84,16 +84,26 @@ Paramlist arg_list_to_params(struct tree *head) {
 	if (head->prodrule != PR_ARG_LIST) {
 		if (head->prodrule == TOKEN) {
 			name = curr_node->leaf->text;
-			type = get_type(curr_node);
+			type = get_type(curr_node, current);
 			parameters = alc_param(name, type);
+			return parameters;
+		} else {
+			type = get_type(curr_node, current);
+			parameters = alc_param("Expr", type);
 			return parameters;
 		}
 		return NULL;
 	}
 
 	// Allocate first param and start of list
-	name = curr_node->kids[1]->leaf->text;
-	type = get_type(curr_node->kids[1]);
+	if (curr_node->kids[1]->prodrule == TOKEN) {
+		name = curr_node->kids[1]->leaf->text;
+
+	} else {
+		name = "Expr";
+	}
+
+	type = get_type(curr_node->kids[1], current);
 	parameters = alc_param(name, type);
 	//printf("TESTING: %s\n\n", parameters->name);
 
@@ -105,20 +115,30 @@ Paramlist arg_list_to_params(struct tree *head) {
 
 	// Loop till the end of the list, link each to param list
 	while(curr_node->prodrule == PR_ARG_LIST) {
-		name = curr_node->kids[1]->leaf->text;
-		type = get_type(curr_node->kids[1]);
+		if (curr_node->kids[1]->prodrule == TOKEN) {
+			name = curr_node->kids[1]->leaf->text;
+		} else { name = "Expr"; }
+
+		type = get_type(curr_node->kids[1], current);
 		curr_param->next = alc_param(name, type);
+		//printf("TESTING: %s\n\n", curr_param->next->name);
+
 		curr_param = curr_param->next;
 		curr_node = curr_node->kids[0];
 	}
 
 	// Add the last node and reverse param list
-	name = curr_node->leaf->text;
-	type = get_type(curr_node);
+	if (curr_node->prodrule == TOKEN) {
+		name = curr_node->leaf->text;
+	} else {
+		name = "Expr";
+	}
+	type = get_type(curr_node, current);
 	curr_param->next = alc_param(name, type);
 
 	parameters = reverse_param_list(parameters);
-	//print_param_list(parameters);
+	// printf("PRINTING PARAM LIST\n");
+	// print_param_list(parameters);
 
 	return parameters;
 }
@@ -157,7 +177,7 @@ Paramlist formal_args_to_list(struct tree *current_node) {
 	while (current_node->prodrule == PR_FORMAL_PARM_LIST) {
 		param_name = current_node->kids[1]->kids[1]->leaf->text;
 		param_type = string_to_type(current_node->kids[1]->kids[0]->leaf->text);
-		printf("MADE IT HERE Type: %s, Var: %s\n", param_name, current_node->kids[1]->kids[0]->leaf->text);
+		//printf("MADE IT HERE Type: %s, Var: %s\n", param_name, current_node->kids[1]->kids[0]->leaf->text);
 		nparams++;
 		current_param->next = alc_param(param_name, param_type);
 		current_param = current_param->next;
@@ -166,7 +186,7 @@ Paramlist formal_args_to_list(struct tree *current_node) {
 	}
 
 	if (nparams > 0) {
-		printf("NUM OF PARAMS LOL: %d\n\n\n", nparams);
+		//printf("NUM OF PARAMS LOL: %d\n\n\n", nparams);
 		param_name = current_node->kids[1]->leaf->text;
 		param_type = string_to_type(current_node->kids[0]->leaf->text);
 		current_param->next = alc_param(param_name, param_type);
@@ -254,12 +274,12 @@ Typeptr string_to_type(char *str) {
 	return type;
 }
 
-Typeptr get_type(struct tree *n) {
+Typeptr get_type(struct tree *n, SymbolTable st) {
 	Typeptr type;
 	SymbolTableEntry ste;
 
 	if (n->prodrule == TOKEN) {
-		ste = lookup_st(current, n->leaf->text);
+		ste = lookup_st(st, n->leaf->text);
 
 		if (ste) { return ste->type; }
 
@@ -280,13 +300,12 @@ Typeptr get_type(struct tree *n) {
 				type = alc_type(BOOLEAN_TYPE);
 				break;
 			default:
-				//semantic_error("I don't know what type this is.", n);
 				//printf("made it here\n");
 				return NULL;
 		}
 	} else {
 		if (n->nkids != 0 && n->prodrule == PR_TYPE_ARRAY) {
-			type = get_type(n->kids[0]);
+			type = get_type(n->kids[0], current);
 		}
 		type = n->type;
 	}

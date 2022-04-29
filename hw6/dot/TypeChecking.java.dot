@@ -1,0 +1,294 @@
+digraph {
+	286 [shape = rectangle, label="ClassDecl"]
+	287 [label="public"]
+	288 [label="class"]
+	289 [label="TypeChecking"]
+	290 [shape = rectangle, label="ClassBodyDecls"]
+	284 [shape = rectangle, label="ClassBodyDecls"]
+	163 [shape = rectangle, label="ClassBodyDecls"]
+	10 [shape = rectangle, label="FieldDecl"]
+	3 [label="char"]
+	4 [shape = rectangle, label="VarDecls"]
+	1 [label="l"]
+	4 -> { 1 }
+	10 -> { 3 4 }
+	11 [shape = rectangle, label="FieldDeclAssign"]
+	6 [label="int"]
+	7 [label="k"]
+	8 [label="3"]
+	11 -> { 6 7 8 }
+	163 -> { 10 11 }
+	164 [shape = rectangle, label="MethodDecl"]
+	160 [shape = rectangle, label="MethodHeader"]
+	43 [label="public"]
+	44 [label="static"]
+	45 [label="int"]
+	46 [shape = rectangle, label="MethodDeclarator"]
+	40 [label="foo"]
+	41 [shape = rectangle, label="FormalParmList"]
+	37 [shape = rectangle, label="FormalParmList"]
+	31 [shape = rectangle, label="FormalParmList"]
+	25 [shape = rectangle, label="FormalParmList"]
+	19 [shape = rectangle, label="FormalParm"]
+	13 [label="int"]
+	14 [label="x"]
+	19 -> { 13 14 }
+	20 [shape = rectangle, label="FormalParm"]
+	16 [label="int"]
+	17 [label="y"]
+	20 -> { 16 17 }
+	25 -> { 19 20 }
+	26 [shape = rectangle, label="FormalParm"]
+	22 [label="int"]
+	23 [label="z"]
+	26 -> { 22 23 }
+	31 -> { 25 26 }
+	32 [shape = rectangle, label="FormalParm"]
+	28 [label="String"]
+	29 [label="s"]
+	32 -> { 28 29 }
+	37 -> { 31 32 }
+	38 [shape = rectangle, label="FormalParm"]
+	34 [label="boolean"]
+	35 [label="b"]
+	38 -> { 34 35 }
+	41 -> { 37 38 }
+	46 -> { 40 41 }
+	160 -> { 43 44 45 46 }
+	161 [shape = rectangle, label="Block"]
+	158 [shape = rectangle, label="BlockStmts"]
+	155 [shape = rectangle, label="BlockStmts"]
+	150 [shape = rectangle, label="BlockStmts"]
+	138 [shape = rectangle, label="BlockStmts"]
+	128 [shape = rectangle, label="BlockStmts"]
+	118 [shape = rectangle, label="BlockStmts"]
+	108 [shape = rectangle, label="BlockStmts"]
+	98 [shape = rectangle, label="BlockStmts"]
+	87 [shape = rectangle, label="BlockStmts"]
+	71 [shape = rectangle, label="BlockStmts"]
+	58 [shape = rectangle, label="LocalVarDecl"]
+	50 [label="boolean"]
+	51 [shape = rectangle, label="VarDecls"]
+	48 [label="t"]
+	51 -> { 48 }
+	58 -> { 50 51 }
+	59 [shape = rectangle, label="LocalVarDecl"]
+	55 [label="boolean"]
+	56 [shape = rectangle, label="VarDecls"]
+	53 [label="f"]
+	56 -> { 53 }
+	59 -> { 55 56 }
+	71 -> { 58 59 }
+	72 [shape = rectangle, label="Assignment"]
+	67 [label="x"]
+	68 [label="="]
+	69 [shape = rectangle, label="MulExpr_Mult"]
+	64 [label="y"]
+	65 [shape = rectangle, label="UnaryExpr_Neg"]
+	61 [label="-"]
+	62 [label="x"]
+	65 -> { 61 62 }
+	69 -> { 64 65 }
+	72 -> { 67 68 69 }
+	87 -> { 71 72 }
+	88 [shape = rectangle, label="Assignment"]
+	83 [label="x"]
+	84 [label="="]
+	85 [shape = rectangle, label="AddExpr_Add"]
+	80 [label="x"]
+	81 [shape = rectangle, label="MulExpr_Mult"]
+	77 [shape = rectangle, label="UnaryExpr_Neg"]
+	74 [label="-"]
+	75 [label="y"]
+	77 -> { 74 75 }
+	78 [label="x"]
+	81 -> { 77 78 }
+	85 -> { 80 81 }
+	88 -> { 83 84 85 }
+	98 -> { 87 88 }
+	99 [shape = rectangle, label="Assignment"]
+	94 [label="b"]
+	95 [label="="]
+	96 [shape = rectangle, label="RelExpr"]
+	90 [label="x"]
+	91 [label="<"]
+	92 [label="y"]
+	96 -> { 90 91 92 }
+	99 -> { 94 95 96 }
+	108 -> { 98 99 }
+	109 [shape = rectangle, label="Assignment"]
+	104 [label="b"]
+	105 [label="="]
+	106 [shape = rectangle, label="CondAndExpr"]
+	101 [label="t"]
+	102 [label="f"]
+	106 -> { 101 102 }
+	109 -> { 104 105 106 }
+	118 -> { 108 109 }
+	119 [shape = rectangle, label="Assignment"]
+	114 [label="x"]
+	115 [label="="]
+	116 [shape = rectangle, label="MulExpr_Mult"]
+	111 [label="y"]
+	112 [label="x"]
+	116 -> { 111 112 }
+	119 -> { 114 115 116 }
+	128 -> { 118 119 }
+	129 [shape = rectangle, label="Assignment"]
+	124 [label="x"]
+	125 [label="="]
+	126 [shape = rectangle, label="UnaryExpr_Neg"]
+	121 [label="-"]
+	122 [label="x"]
+	126 -> { 121 122 }
+	129 -> { 124 125 126 }
+	138 -> { 128 129 }
+	139 [shape = rectangle, label="Assignment"]
+	134 [label="b"]
+	135 [label="="]
+	136 [shape = rectangle, label="UnaryExpr_Not"]
+	131 [label="!"]
+	132 [label="b"]
+	136 -> { 131 132 }
+	139 -> { 134 135 136 }
+	150 -> { 138 139 }
+	151 [shape = rectangle, label="MethodCall_P"]
+	147 [shape = rectangle, label="QualifiedName"]
+	144 [label="System"]
+	145 [shape = rectangle, label="QualifiedName"]
+	141 [label="out"]
+	142 [label="print"]
+	145 -> { 141 142 }
+	147 -> { 144 145 }
+	148 [label="s"]
+	151 -> { 147 148 }
+	155 -> { 150 151 }
+	156 [shape = rectangle, label="ReturnStmt"]
+	153 [label="x"]
+	156 -> { 153 }
+	158 -> { 155 156 }
+	161 -> { 158 }
+	164 -> { 160 161 }
+	284 -> { 163 164 }
+	285 [shape = rectangle, label="MethodDecl"]
+	281 [shape = rectangle, label="MethodHeader"]
+	172 [label="public"]
+	173 [label="static"]
+	174 [label="void"]
+	175 [shape = rectangle, label="MethodDeclarator"]
+	169 [label="main"]
+	170 [shape = rectangle, label="FormalParm"]
+	166 [label="String"]
+	167 [label="argv"]
+	170 -> { 166 167 }
+	175 -> { 169 170 }
+	281 -> { 172 173 174 175 }
+	282 [shape = rectangle, label="Block"]
+	279 [shape = rectangle, label="BlockStmts"]
+	276 [shape = rectangle, label="BlockStmts"]
+	254 [shape = rectangle, label="BlockStmts"]
+	248 [shape = rectangle, label="BlockStmts"]
+	239 [shape = rectangle, label="BlockStmts"]
+	231 [shape = rectangle, label="BlockStmts"]
+	223 [shape = rectangle, label="BlockStmts"]
+	215 [shape = rectangle, label="BlockStmts"]
+	207 [shape = rectangle, label="BlockStmts"]
+	199 [shape = rectangle, label="BlockStmts"]
+	191 [shape = rectangle, label="MethodCall_P"]
+	183 [shape = rectangle, label="QualifiedName"]
+	180 [label="System"]
+	181 [shape = rectangle, label="QualifiedName"]
+	177 [label="out"]
+	178 [label="println"]
+	181 -> { 177 178 }
+	183 -> { 180 181 }
+	184 [label="hello, jzero!"]
+	191 -> { 183 184 }
+	192 [shape = rectangle, label="MethodCall_P"]
+	189 [shape = rectangle, label="QualifiedName"]
+	186 [label="InputStream"]
+	187 [label="read"]
+	189 -> { 186 187 }
+	192 -> { 189 }
+	199 -> { 191 192 }
+	200 [shape = rectangle, label="AssignmentDeclaration"]
+	194 [label="int"]
+	195 [label="f"]
+	196 [label="="]
+	197 [label="1"]
+	200 -> { 194 195 196 197 }
+	207 -> { 199 200 }
+	208 [shape = rectangle, label="LocalVarDecl"]
+	204 [label="int"]
+	205 [shape = rectangle, label="VarDecls"]
+	202 [label="x"]
+	205 -> { 202 }
+	208 -> { 204 205 }
+	215 -> { 207 208 }
+	216 [shape = rectangle, label="LocalVarDecl"]
+	212 [label="int"]
+	213 [shape = rectangle, label="VarDecls"]
+	210 [label="y"]
+	213 -> { 210 }
+	216 -> { 212 213 }
+	223 -> { 215 216 }
+	224 [shape = rectangle, label="LocalVarDecl"]
+	220 [label="int"]
+	221 [shape = rectangle, label="VarDecls"]
+	218 [label="z"]
+	221 -> { 218 }
+	224 -> { 220 221 }
+	231 -> { 223 224 }
+	232 [shape = rectangle, label="LocalVarDecl"]
+	228 [label="boolean"]
+	229 [shape = rectangle, label="VarDecls"]
+	226 [label="bool"]
+	229 -> { 226 }
+	232 -> { 228 229 }
+	239 -> { 231 232 }
+	240 [shape = rectangle, label="AssignmentDeclaration"]
+	234 [label="String"]
+	235 [label="str"]
+	236 [label="="]
+	237 [label="Hello this is a string"]
+	240 -> { 234 235 236 237 }
+	248 -> { 239 240 }
+	249 [shape = rectangle, label="MethodCall_P"]
+	245 [shape = rectangle, label="QualifiedName"]
+	242 [label="str"]
+	243 [label="charAt"]
+	245 -> { 242 243 }
+	246 [label="3"]
+	249 -> { 245 246 }
+	254 -> { 248 249 }
+	255 [shape = rectangle, label="AssignmentUnary"]
+	251 [label="f"]
+	252 [label="++"]
+	255 -> { 251 252 }
+	276 -> { 254 255 }
+	277 [shape = rectangle, label="Assignment"]
+	272 [label="f"]
+	273 [label="="]
+	274 [shape = rectangle, label="MethodCall_P"]
+	269 [label="foo"]
+	270 [shape = rectangle, label="ArgList"]
+	266 [shape = rectangle, label="ArgList"]
+	263 [shape = rectangle, label="ArgList"]
+	260 [shape = rectangle, label="ArgList"]
+	257 [label="f"]
+	258 [label="x"]
+	260 -> { 257 258 }
+	261 [label="k"]
+	263 -> { 260 261 }
+	264 [label="str"]
+	266 -> { 263 264 }
+	267 [label="bool"]
+	270 -> { 266 267 }
+	274 -> { 269 270 }
+	277 -> { 272 273 274 }
+	279 -> { 276 277 }
+	282 -> { 279 }
+	285 -> { 281 282 }
+	290 -> { 284 285 }
+	286 -> { 287 288 289 290 }
+}

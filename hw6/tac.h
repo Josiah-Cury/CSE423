@@ -55,6 +55,16 @@ struct instr {
 #define O_PARM  3019
 #define O_CALL  3020
 #define O_RET   3021
+#define O_LT 	3022
+#define O_LE	3023
+#define O_GT 	3024
+#define O_GE	3025
+#define O_EQ	3026
+#define O_NEQ	3027
+#define O_AND	3028
+#define O_OR	3029
+#define O_NOT	3030
+
 /* declarations/pseudo instructions */
 #define D_GLOB  3051
 #define D_PROC  3052
@@ -73,10 +83,12 @@ struct addr *genlabel();
 
 struct instr *append(struct instr *l1, struct instr *l2);
 struct instr *copylist(struct instr *l);
-struct addr *call_addr(char *s);
-struct addr *gen_local_addr(SymbolTable st);
+struct addr *gen_string_addr(int region, char *s);
 struct addr *gen_int_addr(int region, int ival);
+struct addr *gen_local_addr(SymbolTable st);
 
+struct instr *str_to_addr(struct tree *node, SymbolTable st);
+struct instr *int_tostr(struct tree *node, SymbolTable st);
 struct addr *new_temp(SymbolTable st);
 
 void print_instr(struct instr *rv);

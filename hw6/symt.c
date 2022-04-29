@@ -209,15 +209,31 @@ void populate_symboltables(struct tree * n)
 		}
 
 		case TOKEN: {
-			if (n->leaf->category == IDENTIFIER) {
-				ste = lookup_st(current, n->leaf->text);
-				if(ste == NULL) {
-					semantic_error("There is no matching symbol in the symbol table!", n);
-				}
-				n->address = ste->address;
-			}
-			if (n->leaf->category == STRING_LITERAL) {
-				add_stringpool(n);
+			switch (n->leaf->category) {
+				case IDENTIFIER:
+					ste = lookup_st(current, n->leaf->text);
+					if(ste == NULL) {
+						semantic_error("There is no matching symbol in the symbol table!", n);
+					}
+					n->type = ste->type;
+					n->address = ste->address;
+					break;
+				case STRING_LITERAL:
+					n->type = alc_type(STRING_TYPE);
+					add_stringpool(n);
+					break;
+				case INTEGER_LITERAL:
+					n->type = alc_type(INT_TYPE);
+					break;
+				case FLOAT_LITERAL:
+					n->type = alc_type(FLOAT_TYPE);
+					break;
+				case BOOLEAN_LITERAL:
+					n->type = alc_type(BOOLEAN_TYPE);
+					break;
+				case CHARACTER_LITERAL:
+					n->type = alc_type(CHAR_TYPE);
+					break;
 			}
 			break;
         }
@@ -253,31 +269,14 @@ void type_checker(struct tree *n) {
 Typeptr type, other_type;
 Paramlist method_call_params;
 int int_to_float = 0;
+int string_comp = 0;
 //char *s;
 
 
 switch (n->prodrule) {
-	//case PR_METHODCALL_P:
-		// node = n->kids[0];
-		// if (node->prodrule != PR_QUALIFIED_NAME) {
-		// 	printf("Function PR_METHODCALL_P: %s\n", n->kids[0]->leaf->text);
-		// } else {
-		// 	printf("Builtin PR_METHODCALL_P: ");
-		// 	while (node->kids[1]->prodrule == PR_QUALIFIED_NAME) {
-		// 		printf("%s.", node->kids[0]->leaf->text);
-		// 		node = node->kids[1];
-		// 	}
-		// 	printf("%s.%s\n", node->kids[0]->leaf->text, node->kids[1]->leaf->text);
-		// }
-		//
-		// node = n->kids[1];
-		// if (node != NULL)
-		// 	printf("Checking this symbol's arguments: %s\n", node->symbolname);
-		// while()
-	// break;
 
 	case PR_UNARY_EXPR_NEG:
-		type = get_type(n->kids[1]);
+		type = get_type(n->kids[1], current);
 
 		switch (type->basetype) {
 			case CHAR_TYPE:
@@ -299,7 +298,7 @@ switch (n->prodrule) {
 	//very similar to PR_UNARY_EXPR_NEG
 	//Come back later to shorten
 	case PR_UNARY_EXPR_NOT:
-		type = get_type(n->kids[1]);
+		type = get_type(n->kids[1], current);
 
 		switch (type->basetype) {
 			case BOOLEAN_TYPE:
@@ -315,7 +314,7 @@ switch (n->prodrule) {
 	case PR_MUL_EXPR_DIV:
 	case PR_MUL_EXPR_MOD:
 		for (int i = 0; i < 2; i++) {
-			type = get_type(n->kids[i]);
+			type = get_type(n->kids[i], current);
 
 			switch (type->basetype) {
 				case FLOAT_TYPE:
@@ -338,9 +337,30 @@ switch (n->prodrule) {
 	//This is the same case as PR_MUL_EXPR
 	////Come back later to shorten
 	case PR_ADD_EXPR_ADD:
+		for (int i = 0; i < 2; i++) {
+			type = get_type(n->kids[i], current);
+
+			switch (type->basetype) {
+				case STRING_TYPE:
+					string_comp = 1;
+					break;
+				case FLOAT_TYPE:
+					int_to_float = 1;
+				case INT_TYPE:
+				case CHAR_TYPE:
+					break;
+				default:
+					semantic_error("This is not a proper type for an addition expression.", n->kids[i]);
+			}
+		}
+
+		if (int_to_float) { n->type = alc_type(FLOAT_TYPE);
+		} else if (string_comp) { n->type = alc_type(STRING_TYPE);
+		} else { n->type = alc_type(INT_TYPE); }
+		break;
 	case PR_ADD_EXPR_SUB:
 		for (int i = 0; i < 2; i++) {
-			type = get_type(n->kids[i]);
+			type = get_type(n->kids[i], current);
 
 			switch (type->basetype) {
 				case FLOAT_TYPE:
@@ -353,16 +373,13 @@ switch (n->prodrule) {
 			}
 		}
 
-		if (int_to_float) {
-			n->type = alc_type(FLOAT_TYPE);
-		} else {
-			n->type = alc_type(INT_TYPE);
-		}
+		if (int_to_float) { n->type = alc_type(FLOAT_TYPE);
+		} else { n->type = alc_type(INT_TYPE); }
 		break;
 
 	case PR_REL_EXPR:
 		for (int i = 0; i < 3; i+=2) {
-			type = get_type(n->kids[i]);
+			type = get_type(n->kids[i], current);
 
 			switch (type->basetype) {
 				case FLOAT_TYPE:
@@ -374,11 +391,12 @@ switch (n->prodrule) {
 			}
 		}
 		n->type = alc_type(BOOLEAN_TYPE);
+		break;
 
 	case PR_EQ_EXPR:
 	case PR_EQ_EXPR_NOT:
-		type = get_type(n->kids[0]);
-		other_type = get_type(n->kids[2]);
+		type = get_type(n->kids[0], current);
+		other_type = get_type(n->kids[2], current);
 
 		if (type != other_type) {
 			switch (type->basetype) {
@@ -405,7 +423,7 @@ switch (n->prodrule) {
 		case PR_COND_OR_EXPR:
 		case PR_COND_AND_EXPR:
 			for (int i = 0; i < 2; i++) {
-				type = get_type(n->kids[i]);
+				type = get_type(n->kids[i], current);
 
 				if (type->basetype != BOOLEAN_TYPE) {
 					semantic_error("This is not a boolean type for a conditional expression.", n->kids[i]);
@@ -415,7 +433,7 @@ switch (n->prodrule) {
 			break;
 
 		case PR_TYPE_ARRAY:
-			type = get_type(n->kids[0]);
+			type = get_type(n->kids[0], current);
 			if(!type)
 				type = string_to_type(n->kids[0]->leaf->text);
 
@@ -429,7 +447,7 @@ switch (n->prodrule) {
 			break;
 
 		case PR_ASSIGNMENT_UNARY:
-			type = get_type(n->kids[0]);
+			type = get_type(n->kids[0], current);
 
 			switch (type->basetype) {
 				case CHAR_TYPE:
@@ -445,7 +463,7 @@ switch (n->prodrule) {
 
 		case PR_METHODCALL_P:
 			if (n->kids[0]->prodrule != PR_QUALIFIED_NAME) {
-				type = get_type(n->kids[0]);
+				type = get_type(n->kids[0], current);
 				method_call_params = arg_list_to_params(n->kids[1]);
 				// printf("Method name: %s, Type: %s, Call_Nparams: %d, Method_Nparams: %d\n",
 				// 	n->kids[0]->leaf->text, getTypeName(type->basetype),
@@ -456,8 +474,8 @@ switch (n->prodrule) {
 			break;
 
 		case PR_ASSIGNMENT:
-			type = get_type(n->kids[0]);
-			other_type = get_type(n->kids[2]);
+			type = get_type(n->kids[0], current);
+			other_type = get_type(n->kids[2], current);
 
 			if (type->basetype != other_type->basetype) {
 				// printf("Mismatched type 1: %s, type 2: %s\n", getTypeName(type->basetype), getTypeName(other_type->basetype));
@@ -521,8 +539,8 @@ switch (n->prodrule) {
 			break;
 
 		case PR_ASSIGNMENT_DECL:
-		type = get_type(n->kids[1]);
-		other_type = get_type(n->kids[3]);
+		type = get_type(n->kids[1], current);
+		other_type = get_type(n->kids[3], current);
 
 		if (type->basetype != other_type->basetype) {
 			switch (type->basetype) {
@@ -571,7 +589,7 @@ switch (n->prodrule) {
 }
 
 void check_method_arg(struct tree *func_node, Paramlist method_call_params) {
-	Typeptr func_type = get_type(func_node);
+	Typeptr func_type = get_type(func_node, current);
 	Paramlist formal = func_type->u.f.parameters, call = method_call_params;
 	int method_nparams = count_param_list(method_call_params);
 
@@ -751,46 +769,9 @@ void printsymbols(SymbolTable st, int level)
 }
 
 void create_builtin_packages(SymbolTable global) {
-	//SymbolTable System_st, out_st;
-
-	enter_newscope("System", alc_type(CLASS_TYPE));
-		enter_newscope("out", alc_type(CLASS_TYPE));
-			enter_newscope("println", alc_type(FUNC_TYPE));
-			popscope();
-
-			enter_newscope("print", alc_type(FUNC_TYPE));
-			popscope();
-		popscope();
-
-		enter_newscope("in", alc_type(CLASS_TYPE));
-			enter_newscope("read", alc_type(FUNC_TYPE));
-			popscope();
-		popscope();
-	popscope();
-
-	enter_newscope("String", alc_type(CLASS_TYPE));
-
-		enter_newscope("charAt", alc_type(FUNC_TYPE));
-		popscope();
-
-		enter_newscope("equals", alc_type(FUNC_TYPE));
-		popscope();
-
-		enter_newscope("compareTo", alc_type(FUNC_TYPE));
-		popscope();
-
-		enter_newscope("length", alc_type(FUNC_TYPE));
-		popscope();
-
-		enter_newscope("toString", alc_type(FUNC_TYPE));
-		popscope();
-
-	popscope();
-
-	enter_newscope("InputStream", alc_type(CLASS_TYPE));
-		enter_newscope("read", alc_type(FUNC_TYPE));
-		popscope();
-	popscope();
+	create_string_package();
+	create_system_package();
+	create_input_stream_package();
 }
 
 void check_qualified_name(SymbolTable current, struct tree *n) {
@@ -849,24 +830,87 @@ void add_stringpool(struct tree *n) {
 void print_stringpool() {
 	struct string_list *curr = stringpool;
 
-	printf("BEGINNING PRINT OF STRING POOL STRINGS\n");
+	if(!curr)
+		return;
+
+	printf(".string 16\n");
 	while (curr) {
 		printf("%s: %d\n", curr->string_node->leaf->text, curr->offset);
 		curr = curr->next;
 	}
 }
 
-/*
-void semanticerror(char *s, struct tree *n)
-{
-   while (n && (n->nkids > 0)) n=n->kids[0];
-   if (n) {
-     fprintf(stderr, "%s:%d: ", n->leaf->filename, n->leaf->lineno);
-   }
+void create_string_package() {
+	SymbolTableEntry ste;
+	enter_newscope("String", alc_type(CLASS_TYPE));
 
-  fprintf(stderr, "%s", s);
-  if (n && n->prodrule == PR_IDENT) fprintf(stderr, " %s", n->leaf->text);
-  fprintf(stderr, "\n");
-  errors++;
+		enter_newscope("charAt", alc_type(FUNC_TYPE));
+		ste = lookup_st(current, "charAt");
+		ste->type->u.f.nparams = 1;
+		ste->type->u.f.name = "charAt";
+		popscope();
+
+		enter_newscope("equals", alc_type(FUNC_TYPE));
+		ste = lookup_st(current, "equals");
+		ste->type->u.f.nparams = 1;
+		ste->type->u.f.name = "equals";
+		popscope();
+
+		enter_newscope("compareTo", alc_type(FUNC_TYPE));
+		ste = lookup_st(current, "compareTo");
+		ste->type->u.f.nparams = 1;
+		ste->type->u.f.name = "compareTo";
+		popscope();
+
+		enter_newscope("length", alc_type(FUNC_TYPE));
+		ste = lookup_st(current, "length");
+		ste->type->u.f.nparams = 1;
+		ste->type->u.f.name = "length";
+		popscope();
+
+		enter_newscope("toString", alc_type(FUNC_TYPE));
+		ste = lookup_st(current, "toString");
+		ste->type->u.f.nparams = 1;
+		ste->type->u.f.name = "toString";
+		popscope();
+
+	popscope();
 }
-*/
+
+void create_system_package() {
+	SymbolTableEntry ste;
+	enter_newscope("System", alc_type(CLASS_TYPE));
+		enter_newscope("out", alc_type(CLASS_TYPE));
+			enter_newscope("println", alc_type(FUNC_TYPE));
+			ste = lookup_st(current, "println");
+			ste->type->u.f.nparams = 1;
+			ste->type->u.f.name = "println";
+			popscope();
+
+			enter_newscope("print", alc_type(FUNC_TYPE));
+			ste = lookup_st(current, "print");
+			ste->type->u.f.nparams = 1;
+			ste->type->u.f.name = "print";
+			popscope();
+		popscope();
+
+		enter_newscope("in", alc_type(CLASS_TYPE));
+			enter_newscope("read", alc_type(FUNC_TYPE));
+			ste = lookup_st(current, "read");
+			ste->type->u.f.nparams = 1;
+			ste->type->u.f.name = "read";
+			popscope();
+		popscope();
+	popscope();
+}
+
+void create_input_stream_package() {
+	SymbolTableEntry ste;
+	enter_newscope("InputStream", alc_type(CLASS_TYPE));
+		enter_newscope("read", alc_type(FUNC_TYPE));
+		ste = lookup_st(current, "read");
+		ste->type->u.f.nparams = 1;
+		ste->type->u.f.name = "read";
+		popscope();
+	popscope();
+}

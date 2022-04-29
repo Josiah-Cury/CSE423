@@ -444,7 +444,7 @@ BreakStmt:
 
 ReturnStmt:
 	RETURN ExprOpt ';'
-		{ $$ = $2; }
+		{ $$ = link_tree(PR_RETURN_STMT, "ReturnStmt", 1, $2); }
 	;
 
 Primary:
